@@ -340,7 +340,7 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
                 pos = pos.east();
             }else if(world.getBlockState(pos.south()).is(BlockTags.LOGS)){
                 pos = pos.south();
-            }else if(world.getBlockState(pos.north()).is(BlockTags.LOGS)){
+            }else if(world.getBlockState(pos.west()).is(BlockTags.LOGS)){
                 pos = pos.west();
             }else{
                 return false;
