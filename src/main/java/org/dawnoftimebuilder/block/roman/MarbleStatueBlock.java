@@ -45,7 +45,7 @@ public class MarbleStatueBlock extends WaterloggedBlock {
     @Override
     public void playerWillDestroy(final Level worldIn, final BlockPos blockPosIn, final BlockState blockStateIn, final Player playerEntityIn) {
 
-        if(playerEntityIn.isCreative() && playerEntityIn.isCreative()) {
+        if(playerEntityIn.isCreative()) {
             BlockPos blockPos = blockPosIn;
             System.out.println(blockStateIn.getValue(MarbleStatueBlock.MULTIBLOCK));
             if(blockStateIn.getValue(MarbleStatueBlock.MULTIBLOCK) > 0) {

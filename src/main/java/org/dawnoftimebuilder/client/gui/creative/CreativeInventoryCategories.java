@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.minecraft.world.item.Items.FLINT_AND_STEEL;
 import static net.minecraft.world.level.block.Blocks.*;
@@ -520,7 +521,7 @@ public enum CreativeInventoryCategories {
         return this.translation;
     }
 
-    public ArrayList<Item> getItems() {
+    public List<Item> getItems() {
         return this.items;
     }
 }

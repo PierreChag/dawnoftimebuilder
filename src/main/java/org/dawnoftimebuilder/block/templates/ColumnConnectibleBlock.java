@@ -28,7 +28,7 @@ import java.util.List;
 public abstract class ColumnConnectibleBlock extends WaterloggedBlock {
     public static final EnumProperty<DoTBBlockStateProperties.VerticalConnection> VERTICAL_CONNECTION = DoTBBlockStateProperties.VERTICAL_CONNECTION;
 
-    public ColumnConnectibleBlock(final Properties properties) {
+    protected ColumnConnectibleBlock(final Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(ColumnConnectibleBlock.VERTICAL_CONNECTION, DoTBBlockStateProperties.VerticalConnection.NONE));
     }
