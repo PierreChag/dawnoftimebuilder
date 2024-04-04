@@ -43,30 +43,30 @@ public class ReliefBlock extends SidedPlaneConnectibleBlock{
      * 15 : BOTH & BOTH <p/>
      */
     private static VoxelShape[] makeShapes() {
-        VoxelShape vs_center = Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 4.0D);
-        VoxelShape vs_under = Block.box(4.0D, 0.0D, 0.0D, 12.0D, 4.0D, 4.0D);
-        VoxelShape vs_above = Block.box(4.0D, 12.0D, 0.0D, 12.0D, 16.0D, 4.0D);
-        VoxelShape vs_left = Block.box(0.0D, 4.0D, 0.0D, 4.0D, 12.0D, 4.0D);
-        VoxelShape vs_right = Block.box(12.0D, 4.0D, 0.0D, 16.0D, 12.0D, 4.0D);
-        VoxelShape vs_vertical = Shapes.or(vs_center, vs_under, vs_above);
-        VoxelShape vs_horizontal = Shapes.or(vs_center, vs_left, vs_right);
+        VoxelShape vsCenter = Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 4.0D);
+        VoxelShape vsUnder = Block.box(4.0D, 0.0D, 0.0D, 12.0D, 4.0D, 4.0D);
+        VoxelShape vsAbove = Block.box(4.0D, 12.0D, 0.0D, 12.0D, 16.0D, 4.0D);
+        VoxelShape vsLeft = Block.box(0.0D, 4.0D, 0.0D, 4.0D, 12.0D, 4.0D);
+        VoxelShape vsRight = Block.box(12.0D, 4.0D, 0.0D, 16.0D, 12.0D, 4.0D);
+        VoxelShape vsVertical = Shapes.or(vsCenter, vsUnder, vsAbove);
+        VoxelShape vsHorizontal = Shapes.or(vsCenter, vsLeft, vsRight);
         return new VoxelShape[] {
-                vs_center,
-                vs_horizontal,
-                vs_horizontal,
-                vs_horizontal,
-                vs_vertical,
-                Shapes.or(vs_center, vs_under, vs_right),
-                Shapes.or(vs_center, vs_under, vs_left),
-                Shapes.or(vs_horizontal, vs_under),
-                vs_vertical,
-                Shapes.or(vs_center, vs_above, vs_right),
-                Shapes.or(vs_center, vs_above, vs_left),
-                Shapes.or(vs_horizontal, vs_above),
-                vs_vertical,
-                Shapes.or(vs_vertical, vs_right),
-                Shapes.or(vs_vertical, vs_left),
-                Shapes.or(vs_vertical, vs_horizontal)
+                vsCenter,
+                vsHorizontal,
+                vsHorizontal,
+                vsHorizontal,
+                vsVertical,
+                Shapes.or(vsCenter, vsUnder, vsRight),
+                Shapes.or(vsCenter, vsUnder, vsLeft),
+                Shapes.or(vsHorizontal, vsUnder),
+                vsVertical,
+                Shapes.or(vsCenter, vsAbove, vsRight),
+                Shapes.or(vsCenter, vsAbove, vsLeft),
+                Shapes.or(vsHorizontal, vsAbove),
+                vsVertical,
+                Shapes.or(vsVertical, vsRight),
+                Shapes.or(vsVertical, vsLeft),
+                Shapes.or(vsVertical, vsHorizontal)
         };
     }
 }

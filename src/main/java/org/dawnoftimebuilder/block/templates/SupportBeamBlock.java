@@ -74,25 +74,25 @@ public class SupportBeamBlock extends WaterloggedBlock {
      */
     private static VoxelShape[] makeShapes() {
         VoxelShape vs = Block.box(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vs_axis_x = Shapes.or(vs, Block.box(0.0D, 4.0D, 4.0D, 16.0D, 12.0D, 12.0D));
-        VoxelShape vs_axis_z = Shapes.or(vs, Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 16.0D));
-        VoxelShape vs_axis_x_z = Shapes.or(vs_axis_x, Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 16.0D));
-        VoxelShape vs_axis_4px = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
-        VoxelShape vs_axis_8px = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
-        VoxelShape vs_axis_10px = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
+        VoxelShape vsAxisX = Shapes.or(vs, Block.box(0.0D, 4.0D, 4.0D, 16.0D, 12.0D, 12.0D));
+        VoxelShape vsAxisZ = Shapes.or(vs, Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 16.0D));
+        VoxelShape vsAxisXZ = Shapes.or(vsAxisX, Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 16.0D));
+        VoxelShape vsAxis4px = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
+        VoxelShape vsAxis8px = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
+        VoxelShape vsAxis10px = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
         return new VoxelShape[] {
-                vs_axis_x,
-                vs_axis_z,
-                vs_axis_x_z,
-                Shapes.or(vs_axis_x, vs_axis_4px),
-                Shapes.or(vs_axis_z, vs_axis_4px),
-                Shapes.or(vs_axis_x_z, vs_axis_4px),
-                Shapes.or(vs_axis_x, vs_axis_8px),
-                Shapes.or(vs_axis_z, vs_axis_8px),
-                Shapes.or(vs_axis_x_z, vs_axis_8px),
-                Shapes.or(vs_axis_x, vs_axis_10px),
-                Shapes.or(vs_axis_z, vs_axis_10px),
-                Shapes.or(vs_axis_x_z, vs_axis_10px)
+                vsAxisX,
+                vsAxisZ,
+                vsAxisXZ,
+                Shapes.or(vsAxisX, vsAxis4px),
+                Shapes.or(vsAxisZ, vsAxis4px),
+                Shapes.or(vsAxisXZ, vsAxis4px),
+                Shapes.or(vsAxisX, vsAxis8px),
+                Shapes.or(vsAxisZ, vsAxis8px),
+                Shapes.or(vsAxisXZ, vsAxis8px),
+                Shapes.or(vsAxisX, vsAxis10px),
+                Shapes.or(vsAxisZ, vsAxis10px),
+                Shapes.or(vsAxisXZ, vsAxis10px)
         };
     }
 

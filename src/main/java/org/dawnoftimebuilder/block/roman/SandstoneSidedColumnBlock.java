@@ -31,9 +31,9 @@ public class SandstoneSidedColumnBlock extends SidedColumnConnectibleBlock {
      * 3 : S Both <p/>
      */
     private static VoxelShape[] makeShapes() {
-        VoxelShape vs_column = Block.box(4.0D, 0.0D, 0.0D, 12.0D, 16.0D, 4.0D);
+        VoxelShape vsColumn = Block.box(4.0D, 0.0D, 0.0D, 12.0D, 16.0D, 4.0D);
         return new VoxelShape[] {
-                vs_column,
+                vsColumn,
                 Shapes.or(
                         Block.box(4.0D, 0.0D, 0.0D, 12.0D, 8.0D, 4.0D),
                         Block.box(2.0D, 8.0D, 0.0D, 14.0D, 12.0D, 6.0D),
@@ -41,7 +41,7 @@ public class SandstoneSidedColumnBlock extends SidedColumnConnectibleBlock {
                 Shapes.or(
                         Block.box(2.0D, 0.0D, 0.0D, 14.0D, 8.0D, 6.0D),
                         Block.box(4.0D, 8.0D, 0.0D, 12.0D, 16.0D, 4.0D)),
-                vs_column
+                vsColumn
         };
     }
 }

@@ -1,5 +1,18 @@
 package org.dawnoftimebuilder.block.german;
 
+import static net.minecraft.tags.BlockTags.DIRT;
+import static net.minecraft.tags.BlockTags.SAND;
+import static net.minecraftforge.common.Tags.Blocks.GRAVEL;
+import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_CROP;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.annotation.Nullable;
+import org.dawnoftimebuilder.DoTBConfig;
+import org.dawnoftimebuilder.block.IBlockGeneration;
+import org.dawnoftimebuilder.block.templates.BlockDoTB;
+import org.dawnoftimebuilder.util.DoTBUtils;
+import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,7 +27,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,21 +45,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
-import org.dawnoftimebuilder.DoTBConfig;
-import org.dawnoftimebuilder.block.IBlockGeneration;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
-import org.dawnoftimebuilder.util.DoTBUtils;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import static net.minecraft.tags.BlockTags.DIRT;
-import static net.minecraft.tags.BlockTags.SAND;
-import static net.minecraftforge.common.Tags.Blocks.GRAVEL;
-import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_CROP;
 
 public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
@@ -100,30 +102,30 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
      * 14 : WNE <p/>
      */
     private static VoxelShape[] makeShapes() {
-        VoxelShape vs_south = Block.box(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vs_west = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
-        VoxelShape vs_north = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 4.0D);
-        VoxelShape vs_east = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vs_sw = Shapes.or(vs_south, vs_west);
-        VoxelShape vs_wn = Shapes.or(vs_west, vs_north);
-        VoxelShape vs_ne = Shapes.or(vs_north, vs_east);
-        VoxelShape vs_se = Shapes.or(vs_east, vs_south);
+        VoxelShape vsSouth = Block.box(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
+        VoxelShape vsWest = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
+        VoxelShape vsNorth = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 4.0D);
+        VoxelShape vsEast = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+        VoxelShape vsSouthWest = Shapes.or(vsSouth, vsWest);
+        VoxelShape vsNorthWest = Shapes.or(vsWest, vsNorth);
+        VoxelShape vsNorthEst = Shapes.or(vsNorth, vsEast);
+        VoxelShape vsSouthEst = Shapes.or(vsEast, vsSouth);
         return new VoxelShape[] {
-                Shapes.or(vs_sw, vs_ne),
-                vs_south,
-                vs_west,
-                vs_sw,
-                vs_north,
-                Shapes.or(vs_south, vs_north),
-                vs_wn,
-                Shapes.or(vs_sw, vs_north),
-                vs_east,
-                vs_se,
-                Shapes.or(vs_west, vs_east),
-                Shapes.or(vs_sw, vs_east),
-                vs_ne,
-                Shapes.or(vs_south, vs_ne),
-                Shapes.or(vs_wn, vs_east),
+                Shapes.or(vsSouthWest, vsNorthEst),
+                vsSouth,
+                vsWest,
+                vsSouthWest,
+                vsNorth,
+                Shapes.or(vsSouth, vsNorth),
+                vsNorthWest,
+                Shapes.or(vsSouthWest, vsNorth),
+                vsEast,
+                vsSouthEst,
+                Shapes.or(vsWest, vsEast),
+                Shapes.or(vsSouthWest, vsEast),
+                vsNorthEst,
+                Shapes.or(vsSouth, vsNorthEst),
+                Shapes.or(vsNorthWest, vsEast),
         };
     }
 
