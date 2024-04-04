@@ -6,12 +6,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.function.Supplier;
 
 public class DoTBConfig {
-    //public final static String ARMOR_MATERIAL_CATEGORY = "armor_properties";
-    public final static String BLOCK_CATEGORY = "block_properties";
-    public final static String WORLD_GENERATION_CATEGORY = "world_generation";
-    public final static String ENTITY_CATEGORY = "entity_properties";
-    public final static Config COMMON_CONFIG;
-    final static ForgeConfigSpec COMMON_SPEC;
+    //public static final String ARMOR_MATERIAL_CATEGORY = "armor_properties";
+    public static final String BLOCK_CATEGORY = "block_properties";
+    public static final String WORLD_GENERATION_CATEGORY = "world_generation";
+    public static final String ENTITY_CATEGORY = "entity_properties";
+    public static final Config COMMON_CONFIG;
+    static final ForgeConfigSpec COMMON_SPEC;
     // General
     public static ForgeConfigSpec.IntValue DRYING_TIME_VARIATION;
     public static ForgeConfigSpec.IntValue CLIMBING_PLANT_GROWTH_CHANCE;
@@ -32,7 +32,7 @@ public class DoTBConfig {
         COMMON_CONFIG = pair.getLeft();
     }
 
-    public final static class Config {
+    public static final class Config {
         Config(final ForgeConfigSpec.Builder builderIn) {
 
             builderIn.comment("---------------------------------------|| Entity settings ||---------------------------------------").push(ENTITY_CATEGORY);

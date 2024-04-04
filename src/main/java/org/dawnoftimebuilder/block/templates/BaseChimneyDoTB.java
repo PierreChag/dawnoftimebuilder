@@ -74,7 +74,7 @@ public class BaseChimneyDoTB extends ColumnConnectibleBlock {
         }
 
         if(blockState.getBlock() instanceof MultiblockFireplaceBlock) {
-            BlockState foundBlockState = blockState;
+            BlockState foundBlockState;
             belowBlockPos = belowBlockPos.below();
             while((foundBlockState = world.getBlockState(belowBlockPos)) != null && foundBlockState.getBlock() instanceof MultiblockFireplaceBlock) {
                 blockState = foundBlockState;

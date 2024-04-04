@@ -451,7 +451,7 @@ public abstract class BasePoolBlock extends BlockDoTB {
         return true;
     }
 
-    public final static class PoolLevelAndSides {
+    public static final class PoolLevelAndSides {
         public boolean left;
         public boolean right;
         public boolean north;
