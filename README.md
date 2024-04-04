@@ -5,3 +5,9 @@
 </a>
 
 **Dawn of Time : Builder Edition** is a mod made for Minecraft architect lover as much as beginner as expert. Since this mod have been created by two Minecraft builder everything is balanced to improve and make your building experience perfect : clean inventory and well organized, a lot of different skin for one block, connectivity between blocks, 3D armors, etc…Our mod add nearly 300 new blocks to your game !
+
+## Build
+
+Create a release with `./gradlew assemble`. Release will be in `build/libs/`.
+
+Test the release with a local forge client with `./gradlew runClient`
