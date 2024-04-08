@@ -1,6 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "dawnoftimebuilder:block/moraq_mosaic_tiles_traditional"
-    }
-}

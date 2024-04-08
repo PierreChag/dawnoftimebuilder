@@ -1,0 +1,8 @@
+{
+	"parent": "dawnoftimebuilder:block/general/plate",
+	"textures": {
+		"side": "dawnoftimebuilder:block/sandstone_bricks_turquoise_pattern",
+		"top": "dawnoftimebuilder:block/sandstone_bricks_turquoise_pattern",
+		"frieze": "dawnoftimebuilder:block/sandstone_bricks_turquoise_pattern"
+	}
+}

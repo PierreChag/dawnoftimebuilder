@@ -1,0 +1,18 @@
+{
+	"parent": "block/carpet",
+	"textures": {
+		"particle": "dawnoftimebuilder:block/persian_carpet_red",
+		"wool": "dawnoftimebuilder:block/persian_carpet_red"
+	},
+	"loader": "fusion:model",
+	"type": "connecting",
+	"connections": [
+		{
+			"type": "is_same_block"
+		},
+		{
+			"type": "match_block",
+			"block": "dawnoftimebuilder:persian_carpet_delicate_red"
+		}
+	]
+}

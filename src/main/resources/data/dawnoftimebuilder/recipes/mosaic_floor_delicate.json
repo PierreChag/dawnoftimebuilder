@@ -1,26 +1,23 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"oio",
-		"IxI",
-		"oio"
+		"uiu",
+		"ooo",
+		"ooo"
 	],
 	"key": {
 		"o": {
-			"item": "minecraft:sandstone"
+			"item": "minecraft:smooth_sandstone"
 		},
-		"I":{
-			"tag": "forge:dyes/red"
+		"i":{
+			"item": "dawnoftimebuilder:clay_tile_black"
 		},
-		"i": {
-			"tag": "forge:dyes/orange"
-		},
-		"x": {
-			"tag": "forge:dyes/black"
+		"u":{
+			"item": "dawnoftimebuilder:clay_tile_orange"
 		}
 	},
 	"result": {
 		"item": "dawnoftimebuilder:mosaic_floor_delicate",
-		"count": 16
+		"count": 6
 	}
 }

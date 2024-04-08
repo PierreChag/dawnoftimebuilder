@@ -27,8 +27,15 @@ public class DoTBItemsRegistry {
     public static final RegistryObject<Item> SILK = DoTBItemsRegistry.reg("silk", ItemDoTB::new);
     public static final RegistryObject<Item> TEA_LEAVES = DoTBItemsRegistry.reg("tea_leaves", ItemDoTB::new);
     public static final RegistryObject<Item> CAMELLIA_LEAVES = DoTBItemsRegistry.reg("camellia_leaves", ItemDoTB::new);
-    public static final RegistryObject<Item> GRAY_TILE = DoTBItemsRegistry.reg("gray_tile", ItemDoTB::new);
-    public static final RegistryObject<Item> GRAY_CLAY_TILE = DoTBItemsRegistry.reg("gray_clay_tile", ItemDoTB::new);
+    public static final RegistryObject<Item> UNFIRED_CLAY_TILE = DoTBItemsRegistry.reg("unfired_clay_tile", ItemDoTB::new);
+    public static final RegistryObject<Item> CLAY_TILE = DoTBItemsRegistry.reg("clay_tile", ItemDoTB::new);
+    public static final RegistryObject<Item> CLAY_TILE_WHITE = DoTBItemsRegistry.reg("clay_tile_white", ItemDoTB::new);
+    public static final RegistryObject<Item> CLAY_TILE_ORANGE = DoTBItemsRegistry.reg("clay_tile_orange", ItemDoTB::new);
+    public static final RegistryObject<Item> CLAY_TILE_BLACK = DoTBItemsRegistry.reg("clay_tile_black", ItemDoTB::new);
+    public static final RegistryObject<Item> CLAY_TILE_BLUE = DoTBItemsRegistry.reg("clay_tile_blue", ItemDoTB::new);
+    public static final RegistryObject<Item> CLAY_TILE_CYAN = DoTBItemsRegistry.reg("clay_tile_cyan", ItemDoTB::new);
+    public static final RegistryObject<Item> UNFIRED_CLAY_ROOF_TILE = DoTBItemsRegistry.reg("unfired_clay_roof_tile", ItemDoTB::new);
+    public static final RegistryObject<Item> GRAY_CLAY_ROOF_TILE = DoTBItemsRegistry.reg("gray_clay_roof_tile", ItemDoTB::new);
     public static final RegistryObject<Item> MULBERRY_LEAVES = DoTBItemsRegistry.reg("mulberry_leaves", ItemDoTB::new);
     public static final RegistryObject<Item> GRAPE = DoTBItemsRegistry.reg("grape", () -> new ItemDoTB(new Item.Properties().food(DoTBFoods.GRAPE)));
     public static final RegistryObject<Item> GRAPE_SEEDS = DoTBItemsRegistry.regWithFlowerPot("grape_seeds", PotItem::new);
