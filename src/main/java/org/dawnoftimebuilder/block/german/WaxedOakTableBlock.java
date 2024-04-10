@@ -22,30 +22,30 @@ public class WaxedOakTableBlock extends MultiblockTableBlock {
 
     private static VoxelShape[] makeShapes() {
         // South - West - North - East:
-        VoxelShape[] vs_side = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Shapes.or(Block.box(1.0D, 1.0D, 13.5D, 15.0D, 3.0D, 14.5D), Block.box(1.0D, 12.0D, 13.5D, 15.0D, 16.0D, 14.5D)) });
+        VoxelShape[] vsSide = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Shapes.or(Block.box(1.0D, 1.0D, 13.5D, 15.0D, 3.0D, 14.5D), Block.box(1.0D, 12.0D, 13.5D, 15.0D, 16.0D, 14.5D)) });
         // SW - NW - NE - SE:
-        VoxelShape[] vs_pillar = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(0.5D, 0.0D, 12.5D, 3.5D, 16.0D, 15.5D) });
+        VoxelShape[] vsPillar = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(0.5D, 0.0D, 12.5D, 3.5D, 16.0D, 15.5D) });
         // W - N - E - S
-        VoxelShape[] vs_pillar_left = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(0.0D, 0.0D, 13.0D, 1.0D, 16.0D, 15.0D) });
+        VoxelShape[] vsPillarLeft = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(0.0D, 0.0D, 13.0D, 1.0D, 16.0D, 15.0D) });
         // S - W - N - E
-        VoxelShape[] vs_pillar_right = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(1.0D, 0.0D, 15.0D, 3.0D, 16.0D, 16.0D) });
+        VoxelShape[] vsPillarRight = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(1.0D, 0.0D, 15.0D, 3.0D, 16.0D, 16.0D) });
         return new VoxelShape[] {
                 Shapes.empty(),
-                Shapes.or(vs_side[0], vs_pillar_left[0], vs_pillar_right[3]),
-                Shapes.or(vs_side[1], vs_pillar_left[1], vs_pillar_right[0]),
-                Shapes.or(vs_side[0], vs_side[1], vs_pillar[0], vs_pillar_left[1], vs_pillar_right[3]),
-                Shapes.or(vs_side[2], vs_pillar_left[2], vs_pillar_right[1]),
-                Shapes.or(vs_side[0], vs_side[2], vs_pillar_left[0], vs_pillar_right[3], vs_pillar_left[2], vs_pillar_right[1]),
-                Shapes.or(vs_side[1], vs_side[2], vs_pillar[1], vs_pillar_left[2], vs_pillar_right[0]),
-                Shapes.or(vs_side[0], vs_side[1], vs_side[2], vs_pillar[0], vs_pillar[1], vs_pillar_left[2], vs_pillar_right[3]),
-                Shapes.or(vs_side[3], vs_pillar_left[3], vs_pillar_right[2]),
-                Shapes.or(vs_side[0], vs_side[3], vs_pillar[3], vs_pillar_left[0], vs_pillar_right[2]),
-                Shapes.or(vs_side[1], vs_side[3], vs_pillar_left[1], vs_pillar_right[0], vs_pillar_left[3], vs_pillar_right[2]),
-                Shapes.or(vs_side[0], vs_side[1], vs_side[3], vs_pillar[0], vs_pillar[3], vs_pillar_left[1], vs_pillar_right[2]),
-                Shapes.or(vs_side[2], vs_side[3], vs_pillar[2], vs_pillar_right[1], vs_pillar_left[3]),
-                Shapes.or(vs_side[0], vs_side[2], vs_side[3], vs_pillar[2], vs_pillar[3], vs_pillar_left[0], vs_pillar_right[1]),
-                Shapes.or(vs_side[1], vs_side[2], vs_side[3], vs_pillar[1], vs_pillar[2], vs_pillar_left[3], vs_pillar_right[0]),
-                Shapes.or(vs_side[0], vs_side[1], vs_side[2], vs_side[3], vs_pillar[0], vs_pillar[1], vs_pillar[2], vs_pillar[3]),
+                Shapes.or(vsSide[0], vsPillarLeft[0], vsPillarRight[3]),
+                Shapes.or(vsSide[1], vsPillarLeft[1], vsPillarRight[0]),
+                Shapes.or(vsSide[0], vsSide[1], vsPillar[0], vsPillarLeft[1], vsPillarRight[3]),
+                Shapes.or(vsSide[2], vsPillarLeft[2], vsPillarRight[1]),
+                Shapes.or(vsSide[0], vsSide[2], vsPillarLeft[0], vsPillarRight[3], vsPillarLeft[2], vsPillarRight[1]),
+                Shapes.or(vsSide[1], vsSide[2], vsPillar[1], vsPillarLeft[2], vsPillarRight[0]),
+                Shapes.or(vsSide[0], vsSide[1], vsSide[2], vsPillar[0], vsPillar[1], vsPillarLeft[2], vsPillarRight[3]),
+                Shapes.or(vsSide[3], vsPillarLeft[3], vsPillarRight[2]),
+                Shapes.or(vsSide[0], vsSide[3], vsPillar[3], vsPillarLeft[0], vsPillarRight[2]),
+                Shapes.or(vsSide[1], vsSide[3], vsPillarLeft[1], vsPillarRight[0], vsPillarLeft[3], vsPillarRight[2]),
+                Shapes.or(vsSide[0], vsSide[1], vsSide[3], vsPillar[0], vsPillar[3], vsPillarLeft[1], vsPillarRight[2]),
+                Shapes.or(vsSide[2], vsSide[3], vsPillar[2], vsPillarRight[1], vsPillarLeft[3]),
+                Shapes.or(vsSide[0], vsSide[2], vsSide[3], vsPillar[2], vsPillar[3], vsPillarLeft[0], vsPillarRight[1]),
+                Shapes.or(vsSide[1], vsSide[2], vsSide[3], vsPillar[1], vsPillar[2], vsPillarLeft[3], vsPillarRight[0]),
+                Shapes.or(vsSide[0], vsSide[1], vsSide[2], vsSide[3], vsPillar[0], vsPillar[1], vsPillar[2], vsPillar[3]),
         };
     }
 

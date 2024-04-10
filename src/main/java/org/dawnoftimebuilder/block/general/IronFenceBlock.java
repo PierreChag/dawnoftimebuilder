@@ -86,27 +86,27 @@ public class IronFenceBlock extends PlateBlock {
     private static VoxelShape[] makeShapes(boolean up) {
         int size_flat = up ? 8 : 16;
         int size_corner = up ? 10 : 16;
-        VoxelShape vs_north_flat = Block.box(0.0D, 0.0D, 0.0D, 16.0D, size_flat, 2.5D);
-        VoxelShape vs_east_flat = Block.box(13.5D, 0.0D, 0.0D, 16.0D, size_flat, 16.0D);
-        VoxelShape vs_south_flat = Block.box(0.0D, 0.0D, 13.5D, 16.0D, size_flat, 16.0D);
-        VoxelShape vs_west_flat = Block.box(0.0D, 0.0D, 0.0D, 2.5D, size_flat, 16.0D);
-        VoxelShape vs_nw_corner = Block.box(0.0D, 0.0D, 0.0D, 3.0D, size_corner, 3.0D);
-        VoxelShape vs_ne_corner = Block.box(13.0D, 0.0D, 0.0D, 16.0D, size_corner, 3.0D);
-        VoxelShape vs_se_corner = Block.box(13.0D, 0.0D, 13.0D, 16.0D, size_corner, 16.0D);
-        VoxelShape vs_sw_corner = Block.box(0.0D, 0.0D, 13.0D, 3.0D, size_corner, 16.0D);
+        VoxelShape vsNorthFlat = Block.box(0.0D, 0.0D, 0.0D, 16.0D, size_flat, 2.5D);
+        VoxelShape vsEastFlat = Block.box(13.5D, 0.0D, 0.0D, 16.0D, size_flat, 16.0D);
+        VoxelShape vsSouthFlat = Block.box(0.0D, 0.0D, 13.5D, 16.0D, size_flat, 16.0D);
+        VoxelShape vsWestFlat = Block.box(0.0D, 0.0D, 0.0D, 2.5D, size_flat, 16.0D);
+        VoxelShape vsNorthWestCorner = Block.box(0.0D, 0.0D, 0.0D, 3.0D, size_corner, 3.0D);
+        VoxelShape vsNorthEastCorner = Block.box(13.0D, 0.0D, 0.0D, 16.0D, size_corner, 3.0D);
+        VoxelShape vsSouthEastCorner = Block.box(13.0D, 0.0D, 13.0D, 16.0D, size_corner, 16.0D);
+        VoxelShape vsSouthWestCorner = Block.box(0.0D, 0.0D, 13.0D, 3.0D, size_corner, 16.0D);
         return new VoxelShape[] {
-                vs_nw_corner,
-                vs_north_flat,
-                Shapes.or(vs_north_flat, vs_west_flat, vs_nw_corner),
-                vs_ne_corner,
-                vs_east_flat,
-                Shapes.or(vs_east_flat, vs_north_flat, vs_ne_corner),
-                vs_se_corner,
-                vs_south_flat,
-                Shapes.or(vs_south_flat, vs_east_flat, vs_se_corner),
-                vs_sw_corner,
-                vs_west_flat,
-                Shapes.or(vs_west_flat, vs_south_flat, vs_sw_corner),
+                vsNorthWestCorner,
+                vsNorthFlat,
+                Shapes.or(vsNorthFlat, vsWestFlat, vsNorthWestCorner),
+                vsNorthEastCorner,
+                vsEastFlat,
+                Shapes.or(vsEastFlat, vsNorthFlat, vsNorthEastCorner),
+                vsSouthEastCorner,
+                vsSouthFlat,
+                Shapes.or(vsSouthFlat, vsEastFlat, vsSouthEastCorner),
+                vsSouthWestCorner,
+                vsWestFlat,
+                Shapes.or(vsWestFlat, vsSouthFlat, vsSouthWestCorner),
         };
     }
 

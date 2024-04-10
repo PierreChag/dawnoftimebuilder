@@ -9,6 +9,7 @@ import org.dawnoftimebuilder.HandlerClient;
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
 public class CreativeInventoryHandler {
+    private CreativeInventoryHandler() {}
     public static void onCreativeTabChange(CreativeModeInventoryScreen screen, CreativeModeTab tab) {
         HandlerClient.onCreativeTabChange(screen, tab);
     }

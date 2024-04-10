@@ -62,15 +62,15 @@ public class PlateBlock extends WaterloggedBlock {
      * 11 : SW Inner <p/>
      */
     private static VoxelShape[] makeShapes() {
-        final VoxelShape vs_north_flat = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
-        final VoxelShape vs_east_flat = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        final VoxelShape vs_south_flat = Block.box(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
-        final VoxelShape vs_west_flat = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
-        final VoxelShape vs_nw_corner = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 8.0D);
-        final VoxelShape vs_ne_corner = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
-        final VoxelShape vs_se_corner = Block.box(8.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
-        final VoxelShape vs_sw_corner = Block.box(0.0D, 0.0D, 8.0D, 8.0D, 16.0D, 16.0D);
-        return new VoxelShape[] { vs_nw_corner, vs_north_flat, Shapes.or(vs_north_flat, vs_sw_corner), vs_ne_corner, vs_east_flat, Shapes.or(vs_east_flat, vs_nw_corner), vs_se_corner, vs_south_flat, Shapes.or(vs_south_flat, vs_ne_corner), vs_sw_corner, vs_west_flat, Shapes.or(vs_west_flat, vs_se_corner), };
+        final VoxelShape vsNorthFlat = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
+        final VoxelShape vsEastFlat = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+        final VoxelShape vsSouthFlat = Block.box(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
+        final VoxelShape vsWestFlat = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
+        final VoxelShape vsNorthWestCorner = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 8.0D);
+        final VoxelShape vsNorthEastCorner = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
+        final VoxelShape vsSouthEastCorner = Block.box(8.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
+        final VoxelShape vsSouthWestCorner = Block.box(0.0D, 0.0D, 8.0D, 8.0D, 16.0D, 16.0D);
+        return new VoxelShape[] { vsNorthWestCorner, vsNorthFlat, Shapes.or(vsNorthFlat, vsSouthWestCorner), vsNorthEastCorner, vsEastFlat, Shapes.or(vsEastFlat, vsNorthWestCorner), vsSouthEastCorner, vsSouthFlat, Shapes.or(vsSouthFlat, vsNorthEastCorner), vsSouthWestCorner, vsWestFlat, Shapes.or(vsWestFlat, vsSouthEastCorner), };
     }
 
     @Override

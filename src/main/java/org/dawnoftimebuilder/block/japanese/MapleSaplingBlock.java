@@ -27,7 +27,7 @@ import org.dawnoftimebuilder.block.templates.BushBlockDoT;
 import org.dawnoftimebuilder.registry.DoTBBlocksRegistry;
 
 public class MapleSaplingBlock extends BushBlockDoT implements BonemealableBlock {
-    public final static boolean isValidForPlacement(final LevelAccessor worldIn, final BlockPos bottomCenterIn, final boolean isSaplingCallIn) {
+    public static final boolean isValidForPlacement(final LevelAccessor worldIn, final BlockPos bottomCenterIn, final boolean isSaplingCallIn) {
         final BlockPos floorCenter = bottomCenterIn.below();
         BlockState state = worldIn.getBlockState(floorCenter);
 

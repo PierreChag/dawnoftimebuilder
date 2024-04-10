@@ -215,7 +215,7 @@ public abstract class BasePoolBlock extends BlockDoTB {
     public final int maxLevel;
     public final int faucetLevel;
 
-    public BasePoolBlock(final Properties propertiesIn, final int maxLevelIn, final int faucetLevelIn) {
+    protected BasePoolBlock(final Properties propertiesIn, final int maxLevelIn, final int faucetLevelIn) {
         super(propertiesIn);
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.NORTH, false).setValue(BlockStateProperties.EAST, false).setValue(BlockStateProperties.SOUTH, false).setValue(BlockStateProperties.WEST, false).setValue(DoTBBlockStateProperties.HAS_PILLAR, false).setValue(DoTBBlockStateProperties.LEVEL, 0));
         this.maxLevel = maxLevelIn;
@@ -278,7 +278,7 @@ public abstract class BasePoolBlock extends BlockDoTB {
             } else if(itemStack.getItem() instanceof PotionItem) {
                 final Potion potion = PotionUtils.getPotion(itemStack);
 
-                if(potion.getEffects().size() <= 0 && nextLevel + 1 < this.maxLevel) {
+                if(potion.getEffects().isEmpty() && nextLevel + 1 < this.maxLevel) {
                     nextLevel++;
 
                     if(!playerEntityIn.isCreative()) {
@@ -289,7 +289,7 @@ public abstract class BasePoolBlock extends BlockDoTB {
             } else if(itemStack.getItem() instanceof BottleItem) {
                 final Potion potion = PotionUtils.getPotion(itemStack);
 
-                if(potion.getEffects().size() <= 0 && nextLevel - 1 >= 0) {
+                if(potion.getEffects().isEmpty() && nextLevel - 1 >= 0) {
                     nextLevel--;
 
                     if(!playerEntityIn.isCreative()) {
@@ -451,7 +451,7 @@ public abstract class BasePoolBlock extends BlockDoTB {
         return true;
     }
 
-    public final static class PoolLevelAndSides {
+    public static final class PoolLevelAndSides {
         public boolean left;
         public boolean right;
         public boolean north;

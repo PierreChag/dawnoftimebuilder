@@ -25,7 +25,7 @@ import static org.dawnoftimebuilder.registry.DoTBBlockEntitiesRegistry.DISPLAYER
 public abstract class DisplayerBlock extends WaterloggedBlock implements EntityBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    public DisplayerBlock(Properties properties) {
+    protected DisplayerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(LIT, false));
     }

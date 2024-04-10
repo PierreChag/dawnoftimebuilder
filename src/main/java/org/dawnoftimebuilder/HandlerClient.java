@@ -23,6 +23,7 @@ import org.dawnoftimebuilder.registry.*;
 
 @Mod.EventBusSubscriber(modid = DawnOfTimeBuilder.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class HandlerClient {
+    private HandlerClient() {}
     private static boolean DOT_SELECTED = false;
 
     @SubscribeEvent

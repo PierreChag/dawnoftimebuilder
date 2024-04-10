@@ -100,9 +100,7 @@ public class MultiblockFireplaceBlock extends SidedPlaneConnectibleBlock {
         int activation = -1;
 
         if(!state.getValue(WaterloggedBlock.WATERLOGGED) && !state.getValue(FireplaceBlock.LIT)) {
-            if(projectile instanceof AbstractArrow && ((AbstractArrow) projectile).isOnFire()) {
-                activation = 1;
-            } else if(projectile instanceof AbstractArrow) {
+            if(projectile instanceof AbstractArrow) {
                 activation = 1;
             }
         } else if(state.getValue(FireplaceBlock.LIT) && (projectile instanceof Snowball || projectile instanceof ThrowableProjectile && PotionUtils.getPotion(((ThrowableItemProjectile) projectile).getItem()).getEffects().size() <= 0)) {

@@ -434,10 +434,7 @@ public class DoTBBlocksRegistry {
      * @param tag BlockTags added.
      */
     private static void addBlockTag(RegistryObject<Block> block, TagKey<Block> tag){
-        if(!blockTagsMap.containsKey(tag)){
-            blockTagsMap.put(tag, new HashSet<>());
-        }
-        blockTagsMap.get(tag).add(block);
+        blockTagsMap.computeIfAbsent(tag, k -> new HashSet<>()).add(block);
     }
 
     public static <T extends Block, U extends Item & IHasFlowerPot> RegistryObject<Block> regWithFlowerPotItem(String name, Supplier<T> block, @Nullable Function<T, U> item) {

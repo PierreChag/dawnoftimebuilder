@@ -92,30 +92,30 @@ public class LatticeBlock extends WaterloggedBlock implements IBlockClimbingPlan
      * 14 : WNE <p/>
      */
     private static VoxelShape[] makeShapes() {
-        VoxelShape vs_south = Block.box(0.0D, 0.0D, 14.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vs_west = Block.box(0.0D, 0.0D, 0.0D, 2.0D, 16.0D, 16.0D);
-        VoxelShape vs_north = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 2.0D);
-        VoxelShape vs_east = Block.box(14.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vs_sw = Shapes.or(vs_south, vs_west);
-        VoxelShape vs_wn = Shapes.or(vs_west, vs_north);
-        VoxelShape vs_ne = Shapes.or(vs_north, vs_east);
-        VoxelShape vs_se = Shapes.or(vs_east, vs_south);
+        VoxelShape vsSouth = Block.box(0.0D, 0.0D, 14.0D, 16.0D, 16.0D, 16.0D);
+        VoxelShape vsWest = Block.box(0.0D, 0.0D, 0.0D, 2.0D, 16.0D, 16.0D);
+        VoxelShape vsNorth = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 2.0D);
+        VoxelShape vsEast = Block.box(14.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+        VoxelShape vsSouthWest = Shapes.or(vsSouth, vsWest);
+        VoxelShape vsNorthWest = Shapes.or(vsWest, vsNorth);
+        VoxelShape vsNorthEast = Shapes.or(vsNorth, vsEast);
+        VoxelShape vsSouthEast = Shapes.or(vsEast, vsSouth);
         return new VoxelShape[] {
-                Shapes.or(vs_sw, vs_ne),
-                vs_south,
-                vs_west,
-                vs_sw,
-                vs_north,
-                Shapes.or(vs_south, vs_north),
-                vs_wn,
-                Shapes.or(vs_sw, vs_north),
-                vs_east,
-                vs_se,
-                Shapes.or(vs_west, vs_east),
-                Shapes.or(vs_sw, vs_east),
-                vs_ne,
-                Shapes.or(vs_south, vs_ne),
-                Shapes.or(vs_wn, vs_east),
+                Shapes.or(vsSouthWest, vsNorthEast),
+                vsSouth,
+                vsWest,
+                vsSouthWest,
+                vsNorth,
+                Shapes.or(vsSouth, vsNorth),
+                vsNorthWest,
+                Shapes.or(vsSouthWest, vsNorth),
+                vsEast,
+                vsSouthEast,
+                Shapes.or(vsWest, vsEast),
+                Shapes.or(vsSouthWest, vsEast),
+                vsNorthEast,
+                Shapes.or(vsSouth, vsNorthEast),
+                Shapes.or(vsNorthWest, vsEast),
         };
     }
 
