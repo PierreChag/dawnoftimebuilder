@@ -43,7 +43,7 @@ public class ChairBlock extends WaterloggedBlock {
 
     @Override
     public InteractionResult use(final BlockState state, final Level worldIn, final BlockPos pos, final Player player, final InteractionHand handIn, final BlockHitResult hit) {
-        return ChairEntity.createEntity(worldIn, pos, player, this.pixelsYOffset);
+        return ChairEntity.createEntity(worldIn, pos, player, state.getValue(FACING), this.pixelsYOffset);
     }
 
     @Override

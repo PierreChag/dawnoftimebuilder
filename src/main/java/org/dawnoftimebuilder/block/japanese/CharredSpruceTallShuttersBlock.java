@@ -3,6 +3,7 @@ package org.dawnoftimebuilder.block.japanese;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -19,6 +21,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
 import org.dawnoftimebuilder.util.DoTBUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -39,7 +42,7 @@ public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
 
     public CharredSpruceTallShuttersBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(CORNER, DoTBBlockStateProperties.SquareCorners.TOP_LEFT));
+        this.registerDefaultState(this.defaultBlockState().setValue(CORNER, SquareCorners.TOP_LEFT));
     }
 
     @Override
@@ -127,5 +130,23 @@ public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
             return Blocks.AIR.defaultBlockState();
         }
         return stateIn;
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            SquareCorners corner = state.getValue(CORNER);
+            if (corner != SquareCorners.TOP_LEFT) {
+                BlockPos cornerPos = pos.above(SquareCorners.TOP_LEFT.getVerticalOffset(corner)).relative(state.getValue(FACING).getClockWise(), SquareCorners.TOP_LEFT.getHorizontalOffset(corner));
+                BlockState cornerState = level.getBlockState(cornerPos);
+                if (cornerState.is(this) && cornerState.getValue(FACING) == state.getValue(FACING) && cornerState.getValue(CORNER) == SquareCorners.TOP_LEFT) {
+                    level.setBlock(cornerPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, cornerPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 }

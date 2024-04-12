@@ -38,6 +38,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
+import static org.dawnoftimebuilder.util.DoTBVoxelShapes.BUSH_SHAPE;
+
 public class DoTBBlocksRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, DawnOfTimeBuilder.MOD_ID);
     public static Map<TagKey<Block>, Set<RegistryObject<Block>>> blockTagsMap = new HashMap<>();
@@ -152,7 +154,7 @@ public class DoTBBlocksRegistry {
     public static final RegistryObject<Block> BLACK_WROUGHT_IRON_FENCE = DoTBBlocksRegistry.reg("black_wrought_iron_fence", () -> new IronFenceBlock(Block.Properties.copy(Blocks.IRON_BARS)));
     public static final RegistryObject<Block> REINFORCED_BLACK_WROUGHT_IRON_FENCE = DoTBBlocksRegistry.reg("reinforced_black_wrought_iron_fence", () -> new ReinforcedIronFenceBlock(Block.Properties.copy(Blocks.IRON_BARS)));
     public static final RegistryObject<Block> REINFORCED_GOLDEN_WROUGHT_IRON_FENCE = DoTBBlocksRegistry.reg("reinforced_golden_wrought_iron_fence", () -> new ReinforcedIronFenceBlock(Block.Properties.copy(Blocks.IRON_BARS)));
-    public static final RegistryObject<Block> BOXWOOD_BUSH = DoTBBlocksRegistry.reg("boxwood_bush", () -> new BushBlockDoT(Block.Properties.copy(Blocks.SPRUCE_LEAVES)), BlockTags.SWORD_EFFICIENT);
+    public static final RegistryObject<Block> BOXWOOD_BUSH = DoTBBlocksRegistry.reg("boxwood_bush", () -> new BushBlockDoT(Block.Properties.copy(Blocks.SPRUCE_LEAVES), BUSH_SHAPE), BlockTags.SWORD_EFFICIENT);
     public static final RegistryObject<Block> BOXWOOD_TALL_HEDGE = DoTBBlocksRegistry.reg("boxwood_tall_hedge", () -> new PlateBlock(Block.Properties.copy(Blocks.SPRUCE_LEAVES)), BlockTags.SWORD_EFFICIENT);
     public static final RegistryObject<Block> BOXWOOD_SMALL_HEDGE = DoTBBlocksRegistry.reg("boxwood_small_hedge", () -> new EdgeBlock(Block.Properties.copy(Blocks.SPRUCE_LEAVES)), BlockTags.SWORD_EFFICIENT);
     // German

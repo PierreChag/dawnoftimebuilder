@@ -30,7 +30,6 @@ public class MapleLeavesBlock extends BlockDoTB {
 
     public MapleLeavesBlock(final Properties properties) {
         super(properties);
-
         this.registerDefaultState(this.defaultBlockState().setValue(MapleTrunkBlock.FACING, Direction.NORTH).setValue(MapleLeavesBlock.MULTIBLOCK_X, 0).setValue(MapleLeavesBlock.MULTIBLOCK_Y, 0).setValue(MapleLeavesBlock.MULTIBLOCK_Z, 0));
     }
 
@@ -138,7 +137,7 @@ public class MapleLeavesBlock extends BlockDoTB {
 
     @Override
     public ItemStack getCloneItemStack(final BlockState stateIn, final HitResult targetIn, final BlockGetter worldIn, final BlockPos posIn, final Player playerIn) {
-        return new ItemStack(DoTBBlocksRegistry.ACACIA_BEAM.get().asItem());
+        return new ItemStack(DoTBBlocksRegistry.MAPLE_RED_SAPLING.get().asItem());
     }
 
     @Override

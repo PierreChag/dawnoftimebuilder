@@ -27,6 +27,7 @@ import org.dawnoftimebuilder.DoTBConfig;
 import org.dawnoftimebuilder.block.IBlockChain;
 import org.dawnoftimebuilder.block.templates.BlockDoTB;
 import org.dawnoftimebuilder.util.DoTBUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -159,5 +160,22 @@ public class StickBundleBlock extends BlockDoTB implements IBlockChain {
     @Override
     public boolean canConnectToChainUnder(BlockState state) {
         return false;
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            if (state.getValue(HALF) == Half.TOP) {
+                BlockPos adjacentPos = pos.below();
+                BlockState adjacentState = level.getBlockState(adjacentPos);
+                if (adjacentState.is(this) && adjacentState.getValue(HALF) == Half.BOTTOM) {
+                    level.setBlock(adjacentPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, adjacentPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 }

@@ -322,6 +322,17 @@ public class DoTBBlockStateProperties {
                 case WEST -> WEST;
             };
         }
+
+        public SidedWindow rotate(boolean clockWise){
+            return switch(this){
+                case NORTH -> clockWise ? EAST : WEST;
+                case EAST -> clockWise ? SOUTH : NORTH;
+                case SOUTH -> clockWise ? WEST : EAST;
+                case WEST -> clockWise ? NORTH : SOUTH;
+                case AXIS_X -> AXIS_Z;
+                case AXIS_Z -> AXIS_X;
+            };
+        }
     }
 
     public enum WaterTrickleEnd implements StringRepresentable {

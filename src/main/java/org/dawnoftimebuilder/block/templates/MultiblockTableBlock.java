@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -109,17 +110,12 @@ public abstract class MultiblockTableBlock extends DisplayerBlock {
         if(facing.getAxis().isHorizontal()) {
             BlockState state = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
             boolean canConnect = facingState.getBlock().equals(this);
-            switch(facing) {
-                default:
-                case NORTH:
-                    return state.setValue(NORTH, canConnect);
-                case WEST:
-                    return state.setValue(WEST, canConnect);
-                case SOUTH:
-                    return state.setValue(SOUTH, canConnect);
-                case EAST:
-                    return state.setValue(EAST, canConnect);
-            }
+            return switch (facing) {
+                default -> state.setValue(NORTH, canConnect);
+                case WEST -> state.setValue(WEST, canConnect);
+                case SOUTH -> state.setValue(SOUTH, canConnect);
+                case EAST -> state.setValue(EAST, canConnect);
+            };
         } else {
             Direction halfDirection = (stateIn.getValue(HALF) == Half.TOP) ? Direction.DOWN : Direction.UP;
             if(facing == halfDirection) {
@@ -140,5 +136,22 @@ public abstract class MultiblockTableBlock extends DisplayerBlock {
         } else
             return true;
         return false;
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            if (state.getValue(HALF) == Half.TOP) {
+                BlockPos adjacentPos = pos.below();
+                BlockState adjacentState = level.getBlockState(adjacentPos);
+                if (adjacentState.is(this) && adjacentState.getValue(HALF) == Half.BOTTOM) {
+                    level.setBlock(adjacentPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, adjacentPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 }

@@ -15,6 +15,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -23,6 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.ChairBlock;
 import org.dawnoftimebuilder.entity.ChairEntity;
 import org.dawnoftimebuilder.util.DoTBUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -36,6 +40,13 @@ public class BirchCouchBlock extends ChairBlock {
 
     public BirchCouchBlock(Properties properties, float pixelsYOffset) {
         super(properties, pixelsYOffset);
+        this.defaultBlockState().setValue(BlockStateProperties.PERSISTENT, true);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(BlockStateProperties.PERSISTENT);
     }
 
     @Override
@@ -47,22 +58,14 @@ public class BirchCouchBlock extends ChairBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         float x = 8.0F;
         float z = 8.0F;
-        switch(state.getValue(FACING)) {
-            default:
-            case NORTH:
-                z = 2.0F;
-                break;
-            case SOUTH:
-                z = 14.0F;
-                break;
-            case WEST:
-                x = 2.0F;
-                break;
-            case EAST:
-                x = 14.0F;
-                break;
+        switch (state.getValue(FACING)) {
+            default -> z = 2.0F;
+            case SOUTH -> z = 14.0F;
+            case WEST -> x = 2.0F;
+            case EAST -> x = 14.0F;
         }
-        return ChairEntity.createEntity(worldIn, pos, player, x, this.pixelsYOffset, z);
+
+        return ChairEntity.createEntity(worldIn, pos, player, player.getDirection().getOpposite(), x, this.pixelsYOffset, z);
     }
 
     @Nullable
@@ -77,7 +80,7 @@ public class BirchCouchBlock extends ChairBlock {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         Direction currentFacing = state.getValue(FACING);
-        worldIn.setBlock(pos.relative(currentFacing), state.setValue(FACING, currentFacing.getOpposite()), 3);
+        worldIn.setBlock(pos.relative(currentFacing), state.setValue(FACING, currentFacing.getOpposite()).setValue(BlockStateProperties.PERSISTENT, false), 3);
     }
 
     @Override
@@ -99,23 +102,20 @@ public class BirchCouchBlock extends ChairBlock {
     }
 
     @Override
-    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
-        super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
-    }
-
-    @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-        BlockPos otherPos = pos.relative(state.getValue(FACING));
-        BlockState otherState = worldIn.getBlockState(otherPos);
-        if(otherState.getBlock() == this) {
-            worldIn.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
-            worldIn.levelEvent(player, 2001, otherPos, Block.getId(otherState));
-            ItemStack itemstack = player.getMainHandItem();
-            if(!worldIn.isClientSide() && !player.isCreative()) {
-                //Only one of the 2 blocks drops since there is no way to make a difference between halves in loot_tables
-                Block.dropResources(state, worldIn, pos, null, player, itemstack);
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            if (!state.getValue(BlockStateProperties.PERSISTENT)) {
+                Direction dir = state.getValue(FACING);
+                BlockPos adjacentPos = pos.relative(dir);
+                BlockState adjacentState = level.getBlockState(adjacentPos);
+                if (adjacentState.is(this) && adjacentState.getValue(FACING) == dir.getOpposite()) {
+                    level.setBlock(adjacentPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, adjacentPos, Block.getId(state));
+                }
             }
         }
-        super.playerWillDestroy(worldIn, pos, state, player);
+        super.playerWillDestroy(level, pos, state, player);
     }
 }

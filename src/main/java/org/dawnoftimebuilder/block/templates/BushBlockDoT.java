@@ -10,14 +10,29 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockGeneration;
+
+import static org.dawnoftimebuilder.util.DoTBVoxelShapes.FULL_SHAPE;
 
 public class BushBlockDoT extends BushBlock implements IBlockGeneration {
     private int fireSpreadSpeed = 0;
     private int fireDestructionSpeed = 0;
+    private final VoxelShape[] shapes;
 
     public BushBlockDoT(final Properties properties) {
+        this(properties, FULL_SHAPE);
+    }
+
+    public BushBlockDoT(final Properties properties, VoxelShape[] shapes) {
         super(properties);
+        this.shapes = shapes;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return this.shapes[0];
     }
 
     /**
