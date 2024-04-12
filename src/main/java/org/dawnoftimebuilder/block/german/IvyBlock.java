@@ -1,5 +1,18 @@
 package org.dawnoftimebuilder.block.german;
 
+import static net.minecraft.tags.BlockTags.DIRT;
+import static net.minecraft.tags.BlockTags.SAND;
+import static net.minecraftforge.common.Tags.Blocks.GRAVEL;
+import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_CROP;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.annotation.Nullable;
+import org.dawnoftimebuilder.DoTBConfig;
+import org.dawnoftimebuilder.block.IBlockGeneration;
+import org.dawnoftimebuilder.block.templates.BlockDoTB;
+import org.dawnoftimebuilder.util.DoTBUtils;
+import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,7 +27,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,21 +45,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
-import org.dawnoftimebuilder.DoTBConfig;
-import org.dawnoftimebuilder.block.IBlockGeneration;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
-import org.dawnoftimebuilder.util.DoTBUtils;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import static net.minecraft.tags.BlockTags.DIRT;
-import static net.minecraft.tags.BlockTags.SAND;
-import static net.minecraftforge.common.Tags.Blocks.GRAVEL;
-import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_CROP;
 
 public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
@@ -65,7 +67,7 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter LevelIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter levelIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         int index = 0;
         if(state.getValue(SOUTH))
             index += 1;
@@ -100,30 +102,30 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
      * 14 : WNE <p/>
      */
     private static VoxelShape[] makeShapes() {
-        VoxelShape vs_south = Block.box(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vs_west = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
-        VoxelShape vs_north = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 4.0D);
-        VoxelShape vs_east = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vs_sw = Shapes.or(vs_south, vs_west);
-        VoxelShape vs_wn = Shapes.or(vs_west, vs_north);
-        VoxelShape vs_ne = Shapes.or(vs_north, vs_east);
-        VoxelShape vs_se = Shapes.or(vs_east, vs_south);
+        VoxelShape vsSouth = Block.box(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
+        VoxelShape vsWest = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
+        VoxelShape vsNorth = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 4.0D);
+        VoxelShape vsEast = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+        VoxelShape vsSouthWest = Shapes.or(vsSouth, vsWest);
+        VoxelShape vsNorthWest = Shapes.or(vsWest, vsNorth);
+        VoxelShape vsNorthEst = Shapes.or(vsNorth, vsEast);
+        VoxelShape vsSouthEst = Shapes.or(vsEast, vsSouth);
         return new VoxelShape[] {
-                Shapes.or(vs_sw, vs_ne),
-                vs_south,
-                vs_west,
-                vs_sw,
-                vs_north,
-                Shapes.or(vs_south, vs_north),
-                vs_wn,
-                Shapes.or(vs_sw, vs_north),
-                vs_east,
-                vs_se,
-                Shapes.or(vs_west, vs_east),
-                Shapes.or(vs_sw, vs_east),
-                vs_ne,
-                Shapes.or(vs_south, vs_ne),
-                Shapes.or(vs_wn, vs_east),
+                Shapes.or(vsSouthWest, vsNorthEst),
+                vsSouth,
+                vsWest,
+                vsSouthWest,
+                vsNorth,
+                Shapes.or(vsSouth, vsNorth),
+                vsNorthWest,
+                Shapes.or(vsSouthWest, vsNorth),
+                vsEast,
+                vsSouthEst,
+                Shapes.or(vsWest, vsEast),
+                Shapes.or(vsSouthWest, vsEast),
+                vsNorthEst,
+                Shapes.or(vsSouth, vsNorthEst),
+                Shapes.or(vsNorthWest, vsEast),
         };
     }
 
@@ -167,17 +169,17 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public void tick(@NotNull BlockState state, ServerLevel LevelIn, @NotNull BlockPos pos, @NotNull RandomSource random) {
-        if(!LevelIn.isClientSide()) {
-            if(!LevelIn.isAreaLoaded(pos, 2))
+    public void tick(@NotNull BlockState state, ServerLevel levelIn, @NotNull BlockPos pos, @NotNull RandomSource random) {
+        if(!levelIn.isClientSide()) {
+            if(!levelIn.isAreaLoaded(pos, 2))
                 return; // Forge: prevent loading unloaded chunks when checking neighbor's light
 
-            if(LevelIn.getRawBrightness(pos, 0) >= 8) {
+            if(levelIn.getRawBrightness(pos, 0) >= 8) {
                 int age = state.getValue(AGE);
                 if(age < 2) { //Probability "can grow"
-                    if(ForgeHooks.onCropsGrowPre(LevelIn, pos, state, random.nextInt(DoTBConfig.CLIMBING_PLANT_GROWTH_CHANCE.get()) == 0)) {
-                        LevelIn.setBlock(pos, state.setValue(AGE, age + 1), 2);
-                        ForgeHooks.onCropsGrowPost(LevelIn, pos, state);
+                    if(ForgeHooks.onCropsGrowPre(levelIn, pos, state, random.nextInt(DoTBConfig.CLIMBING_PLANT_GROWTH_CHANCE.get()) == 0)) {
+                        levelIn.setBlock(pos, state.setValue(AGE, age + 1), 2);
+                        ForgeHooks.onCropsGrowPost(levelIn, pos, state);
                     }
                     return;
                 }
@@ -196,20 +198,20 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
                         // 0 : spread on the left
                         // 1 : spread on the right
                         Direction rotFace = faceIndex == 0 ? face.getCounterClockWise() : face.getClockWise();
-                        if(hasFullFace(LevelIn, pos, rotFace)) {
+                        if(hasFullFace(levelIn, pos, rotFace)) {
                             if(!state.getValue(getProperty(rotFace)))
-                                LevelIn.setBlock(pos, state.setValue(getProperty(rotFace), true), 2);
+                                levelIn.setBlock(pos, state.setValue(getProperty(rotFace), true), 2);
                         } else {
                             studiedPos = pos.relative(rotFace);
-                            if(LevelIn.getBlockState(studiedPos).isAir()) {
-                                if(hasFullFace(LevelIn, studiedPos, face)) {
-                                    LevelIn.setBlock(studiedPos, this.defaultBlockState().setValue(getProperty(face), true), 2);
+                            if(levelIn.getBlockState(studiedPos).isAir()) {
+                                if(hasFullFace(levelIn, studiedPos, face)) {
+                                    levelIn.setBlock(studiedPos, this.defaultBlockState().setValue(getProperty(face), true), 2);
                                 } else {
                                     studiedPos = studiedPos.relative(face);
-                                    if(LevelIn.getBlockState(studiedPos).isAir()) {
+                                    if(levelIn.getBlockState(studiedPos).isAir()) {
                                         rotFace = faceIndex == 0 ? face.getClockWise() : face.getCounterClockWise();
-                                        if(hasFullFace(LevelIn, studiedPos, rotFace)) {
-                                            LevelIn.setBlock(studiedPos, this.defaultBlockState().setValue(getProperty(rotFace), true), 2);
+                                        if(hasFullFace(levelIn, studiedPos, rotFace)) {
+                                            levelIn.setBlock(studiedPos, this.defaultBlockState().setValue(getProperty(rotFace), true), 2);
                                         }
                                     }
                                 }
@@ -219,9 +221,9 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
                         // 2 : spread above
                         // 3 : spread below
                         studiedPos = faceIndex == 2 ? pos.above() : pos.below();
-                        if(LevelIn.getBlockState(studiedPos).isAir()) {
-                            if(hasFullFace(LevelIn, studiedPos, face)) {
-                                LevelIn.setBlock(studiedPos, this.defaultBlockState().setValue(getProperty(face), true), 2);
+                        if(levelIn.getBlockState(studiedPos).isAir()) {
+                            if(hasFullFace(levelIn, studiedPos, face)) {
+                                levelIn.setBlock(studiedPos, this.defaultBlockState().setValue(getProperty(face), true), 2);
                             }
                         }
                     }
@@ -231,18 +233,18 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor LevelIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
+    public @NotNull BlockState updateShape(@NotNull BlockState stateIn, Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor levelIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         if(facing.getAxis().isHorizontal()) {
-            if(facing == Direction.NORTH && stateIn.getValue(NORTH) && !hasFullFace(facingState, LevelIn, facingPos, facing)) {
+            if(facing == Direction.NORTH && stateIn.getValue(NORTH) && !hasFullFace(facingState, levelIn, facingPos, facing)) {
                 stateIn = stateIn.setValue(NORTH, false);
             }
-            if(facing == Direction.EAST && stateIn.getValue(EAST) && !hasFullFace(facingState, LevelIn, facingPos, facing)) {
+            if(facing == Direction.EAST && stateIn.getValue(EAST) && !hasFullFace(facingState, levelIn, facingPos, facing)) {
                 stateIn = stateIn.setValue(EAST, false);
             }
-            if(facing == Direction.SOUTH && stateIn.getValue(SOUTH) && !hasFullFace(facingState, LevelIn, facingPos, facing)) {
+            if(facing == Direction.SOUTH && stateIn.getValue(SOUTH) && !hasFullFace(facingState, levelIn, facingPos, facing)) {
                 stateIn = stateIn.setValue(SOUTH, false);
             }
-            if(facing == Direction.WEST && stateIn.getValue(WEST) && !hasFullFace(facingState, LevelIn, facingPos, facing)) {
+            if(facing == Direction.WEST && stateIn.getValue(WEST) && !hasFullFace(facingState, levelIn, facingPos, facing)) {
                 stateIn = stateIn.setValue(WEST, false);
             }
         }
@@ -286,29 +288,29 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, @NotNull Level LevelIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    public @NotNull InteractionResult use(BlockState state, @NotNull Level levelIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if(state.getValue(PERSISTENT)) {
             if(player.isCreative()) {
                 int age = state.getValue(AGE);
                 if(player.isCrouching()) {
                     if(age > 0) {
-                        LevelIn.setBlock(pos, state.setValue(AGE, age - 1), 10);
+                        levelIn.setBlock(pos, state.setValue(AGE, age - 1), 10);
                         return InteractionResult.SUCCESS;
                     }
                 } else {
                     if(age < 2) {
-                        LevelIn.setBlock(pos, state.setValue(AGE, age + 1), 10);
+                        levelIn.setBlock(pos, state.setValue(AGE, age + 1), 10);
                         return InteractionResult.SUCCESS;
                     }
                 }
             }
         } else {
-            if(DoTBUtils.useLighter(LevelIn, pos, player, handIn)) {
+            if(DoTBUtils.useLighter(levelIn, pos, player, handIn)) {
                 Random rand = new Random();
                 for(int i = 0; i < 5; i++) {
-                    LevelIn.addAlwaysVisibleParticle(ParticleTypes.SMOKE, (double) pos.getX() + rand.nextDouble(), (double) pos.getY() + 0.5D + rand.nextDouble() / 2, (double) pos.getZ() + rand.nextDouble(), 0.0D, 0.07D, 0.0D);
+                    levelIn.addAlwaysVisibleParticle(ParticleTypes.SMOKE, (double) pos.getX() + rand.nextDouble(), (double) pos.getY() + 0.5D + rand.nextDouble() / 2, (double) pos.getZ() + rand.nextDouble(), 0.0D, 0.07D, 0.0D);
                 }
-                LevelIn.setBlock(pos, state.setValue(PERSISTENT, true), 10);
+                levelIn.setBlock(pos, state.setValue(PERSISTENT, true), 10);
                 return InteractionResult.SUCCESS;
             }
         }
@@ -326,8 +328,8 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter LevelIn,@NotNull List<Component> tooltip,@NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, LevelIn, tooltip, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter levelIn,@NotNull List<Component> tooltip,@NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, levelIn, tooltip, flagIn);
         DoTBUtils.addTooltip(tooltip, TOOLTIP_CROP);
     }
 
@@ -340,7 +342,7 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
                 pos = pos.east();
             }else if(world.getBlockState(pos.south()).is(BlockTags.LOGS)){
                 pos = pos.south();
-            }else if(world.getBlockState(pos.north()).is(BlockTags.LOGS)){
+            }else if(world.getBlockState(pos.west()).is(BlockTags.LOGS)){
                 pos = pos.west();
             }else{
                 return false;

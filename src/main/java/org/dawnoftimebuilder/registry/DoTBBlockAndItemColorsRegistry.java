@@ -27,13 +27,13 @@ import java.util.function.Supplier;
  */
 @Mod.EventBusSubscriber(modid = DawnOfTimeBuilder.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DoTBBlockAndItemColorsRegistry {
-    private final static Map<BlockColor, List<Supplier<Block>>> BLOCKS_COLOR_REGISTRY = new HashMap<>();
-    private final static Map<ItemColor, List<Supplier<Item>>> ITEMS_COLOR_REGISTRY = new HashMap<>();
+    private static final Map<BlockColor, List<Supplier<Block>>> BLOCKS_COLOR_REGISTRY = new HashMap<>();
+    private static final Map<ItemColor, List<Supplier<Item>>> ITEMS_COLOR_REGISTRY = new HashMap<>();
     // Register colors
-    public final static BlockColor WATER_BLOCK_COLOR = DoTBBlockAndItemColorsRegistry.register((blockStateIn, blockDisplayReaderIn, blockPosIn, tintIndexIn) -> BiomeColors.getAverageWaterColor(blockDisplayReaderIn, blockPosIn),
+    public static final BlockColor WATER_BLOCK_COLOR = DoTBBlockAndItemColorsRegistry.register((blockStateIn, blockDisplayReaderIn, blockPosIn, tintIndexIn) -> BiomeColors.getAverageWaterColor(blockDisplayReaderIn, blockPosIn),
             DoTBBlocksRegistry.STONE_BRICKS_FAUCET, DoTBBlocksRegistry.STONE_BRICKS_POOL, DoTBBlocksRegistry.STONE_BRICKS_SMALL_POOL, DoTBBlocksRegistry.WATER_FLOWING_TRICKLE,
             DoTBBlocksRegistry.WATER_SOURCE_TRICKLE, DoTBBlocksRegistry.STONE_BRICKS_WATER_JET);
-    public final static ItemColor WATER_ITEM_COLOR = DoTBBlockAndItemColorsRegistry.register(
+    public static final ItemColor WATER_ITEM_COLOR = DoTBBlockAndItemColorsRegistry.register(
             (itemStackIn, i) -> {
                 ClientLevel clientLevel = Minecraft.getInstance().level;
                 if(clientLevel == null) {

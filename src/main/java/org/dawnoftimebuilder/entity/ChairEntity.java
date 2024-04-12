@@ -24,25 +24,25 @@ import java.util.List;
 public class ChairEntity extends Entity {
     private BlockPos pos;
 
-    public ChairEntity(final Level Level) {
-        super(DoTBEntitiesRegistry.CHAIR_ENTITY.get(), Level);
+    public ChairEntity(final Level level) {
+        super(DoTBEntitiesRegistry.CHAIR_ENTITY.get(), level);
         this.noPhysics = true;
     }
 
-    private ChairEntity(final Level Level, final BlockPos pos, Direction direction, final float pixelsXOffset, final float pixelsYOffset, final float pixelsZOffset) {
-        this(Level);
+    private ChairEntity(final Level level, final BlockPos pos, Direction direction, final float pixelsXOffset, final float pixelsYOffset, final float pixelsZOffset) {
+        this(level);
         this.pos = pos;
         this.setYRot(direction.toYRot());
         //Strangely, the default position (with 0 vertical offset) is 3 pixels above the floor.
         this.setPos(pos.getX() + pixelsXOffset / 16.0D, pos.getY() + (pixelsYOffset - 3.0D) / 16.0D, pos.getZ() + pixelsZOffset / 16.0D);
     }
 
-    public static InteractionResult createEntity(final Level Level, final BlockPos pos, final Player player, Direction direction, float pixelsXOffset, final float pixelsYOffset, final float pixelsZOffset) {
-        if(!Level.isClientSide()) {
-            final List<ChairEntity> seats = Level.getEntitiesOfClass(ChairEntity.class, new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0D, pos.getY() + 1.0D, pos.getZ() + 1.0D));
+    public static InteractionResult createEntity(final Level level, final BlockPos pos, final Player player, Direction direction, float pixelsXOffset, final float pixelsYOffset, final float pixelsZOffset) {
+        if(!level.isClientSide()) {
+            final List<ChairEntity> seats = level.getEntitiesOfClass(ChairEntity.class, new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0D, pos.getY() + 1.0D, pos.getZ() + 1.0D));
             if(seats.isEmpty()) {
-                final ChairEntity seat = new ChairEntity(Level, pos, direction, pixelsXOffset, pixelsYOffset, pixelsZOffset);
-                Level.addFreshEntity(seat);
+                final ChairEntity seat = new ChairEntity(level, pos, direction, pixelsXOffset, pixelsYOffset, pixelsZOffset);
+                level.addFreshEntity(seat);
                 if(player.startRiding(seat, false)) {
                     return InteractionResult.SUCCESS;
                 }
@@ -53,8 +53,8 @@ public class ChairEntity extends Entity {
         return InteractionResult.SUCCESS;
     }
 
-    public static InteractionResult createEntity(final Level Level, final BlockPos pos, final Player player, Direction direction, final float pixelsYOffset) {
-        return ChairEntity.createEntity(Level, pos, player, direction, 8.0F, pixelsYOffset, 8.0F);
+    public static InteractionResult createEntity(final Level level, final BlockPos pos, final Player player, Direction direction, final float pixelsYOffset) {
+        return ChairEntity.createEntity(level, pos, player, direction, 8.0F, pixelsYOffset, 8.0F);
     }
 
     @Override

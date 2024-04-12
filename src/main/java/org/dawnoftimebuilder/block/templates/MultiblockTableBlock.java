@@ -31,7 +31,7 @@ public abstract class MultiblockTableBlock extends DisplayerBlock {
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
 
-    public MultiblockTableBlock(Properties properties) {
+    protected MultiblockTableBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false).setValue(NORTH, false).setValue(WATERLOGGED, Boolean.FALSE).setValue(LIT, false).setValue(HALF, Half.BOTTOM));
     }
