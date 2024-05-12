@@ -27,6 +27,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockClimbingPlant;
 import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
 import org.dawnoftimebuilder.util.DoTBUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -138,23 +139,18 @@ public class LatticeBlock extends WaterloggedBlock implements IBlockClimbingPlan
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+    public boolean canBeReplaced(@NotNull BlockState state, BlockPlaceContext useContext) {
         ItemStack itemstack = useContext.getItemInHand();
         if(useContext.getPlayer() != null && useContext.getPlayer().isCrouching())
             return false;
         if(itemstack.getItem() == this.asItem()) {
             Direction newDirection = useContext.getHorizontalDirection();
-            switch(newDirection) {
-                default:
-                case SOUTH:
-                    return !state.getValue(SOUTH);
-                case WEST:
-                    return !state.getValue(WEST);
-                case NORTH:
-                    return !state.getValue(NORTH);
-                case EAST:
-                    return !state.getValue(EAST);
-            }
+            return switch (newDirection) {
+                default -> !state.getValue(SOUTH);
+                case WEST -> !state.getValue(WEST);
+                case NORTH -> !state.getValue(NORTH);
+                case EAST -> !state.getValue(EAST);
+            };
         }
         return false;
     }

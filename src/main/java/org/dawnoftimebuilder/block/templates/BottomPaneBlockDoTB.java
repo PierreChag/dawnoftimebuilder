@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import org.jetbrains.annotations.NotNull;
 
 public class BottomPaneBlockDoTB extends PillarPaneBlock {
     private static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
@@ -38,7 +39,7 @@ public class BottomPaneBlockDoTB extends PillarPaneBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         if(facing == Direction.DOWN) {
             stateIn = stateIn.setValue(BOTTOM, !(facingState.getBlock() instanceof BottomPaneBlockDoTB));

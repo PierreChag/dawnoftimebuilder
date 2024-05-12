@@ -1,23 +1,26 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"oIo",
-		"IiI",
-		"oIo"
+		"ooo",
+		"xyz",
+		"ooo"
 	],
 	"key": {
-		"i": {
-			"item": "minecraft:stone"
-		},
-		"I":{
-			"item": "minecraft:lapis_lazuli"
-		},
 		"o": {
-			"tag": "forge:dyes/blue"
+			"item": "minecraft:smooth_sandstone"
+		},
+		"x":{
+			"item": "dawnoftimebuilder:clay_tile_blue"
+		},
+		"y": {
+			"item": "dawnoftimebuilder:clay_tile_white"
+		},
+		"z": {
+			"tag": "dawnoftimebuilder:clay_tile_cyan"
 		}
 	},
 	"result": {
 		"item": "dawnoftimebuilder:moraq_mosaic_traditional",
-		"count": 16
+		"count": 6
 	}
 }

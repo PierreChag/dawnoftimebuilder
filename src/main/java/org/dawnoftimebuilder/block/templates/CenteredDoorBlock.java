@@ -1,4 +1,4 @@
-package org.dawnoftimebuilder.block.japanese;
+package org.dawnoftimebuilder.block.templates;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -11,12 +11,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.DoorBlockDoTB;
 import org.dawnoftimebuilder.util.DoTBUtils;
 
-public class PaperDoorBlock extends DoorBlockDoTB {
+public class CenteredDoorBlock extends DoorBlockDoTB {
     //VoxelShapes are slightly larger than paper_walls so that it can easily be right-clicked when opened.
     private static final VoxelShape[] VS_NORTH = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(0.0D, 0.0D, 6.99D, 16.0D, 16.0D, 8.01D) });
     private static final VoxelShape[] VS_NORTH_OPEN = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(-12.0D, 0.0D, 6.99D, 4.0D, 16.0D, 8.01) });
 
-    public PaperDoorBlock(Properties properties, BlockSetType blockSetType) {
+    public CenteredDoorBlock(Properties properties, BlockSetType blockSetType) {
         super(properties, blockSetType);
     }
 
