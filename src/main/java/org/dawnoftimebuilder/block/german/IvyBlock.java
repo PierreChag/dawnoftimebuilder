@@ -318,11 +318,6 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public boolean isLadder(BlockState state, LevelReader Level, BlockPos pos, LivingEntity entity) {
-        return true;
-    }
-
-    @Override
     public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }

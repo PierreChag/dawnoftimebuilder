@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "dawnoftimebuilder:ivy",
+    "dawnoftimebuilder:acacia_lattice",
+    "dawnoftimebuilder:birch_lattice",
+    "dawnoftimebuilder:crimson_lattice",
+    "dawnoftimebuilder:dark_oak_lattice",
+    "dawnoftimebuilder:jungle_lattice",
+    "dawnoftimebuilder:oak_lattice",
+    "dawnoftimebuilder:spruce_lattice",
+    "dawnoftimebuilder:warped_lattice",
+    "dawnoftimebuilder:waxed_oak_lattice",
+    "dawnoftimebuilder:charred_spruce_lattice"
+  ]
+}

@@ -197,11 +197,6 @@ public class LatticeBlock extends WaterloggedBlock implements IBlockClimbingPlan
     }
 
     @Override
-    public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
-        return true;
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         DoTBUtils.addTooltip(tooltip, TOOLTIP_CLIMBING_PLANT);

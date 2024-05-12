@@ -20,6 +20,7 @@ public class DoTBItemsRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DawnOfTimeBuilder.MOD_ID);
 
     // General
+    public static final RegistryObject<Item> ANCIENTARCHI = DoTBItemsRegistry.reg("ancientarchi", () -> new ItemDoTB(false));
     public static final RegistryObject<Item> SILK_WORMS = DoTBItemsRegistry.reg("silk_worms", () -> new ItemDoTB(true));
     public static final RegistryObject<Item> SILK_WORMS_HATCHERY = DoTBItemsRegistry.reg("silk_worm_hatchery", () -> new ItemDoTB(true));
     public static final RegistryObject<Item> SILK_WORM_EGGS = DoTBItemsRegistry.reg("silk_worm_eggs", () -> new ItemDoTB(true));

@@ -34,6 +34,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.dawnoftimebuilder.block.templates.MultiblockFireplaceBlock;
+import org.dawnoftimebuilder.block.templates.SidedColumnConnectibleBlock;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
 import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
 import org.dawnoftimebuilder.util.DoTBBlockStateProperties.HorizontalConnection;
@@ -78,7 +80,16 @@ public class FireplaceBlock extends WaterloggedBlock {
     @Override
     public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-        return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        if(stateIn.getValue(WATERLOGGED)){
+            stateIn = stateIn.setValue(LIT, false);
+        }else{
+            if(facing.getAxis() == stateIn.getValue(HORIZONTAL_AXIS) && facingState.getBlock() == this){
+                if(!facingState.getValue(WATERLOGGED)){
+                    stateIn = stateIn.setValue(LIT, facingState.getValue(LIT));
+                }
+            }
+        }
+        return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
     }
 
     @Override
@@ -132,35 +143,6 @@ public class FireplaceBlock extends WaterloggedBlock {
         return state.setValue(FireplaceBlock.HORIZONTAL_AXIS, axis).setValue(FireplaceBlock.HORIZONTAL_CONNECTION, this.getHorizontalShape(context.getLevel(), context.getClickedPos(), axis));
     }
 
-    @Override
-    public void neighborChanged(BlockState state, final Level worldIn, final BlockPos pos, final Block blockIn, final BlockPos fromPos, final boolean isMoving) {
-        //TODO Debug : it seems the block is not updated when an adjacent fireplace is lit.
-        if(pos.getY() == fromPos.getY()) {
-            final Direction.Axis axis = state.getValue(FireplaceBlock.HORIZONTAL_AXIS);
-            if(axis == Direction.Axis.X) {
-                if(pos.getX() == fromPos.getX()) {
-                    return;
-                }
-            } else if(pos.getZ() == fromPos.getZ()) {
-                return;
-            }
-
-            state = state.setValue(FireplaceBlock.HORIZONTAL_CONNECTION, this.getHorizontalShape(worldIn, pos, axis));
-
-            final BlockState newState = worldIn.getBlockState(fromPos);
-            if(newState.getBlock() instanceof FireplaceBlock && newState.getValue(FireplaceBlock.HORIZONTAL_AXIS) == axis && newState.getValue(FireplaceBlock.LIT) != state.getValue(FireplaceBlock.LIT)) {
-                if(newState.getValue(FireplaceBlock.LIT) && state.getValue(WaterloggedBlock.WATERLOGGED)) {
-                    return;
-                }
-                worldIn.setBlock(pos, state.setValue(FireplaceBlock.LIT, newState.getValue(FireplaceBlock.LIT)), 10);
-                final BlockPos newPos = axis == Direction.Axis.X ? pos.relative(Direction.EAST, pos.getX() - fromPos.getX()) : pos.relative(Direction.SOUTH, pos.getZ() - fromPos.getZ());
-                worldIn.getBlockState(newPos).neighborChanged(worldIn, newPos, this, pos, false);
-                return;
-            }
-            worldIn.setBlock(pos, state, 10);
-        }
-        super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-    }
 
     private DoTBBlockStateProperties.HorizontalConnection getHorizontalShape(final Level worldIn, final BlockPos pos, final Direction.Axis axis) {
 
