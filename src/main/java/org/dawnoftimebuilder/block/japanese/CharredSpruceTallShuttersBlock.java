@@ -13,35 +13,25 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-import static org.dawnoftimebuilder.util.DoTBBlockStateProperties.SquareCorners;
+import static org.dawnoftimebuilder.util.BlockStatePropertiesAA.SquareCorners;
+import static org.dawnoftimebuilder.util.VoxelShapes.CHARRED_SPRUCE_TALL_SHUTTERS_SHAPES;
 
 public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
-    public static final EnumProperty<SquareCorners> CORNER = DoTBBlockStateProperties.CORNER;
-    private static final VoxelShape[] SHAPES = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] {
-            Block.box(0.0D, 0.0D, 14.0D, 16.0D, 16.0D, 16.0D),
-            Shapes.or(
-                    Block.box(0.0D, 10.0D, 11.0D, 16.0D, 16.0D, 16.0D),
-                    Block.box(0.0D, 5.0D, 9.0D, 16.0D, 10.0D, 14.0D),
-                    Block.box(0.0D, 0.0D, 7.0D, 16.0D, 5.0D, 12.0D)),
-            Shapes.or(
-                    Block.box(0.0D, 11.0D, 5.0D, 16.0D, 16.0D, 10.0D),
-                    Block.box(0.0D, 6.0D, 3.0D, 16.0D, 11.0D, 8.0D),
-                    Block.box(0.0D, 1.0D, 1.0D, 16.0D, 6.0D, 6.0D)) });
+    public static final EnumProperty<SquareCorners> CORNER = BlockStatePropertiesAA.CORNER;
 
     public CharredSpruceTallShuttersBlock(Properties properties) {
-        super(properties);
+        super(properties, CHARRED_SPRUCE_TALL_SHUTTERS_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(CORNER, SquareCorners.TOP_LEFT));
     }
 
@@ -52,9 +42,9 @@ public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         int index = state.getValue(OPEN) ? state.getValue(CORNER).isTopCorner() ? 1 : 2 : 0;
-        return SHAPES[state.getValue(FACING).get2DDataValue() * 3 + index];
+        return state.getValue(FACING).get2DDataValue() * 3 + index;
     }
 
     @Nullable
@@ -114,7 +104,7 @@ public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         SquareCorners thisCorner = stateIn.getValue(CORNER);
         if(stateIn.getValue(WATERLOGGED))
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));

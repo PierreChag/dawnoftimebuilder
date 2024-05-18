@@ -16,17 +16,21 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockPillar;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.SUPPORT_BEAM_SHAPES;
 
 public class SupportBeamBlock extends WaterloggedBlock {
-    private static final EnumProperty<DoTBBlockStateProperties.PillarConnection> PILLAR_CONNECTION = DoTBBlockStateProperties.PILLAR_CONNECTION;
+    private static final EnumProperty<BlockStatePropertiesAA.PillarConnection> PILLAR_CONNECTION = BlockStatePropertiesAA.PILLAR_CONNECTION;
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-    private static final BooleanProperty SUBAXIS = DoTBBlockStateProperties.SUBAXIS;
-    private static final VoxelShape[] SHAPES = makeShapes();
+    private static final BooleanProperty SUBAXIS = BlockStatePropertiesAA.SUBAXIS;
 
     public SupportBeamBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(HORIZONTAL_AXIS, Direction.Axis.X).setValue(SUBAXIS, false).setValue(PILLAR_CONNECTION, DoTBBlockStateProperties.PillarConnection.NOTHING));
+        super(properties, SUPPORT_BEAM_SHAPES);
+        this.registerDefaultState(this.defaultBlockState().setValue(HORIZONTAL_AXIS, Direction.Axis.X).setValue(SUBAXIS, false).setValue(PILLAR_CONNECTION, BlockStatePropertiesAA.PillarConnection.NOTHING));
     }
 
     @Override
@@ -36,66 +40,21 @@ public class SupportBeamBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        int index = 0;
-        switch(state.getValue(PILLAR_CONNECTION)) {
-            case FOUR_PX:
-                index = 3;
-                break;
-            case EIGHT_PX:
-                index = 6;
-                break;
-            case TEN_PX:
-                index = 9;
-                break;
-            default:
-        }
-        if(state.getValue(SUBAXIS))
-            index += 2;
-        else if(state.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z)
-            index++;
-        return SHAPES[index];
-    }
-
-    /**
-     * @return Stores VoxelShape with index : <p/>
-     * 0 : Axis X <p/>
-     * 1 : Axis Z <p/>
-     * 2 : Axis X + Z <p/>
-     * 3 : Axis X + 4px <p/>
-     * 4 : Axis Z + 4px <p/>
-     * 5 : Axis X + Z + 4px <p/>
-     * 6 : Axis X + 8px <p/>
-     * 7 : Axis Z + 8px <p/>
-     * 8 : Axis X + Z + 8px <p/>
-     * 9 : Axis X + 10px <p/>
-     * 10 : Axis Z + 10px <p/>
-     * 11 : Axis X + Z + 10px <p/>
-     */
-    private static VoxelShape[] makeShapes() {
-        VoxelShape vs = Block.box(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vsAxisX = Shapes.or(vs, Block.box(0.0D, 4.0D, 4.0D, 16.0D, 12.0D, 12.0D));
-        VoxelShape vsAxisZ = Shapes.or(vs, Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 16.0D));
-        VoxelShape vsAxisXZ = Shapes.or(vsAxisX, Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 16.0D));
-        VoxelShape vsAxis4px = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
-        VoxelShape vsAxis8px = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
-        VoxelShape vsAxis10px = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
-        return new VoxelShape[] {
-                vsAxisX,
-                vsAxisZ,
-                vsAxisXZ,
-                Shapes.or(vsAxisX, vsAxis4px),
-                Shapes.or(vsAxisZ, vsAxis4px),
-                Shapes.or(vsAxisXZ, vsAxis4px),
-                Shapes.or(vsAxisX, vsAxis8px),
-                Shapes.or(vsAxisZ, vsAxis8px),
-                Shapes.or(vsAxisXZ, vsAxis8px),
-                Shapes.or(vsAxisX, vsAxis10px),
-                Shapes.or(vsAxisZ, vsAxis10px),
-                Shapes.or(vsAxisXZ, vsAxis10px)
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        int index = switch (state.getValue(PILLAR_CONNECTION)) {
+            case FOUR_PX -> 3;
+            case EIGHT_PX -> 6;
+            case TEN_PX -> 9;
+            default -> 0;
         };
+        if(state.getValue(SUBAXIS)) {
+            return index + 2;
+        }else{
+            return state.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z ? index + 1 : index;
+        }
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context).setValue(HORIZONTAL_AXIS, context.getHorizontalDirection().getAxis());
@@ -103,7 +62,7 @@ public class SupportBeamBlock extends WaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         return this.getCurrentState(stateIn, worldIn, currentPos);
     }

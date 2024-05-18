@@ -5,7 +5,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -13,24 +12,30 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class WildPlantBlock extends BlockDoTB {
-    private final VoxelShape VS = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 14.0D, 14.0D);
+import static org.dawnoftimebuilder.util.VoxelShapes.WILD_PLANT_SHAPES;
 
-    public WildPlantBlock(Properties properties) {
-        super(properties);
+public class WildPlantBlock extends BlockAA {
+
+    public WildPlantBlock(Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
+    }
+
+    public WildPlantBlock(Properties properties){
+        this(properties, WILD_PLANT_SHAPES);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Vec3 vector = state.getOffset(worldIn, pos);
-        return VS.move(vector.x, vector.y, vector.z);
+        return super.getShape(state, worldIn, pos, context).move(vector.x, vector.y, vector.z);
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
 

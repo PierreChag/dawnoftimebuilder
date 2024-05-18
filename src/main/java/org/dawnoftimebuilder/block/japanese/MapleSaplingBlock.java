@@ -24,14 +24,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.templates.BushBlockDoT;
 import org.dawnoftimebuilder.registry.DoTBBlocksRegistry;
 
-import static org.dawnoftimebuilder.util.DoTBVoxelShapes.SAPLING_SHAPE;
+import static org.dawnoftimebuilder.util.VoxelShapes.SAPLING_SHAPES;
 
 public class MapleSaplingBlock extends BushBlockDoT implements BonemealableBlock {
 
     public static final IntegerProperty STAGE = BlockStateProperties.STAGE;
 
     public MapleSaplingBlock(final Properties properties) {
-        super(properties, SAPLING_SHAPE);
+        super(properties, SAPLING_SHAPES);
         this.registerDefaultState(this.stateDefinition.any().setValue(MapleSaplingBlock.STAGE, 0));
     }
 

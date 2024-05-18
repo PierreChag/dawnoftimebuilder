@@ -19,16 +19,17 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.IBlockSpecialDisplay;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
 
 public abstract class CandleLampBlock extends WaterloggedBlock implements IBlockSpecialDisplay {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    public CandleLampBlock(final Properties properties) {
-        super(properties);
+    public CandleLampBlock(final Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(CandleLampBlock.LIT, false));
     }
 
@@ -38,6 +39,15 @@ public abstract class CandleLampBlock extends WaterloggedBlock implements IBlock
         builder.add(CandleLampBlock.LIT);
     }
 
+    /**
+     * Call this function in animateTick to render the list candle effect at the given coordinate xyz.
+     * @param stateIn Current state of the block.
+     * @param worldIn World where the block is placed.
+     * @param pos BlockPos of the block.
+     * @param x coordinate offset (between 0 and 1).
+     * @param y coordinate offset (between 0 and 1).
+     * @param z coordinate offset (between 0 and 1).
+     */
     @OnlyIn(Dist.CLIENT)
     public void animateLitCandle(final BlockState stateIn, final Level worldIn, final BlockPos pos, final double x, final double y, final double z) {
         if(stateIn.getValue(CandleLampBlock.LIT)) {
@@ -51,7 +61,7 @@ public abstract class CandleLampBlock extends WaterloggedBlock implements IBlock
 
     @Override
     public InteractionResult use(final BlockState state, final Level worldIn, final BlockPos pos, final Player player, final InteractionHand handIn, final BlockHitResult hit) {
-        return DoTBUtils.changeBlockLitStateWithItemOrCreativePlayer(state, worldIn, pos, player, handIn) >= 0 ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return Utils.changeBlockLitStateWithItemOrCreativePlayer(state, worldIn, pos, player, handIn) >= 0 ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     @Override

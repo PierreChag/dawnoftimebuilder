@@ -13,10 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
@@ -25,21 +23,15 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.ChairBlock;
 import org.dawnoftimebuilder.entity.ChairEntity;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class BirchCouchBlock extends ChairBlock {
-    private static final VoxelShape[] SHAPES = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] {
-            Shapes.or(
-                    Block.box(1.0D, 0.0D, 2.0D, 15.0D, 8.0D, 6.0D),
-                    Block.box(0.0D, 8.0D, 0.0D, 16.0D, 13.0D, 16.0D),
-                    Block.box(0.0D, 13.0D, 0.0D, 16.0D, 19.0D, 8.0D)
-            ) });
 
-    public BirchCouchBlock(Properties properties, float pixelsYOffset) {
-        super(properties, pixelsYOffset);
+    public BirchCouchBlock(Properties properties, float pixelsYOffset, VoxelShape[] shapes) {
+        super(properties, pixelsYOffset, shapes);
         this.defaultBlockState().setValue(BlockStateProperties.PERSISTENT, true);
     }
 
@@ -47,11 +39,6 @@ public class BirchCouchBlock extends ChairBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(BlockStateProperties.PERSISTENT);
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return SHAPES[state.getValue(FACING).get2DDataValue()];
     }
 
     @Override
@@ -84,7 +71,7 @@ public class BirchCouchBlock extends ChairBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         Direction blockFacing = stateIn.getValue(FACING);
         if(facing == blockFacing) {
             if(facingState.getBlock() == this) {

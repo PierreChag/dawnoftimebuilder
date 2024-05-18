@@ -23,7 +23,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.blockentity.DryerBlockEntity;
 import org.dawnoftimebuilder.registry.DoTBBlockEntitiesRegistry;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -32,12 +33,10 @@ import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HAND
 
 public class DryerBlock extends WaterloggedBlock implements EntityBlock {
     //TODO Add redstone compatibility : ie emit redstone when dried
-    public static final IntegerProperty SIZE = DoTBBlockStateProperties.SIZE_0_2;
-    public static final VoxelShape VS_SIMPLE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D);
-    public static final VoxelShape VS_DOUBLE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
+    public static final IntegerProperty SIZE = BlockStatePropertiesAA.SIZE_0_2;
 
-    public DryerBlock(final Properties properties) {
-        super(properties);
+    public DryerBlock(final Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(DryerBlock.SIZE, 0));
     }
 
@@ -54,20 +53,12 @@ public class DryerBlock extends WaterloggedBlock implements EntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
-        switch(state.getValue(DryerBlock.SIZE)) {
-            default:
-            case 0:
-                return DryerBlock.VS_SIMPLE;
-            case 1:
-                return DryerBlock.VS_DOUBLE;
-            case 2:
-                return Shapes.block();
-        }
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
+        return state.getValue(DryerBlock.SIZE);
     }
 
-    @Override
     @Nullable
+    @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         final BlockPos pos = context.getClickedPos();
         final BlockState state = context.getLevel().getBlockState(pos);
@@ -111,7 +102,7 @@ public class DryerBlock extends WaterloggedBlock implements EntityBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         if(facing == Direction.DOWN && !this.canSurvive(stateIn, worldIn, currentPos)) {
             return Blocks.AIR.defaultBlockState();

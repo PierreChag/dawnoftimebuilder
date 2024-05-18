@@ -9,13 +9,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.dawnoftimebuilder.block.templates.FlowerPotBlockDoTB;
+import org.dawnoftimebuilder.block.templates.FlowerPotBlockAA;
 import org.dawnoftimebuilder.item.IHasFlowerPot;
 
 import javax.annotation.Nullable;
 
 public class PotItem extends ItemDoTB implements IHasFlowerPot {
-    private FlowerPotBlockDoTB potBlock;
+    private FlowerPotBlockAA potBlock;
 
     public PotItem() {
         super();
@@ -43,12 +43,12 @@ public class PotItem extends ItemDoTB implements IHasFlowerPot {
 
     @Nullable
     @Override
-    public FlowerPotBlockDoTB getPotBlock() {
+    public FlowerPotBlockAA getPotBlock() {
         return this.potBlock;
     }
 
     @Override
-    public void setPotBlock(@Nullable FlowerPotBlockDoTB pot) {
+    public void setPotBlock(@Nullable FlowerPotBlockAA pot) {
         this.potBlock = pot;
     }
 }

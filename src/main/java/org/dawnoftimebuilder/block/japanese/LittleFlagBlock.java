@@ -14,16 +14,16 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.block.templates.PaneBlockDoTB;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.block.templates.PaneBlockAA;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
 import org.jetbrains.annotations.NotNull;
 
-public class LittleFlagBlock extends PaneBlockDoTB {
-    public static final BooleanProperty AXIS_Y = DoTBBlockStateProperties.AXIS_Y;
+public class LittleFlagBlock extends PaneBlockAA {
+    public static final BooleanProperty AXIS_Y = BlockStatePropertiesAA.AXIS_Y;
     private final VoxelShape[] VS_PILLAR = this.makePillarShapes(this.shapeByIndex);
 
-    public LittleFlagBlock(DyeColor dyeColor, Properties properties) {
-        super(dyeColor, properties);
+    public LittleFlagBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS_Y, true).setValue(NORTH, true).setValue(WEST, true).setValue(SOUTH, true).setValue(EAST, true).setValue(WATERLOGGED, false));
     }
 

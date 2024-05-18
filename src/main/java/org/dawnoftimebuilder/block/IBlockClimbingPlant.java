@@ -19,14 +19,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.ForgeHooks;
 import org.dawnoftimebuilder.DoTBConfig;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
 
 import java.util.List;
 
 import static net.minecraft.world.level.block.LeavesBlock.PERSISTENT;
-import static org.dawnoftimebuilder.util.DoTBBlockStateProperties.AGE_0_6;
-import static org.dawnoftimebuilder.util.DoTBBlockStateProperties.CLIMBING_PLANT;
+import static org.dawnoftimebuilder.util.BlockStatePropertiesAA.AGE_0_6;
+import static org.dawnoftimebuilder.util.BlockStatePropertiesAA.CLIMBING_PLANT;
 
 public interface IBlockClimbingPlant {
     /**
@@ -97,7 +97,7 @@ public interface IBlockClimbingPlant {
             return false;
         ItemStack heldItemStack = player.getItemInHand(handIn);
         if(this.canHavePlant(stateIn) && stateIn.getValue(CLIMBING_PLANT).hasNoPlant()) {
-            DoTBBlockStateProperties.ClimbingPlant plant = DoTBBlockStateProperties.ClimbingPlant.getFromItem(heldItemStack.getItem());
+            BlockStatePropertiesAA.ClimbingPlant plant = BlockStatePropertiesAA.ClimbingPlant.getFromItem(heldItemStack.getItem());
             if(!plant.hasNoPlant()) {
                 stateIn = stateIn.setValue(CLIMBING_PLANT, plant);
                 if(!player.isCreative()) {
@@ -140,7 +140,7 @@ public interface IBlockClimbingPlant {
                 if(stateIn.getValue(AGE_0_6) > 0) {
                     this.placePlant(stateIn.setValue(AGE_0_6, stateIn.getValue(AGE_0_6) - 1), worldIn, pos, 10);
                 } else {
-                    this.placePlant(stateIn.setValue(CLIMBING_PLANT, DoTBBlockStateProperties.ClimbingPlant.NONE).setValue(AGE_0_6, 0), worldIn, pos, 10);
+                    this.placePlant(stateIn.setValue(CLIMBING_PLANT, BlockStatePropertiesAA.ClimbingPlant.NONE).setValue(AGE_0_6, 0), worldIn, pos, 10);
                 }
                 return InteractionResult.SUCCESS;
             } else {
@@ -198,7 +198,7 @@ public interface IBlockClimbingPlant {
     default BlockState removePlant(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, ItemStack heldItemStack) {
         this.dropPlant(stateIn, worldIn, pos, heldItemStack, true);
         worldIn.playSound(null, pos, SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
-        stateIn = stateIn.setValue(CLIMBING_PLANT, DoTBBlockStateProperties.ClimbingPlant.NONE).setValue(AGE_0_6, 0);
+        stateIn = stateIn.setValue(CLIMBING_PLANT, BlockStatePropertiesAA.ClimbingPlant.NONE).setValue(AGE_0_6, 0);
         return stateIn;
     }
 
@@ -216,11 +216,11 @@ public interface IBlockClimbingPlant {
     default boolean dropPlant(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, ItemStack heldItemStack, boolean bool) {
         if(worldIn.isClientSide())
             return false;
-        DoTBBlockStateProperties.ClimbingPlant plant = stateIn.getValue(CLIMBING_PLANT);
+        BlockStatePropertiesAA.ClimbingPlant plant = stateIn.getValue(CLIMBING_PLANT);
         if(plant.hasNoPlant())
             return false;
-        List<ItemStack> drops = DoTBUtils.getLootList((ServerLevel) worldIn, stateIn, heldItemStack, plant.getSerializedName() + "_" + stateIn.getValue(AGE_0_6));
-        return DoTBUtils.dropLootFromList(worldIn, pos, drops, 1.0F);
+        List<ItemStack> drops = Utils.getLootList((ServerLevel) worldIn, stateIn, heldItemStack, plant.getSerializedName() + "_" + stateIn.getValue(AGE_0_6));
+        return Utils.dropLootFromList(worldIn, pos, drops, 1.0F);
     }
 
     /**

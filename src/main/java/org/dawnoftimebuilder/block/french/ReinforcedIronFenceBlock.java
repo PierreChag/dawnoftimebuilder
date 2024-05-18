@@ -12,24 +12,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.block.templates.ColumnConnectibleBlock;
+import org.dawnoftimebuilder.block.templates.ConnectedVerticalBlock;
 import org.dawnoftimebuilder.block.templates.PlateBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties.VerticalConnection;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA.VerticalConnection;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.StairsShape.OUTER_LEFT;
+import static org.dawnoftimebuilder.util.VoxelShapes.REINFORCED_IRON_FENCE_SHAPES;
 
-public class ReinforcedIronFenceBlock extends ColumnConnectibleBlock {
+public class ReinforcedIronFenceBlock extends ConnectedVerticalBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<StairsShape> SHAPE = BlockStateProperties.STAIRS_SHAPE;
-    private static final VoxelShape[] SHAPES_BOTTOM = makeBottomShapes();
-    private static final VoxelShape[] SHAPES = makeShapes();
 
     public ReinforcedIronFenceBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(SHAPE, StairsShape.STRAIGHT).setValue(VERTICAL_CONNECTION, DoTBBlockStateProperties.VerticalConnection.NONE));
+        super(properties, REINFORCED_IRON_FENCE_SHAPES);
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(SHAPE, StairsShape.STRAIGHT).setValue(VERTICAL_CONNECTION, BlockStatePropertiesAA.VerticalConnection.NONE));
     }
 
     @Override
@@ -39,108 +39,21 @@ public class ReinforcedIronFenceBlock extends ColumnConnectibleBlock {
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
         int index = (state.getValue(PlateBlock.FACING).get2DDataValue() + 2) % 4;
         index *= 3;
-        switch(state.getValue(PlateBlock.SHAPE)) {
-            default:
-            case OUTER_LEFT:
-                break;
-            case OUTER_RIGHT:
-                index += 3;
-                break;
-            case STRAIGHT:
-                index += 1;
-                break;
-            case INNER_LEFT:
-                index += 2;
-                break;
-            case INNER_RIGHT:
-                index += 5;
-                break;
+        switch (state.getValue(PlateBlock.SHAPE)) {
+            default -> {}
+            case OUTER_RIGHT -> index += 3;
+            case STRAIGHT -> index += 1;
+            case INNER_LEFT -> index += 2;
+            case INNER_RIGHT -> index += 5;
         }
         index %= 12;
-        return state.getValue(VERTICAL_CONNECTION) == VerticalConnection.NONE || state.getValue(VERTICAL_CONNECTION) == VerticalConnection.ABOVE ? SHAPES_BOTTOM[index] : SHAPES[index];
+        return state.getValue(VERTICAL_CONNECTION) == VerticalConnection.NONE || state.getValue(VERTICAL_CONNECTION) == VerticalConnection.ABOVE ? index : index + 12;
     }
 
-    /**
-     * @return Stores VoxelShape with index : <p/>
-     * 0 : NW Outer <p/>
-     * 1 : N Default <p/>
-     * 2 : NW Inner <p/>
-     * 3 : NE Outer <p/>
-     * 4 : N Default <p/>
-     * 5 : NE Inner <p/>
-     * 6 : SE Outer <p/>
-     * 7 : S Default <p/>
-     * 8 : SE Inner <p/>
-     * 9 : SW Outer <p/>
-     * 10 : S Default <p/>
-     * 11 : SW Inner <p/>
-     */
-    private static VoxelShape[] makeShapes() {
-        VoxelShape vsNorthFlat = Block.box(0.0D, 0.0D, 4.0D, 16.0D, 16.0D, 6.0D);
-        VoxelShape vsEastFlat = Block.box(10.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
-        VoxelShape vsSouthFlat = Block.box(0.0D, 0.0D, 10.0D, 16.0D, 16.0D, 12.0D);
-        VoxelShape vsWestFlat = Block.box(4.0D, 0.0D, 0.0D, 6.0D, 16.0D, 16.0D);
-        VoxelShape vsNorthWestCorner = Block.box(0.0D, 0.0D, 0.0D, 10.0D, 16.0D, 10.0D);
-        VoxelShape vsNorthEastCorner = Block.box(6.0D, 0.0D, 0.0D, 16.0D, 16.0D, 10.0D);
-        VoxelShape vsSouthEastCorner = Block.box(6.0D, 0.0D, 6.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vsSouthWestCorner = Block.box(0.0D, 0.0D, 6.0D, 10.0D, 16.0D, 16.0D);
-        return new VoxelShape[] {
-                vsNorthWestCorner,
-                vsNorthFlat,
-                Shapes.or(vsNorthFlat, vsWestFlat, vsNorthWestCorner),
-                vsNorthEastCorner,
-                vsEastFlat,
-                Shapes.or(vsEastFlat, vsNorthFlat, vsNorthEastCorner),
-                vsSouthEastCorner,
-                vsSouthFlat,
-                Shapes.or(vsSouthFlat, vsEastFlat, vsSouthEastCorner),
-                vsSouthWestCorner,
-                vsWestFlat,
-                Shapes.or(vsWestFlat, vsSouthFlat, vsSouthWestCorner) };
-    }
-
-    /**
-     * @return Stores VoxelShape with index : <p/>
-     * 0 : NW Outer <p/>
-     * 1 : N Default <p/>
-     * 2 : NW Inner <p/>
-     * 3 : NE Outer <p/>
-     * 4 : N Default <p/>
-     * 5 : NE Inner <p/>
-     * 6 : SE Outer <p/>
-     * 7 : S Default <p/>
-     * 8 : SE Inner <p/>
-     * 9 : SW Outer <p/>
-     * 10 : S Default <p/>
-     * 11 : SW Inner <p/>
-     */
-    private static VoxelShape[] makeBottomShapes() {
-        VoxelShape vsNorthFlat = Shapes.or(Block.box(0.0D, 8.0D, 4.0D, 16.0D, 16.0D, 6.0D), Block.box(0.0D, 0.0D, 1.0D, 16.0D, 8.0D, 9.0D));
-        VoxelShape vsEastFlat = Shapes.or(Block.box(10.0D, 8.0D, 0.0D, 12.0D, 16.0D, 16.0D), Block.box(7.0D, 0.0D, 0.0D, 15.0D, 8.0D, 16.0D));
-        VoxelShape vsSouthFlat = Shapes.or(Block.box(0.0D, 8.0D, 10.0D, 16.0D, 16.0D, 12.0D), Block.box(0.0D, 0.0D, 7.0D, 16.0D, 8.0D, 15.0D));
-        VoxelShape vsWestFlat = Shapes.or(Block.box(4.0D, 8.0D, 0.0D, 6.0D, 16.0D, 16.0D), Block.box(1.0D, 0.0D, 0.0D, 9.0D, 8.0D, 16.0D));
-        VoxelShape vsNorthWestCorner = Block.box(0.0D, 0.0D, 0.0D, 10.0D, 16.0D, 10.0D);
-        VoxelShape vsNorthEastCorner = Block.box(6.0D, 0.0D, 0.0D, 16.0D, 16.0D, 10.0D);
-        VoxelShape vsSouthEastCorner = Block.box(6.0D, 0.0D, 6.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vsSouthWestCorner = Block.box(0.0D, 0.0D, 6.0D, 10.0D, 16.0D, 16.0D);
-        return new VoxelShape[] {
-                vsNorthWestCorner,
-                vsNorthFlat,
-                Shapes.or(vsNorthFlat, vsWestFlat, vsNorthWestCorner),
-                vsNorthEastCorner,
-                vsEastFlat,
-                Shapes.or(vsEastFlat, vsNorthFlat, vsNorthEastCorner),
-                vsSouthEastCorner,
-                vsSouthFlat,
-                Shapes.or(vsSouthFlat, vsEastFlat, vsSouthEastCorner),
-                vsSouthWestCorner,
-                vsWestFlat,
-                Shapes.or(vsWestFlat, vsSouthFlat, vsSouthWestCorner) };
-    }
-
+    @Nullable
     @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         final BlockState state = super.getStateForPlacement(context).setValue(PlateBlock.FACING, context.getHorizontalDirection());
@@ -148,7 +61,7 @@ public class ReinforcedIronFenceBlock extends ColumnConnectibleBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         return facing.getAxis().isHorizontal() ? stateIn.setValue(PlateBlock.SHAPE, getShapeProperty(stateIn, worldIn, currentPos)) : stateIn;
     }
@@ -190,34 +103,30 @@ public class ReinforcedIronFenceBlock extends ColumnConnectibleBlock {
         switch(mirrorIn) {
             case LEFT_RIGHT:
                 if(direction.getAxis() == Direction.Axis.Z) {
-                    switch(stairsshape) {
-                        case INNER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_RIGHT);
-                        case INNER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_LEFT);
-                        case OUTER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.OUTER_RIGHT);
-                        case OUTER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, OUTER_LEFT);
-                        default:
-                            return state.rotate(Rotation.CLOCKWISE_180);
-                    }
+                    return switch (stairsshape) {
+                        case INNER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_RIGHT);
+                        case INNER_RIGHT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_LEFT);
+                        case OUTER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.OUTER_RIGHT);
+                        case OUTER_RIGHT -> state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, OUTER_LEFT);
+                        default -> state.rotate(Rotation.CLOCKWISE_180);
+                    };
                 }
                 break;
             case FRONT_BACK:
                 if(direction.getAxis() == Direction.Axis.X) {
-                    switch(stairsshape) {
-                        case INNER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_LEFT);
-                        case INNER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_RIGHT);
-                        case OUTER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.OUTER_RIGHT);
-                        case OUTER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, OUTER_LEFT);
-                        case STRAIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180);
-                    }
+                    return switch (stairsshape) {
+                        case INNER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_LEFT);
+                        case INNER_RIGHT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.INNER_RIGHT);
+                        case OUTER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, StairsShape.OUTER_RIGHT);
+                        case OUTER_RIGHT -> state.rotate(Rotation.CLOCKWISE_180).setValue(PlateBlock.SHAPE, OUTER_LEFT);
+                        case STRAIGHT -> state.rotate(Rotation.CLOCKWISE_180);
+                    };
                 }
             default:
                 break;

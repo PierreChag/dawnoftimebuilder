@@ -13,20 +13,25 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.EDGE_SHAPES;
 
 public class EdgeBlock extends WaterloggedBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
     public static final EnumProperty<StairsShape> SHAPE = BlockStateProperties.STAIRS_SHAPE;
-    private static final VoxelShape[] SHAPES_TOP = EdgeBlock.makeShapes(false);
-    private static final VoxelShape[] SHAPES_BOTTOM = EdgeBlock.makeShapes(true);
 
-    public EdgeBlock(final Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(EdgeBlock.FACING, Direction.NORTH)
-                .setValue(EdgeBlock.HALF, Half.BOTTOM).setValue(EdgeBlock.SHAPE, StairsShape.STRAIGHT));
+    public EdgeBlock(final Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
+        this.registerDefaultState(this.defaultBlockState().setValue(EdgeBlock.FACING, Direction.NORTH).setValue(EdgeBlock.HALF, Half.BOTTOM).setValue(EdgeBlock.SHAPE, StairsShape.STRAIGHT));
+    }
+
+    public EdgeBlock(Properties properties){
+        this(properties, EDGE_SHAPES);
     }
 
     @Override
@@ -36,72 +41,21 @@ public class EdgeBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos,
-                               final CollisionContext context) {
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
         int index = (state.getValue(EdgeBlock.FACING).get2DDataValue() + 2) % 4;
         index *= 3;
-        switch(state.getValue(EdgeBlock.SHAPE)) {
-            default:
-            case OUTER_LEFT:
-                break;
-            case OUTER_RIGHT:
-                index += 3;
-                break;
-            case STRAIGHT:
-                index += 1;
-                break;
-            case INNER_LEFT:
-                index += 2;
-                break;
-            case INNER_RIGHT:
-                index += 5;
-                break;
+        switch (state.getValue(EdgeBlock.SHAPE)) {
+            default -> {}
+            case OUTER_RIGHT -> index += 3;
+            case STRAIGHT -> index += 1;
+            case INNER_LEFT -> index += 2;
+            case INNER_RIGHT -> index += 5;
         }
         index %= 12;
-        return state.getValue(EdgeBlock.HALF) == Half.BOTTOM ? EdgeBlock.SHAPES_BOTTOM[index]
-                : EdgeBlock.SHAPES_TOP[index];
+        return state.getValue(EdgeBlock.HALF) == Half.BOTTOM ? index : index + 12;
     }
 
-    /**
-     * @return Stores VoxelShape with index : <p/>
-     * 0 : NW Outer <p/>
-     * 1 : NW Default <p/>
-     * 2 : NW Inner <p/>
-     * 3 : NE Outer <p/>
-     * 4 : NE Default <p/>
-     * 5 : NE Inner <p/>
-     * 6 : SE Outer <p/>
-     * 7 : SE Default <p/>
-     * 8 : SE Inner <p/>
-     * 9 : SW Outer <p/>
-     * 10 : SW Default <p/>
-     * 11 : SW Inner <p/>
-     */
-    private static VoxelShape[] makeShapes(final boolean bottom) {
-        final VoxelShape vsNorthFlat = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 8.0D);
-        final VoxelShape vsEastFlat = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
-        final VoxelShape vsSouthFlat = Block.box(0.0D, 0.0D, 8.0D, 16.0D, 8.0D, 16.0D);
-        final VoxelShape vsWestFlat = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 8.0D, 16.0D);
-        final VoxelShape vsNorthWestCorner = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 8.0D, 8.0D);
-        final VoxelShape vsNorthEastCorner = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 8.0D, 8.0D);
-        final VoxelShape vsSouthEastCorner = Block.box(8.0D, 0.0D, 8.0D, 16.0D, 8.0D, 16.0D);
-        final VoxelShape vsSouthWestCorner = Block.box(0.0D, 0.0D, 8.0D, 8.0D, 8.0D, 16.0D);
-        final VoxelShape[] vss =
-                {
-                        vsNorthWestCorner, vsNorthFlat, Shapes.or(vsNorthFlat, vsSouthWestCorner), vsNorthEastCorner, vsEastFlat,
-                        Shapes.or(vsEastFlat, vsNorthWestCorner), vsSouthEastCorner, vsSouthFlat,
-                        Shapes.or(vsSouthFlat, vsNorthEastCorner), vsSouthWestCorner, vsWestFlat,
-                        Shapes.or(vsWestFlat, vsSouthEastCorner),
-                };
-        if(bottom) {
-            return vss;
-        }
-        for(int i = 0; i < vss.length; i++) {
-            vss[i] = vss[i].move(0.0D, 0.5D, 0.0D);
-        }
-        return vss;
-    }
-
+    @Nullable
     @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
@@ -116,8 +70,8 @@ public class EdgeBlock extends WaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState,
-                                  final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState,
+                                           final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         return facing.getAxis().isHorizontal()
                 ? stateIn.setValue(EdgeBlock.SHAPE, EdgeBlock.getShapeProperty(stateIn, worldIn, currentPos))
@@ -155,8 +109,7 @@ public class EdgeBlock extends WaterloggedBlock {
         return StairsShape.STRAIGHT;
     }
 
-    private static boolean isDifferentEdge(final BlockState state, final LevelReader worldIn, final BlockPos pos,
-                                           final Direction face) {
+    private static boolean isDifferentEdge(final BlockState state, final LevelReader worldIn, final BlockPos pos, final Direction face) {
         final BlockState adjacentState = worldIn.getBlockState(pos.relative(face));
         return !EdgeBlock.isBlockEdge(adjacentState)
                 || adjacentState.getValue(EdgeBlock.FACING) != state.getValue(EdgeBlock.FACING)
@@ -179,42 +132,32 @@ public class EdgeBlock extends WaterloggedBlock {
         switch(mirrorIn) {
             case LEFT_RIGHT:
                 if(direction.getAxis() == Direction.Axis.Z) {
-                    switch(stairsshape) {
-                        case INNER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.INNER_RIGHT);
-                        case INNER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.INNER_LEFT);
-                        case OUTER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.OUTER_RIGHT);
-                        case OUTER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.OUTER_LEFT);
-                        default:
-                            return state.rotate(Rotation.CLOCKWISE_180);
-                    }
+                    return switch (stairsshape) {
+                        case INNER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.INNER_RIGHT);
+                        case INNER_RIGHT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.INNER_LEFT);
+                        case OUTER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.OUTER_RIGHT);
+                        case OUTER_RIGHT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.OUTER_LEFT);
+                        default -> state.rotate(Rotation.CLOCKWISE_180);
+                    };
                 }
                 break;
             case FRONT_BACK:
                 if(direction.getAxis() == Direction.Axis.X) {
-                    switch(stairsshape) {
-                        case INNER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.INNER_LEFT);
-                        case INNER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.INNER_RIGHT);
-                        case OUTER_LEFT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.OUTER_RIGHT);
-                        case OUTER_RIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE,
-                                    StairsShape.OUTER_LEFT);
-                        case STRAIGHT:
-                            return state.rotate(Rotation.CLOCKWISE_180);
-                    }
+                    return switch (stairsshape) {
+                        case INNER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.INNER_LEFT);
+                        case INNER_RIGHT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.INNER_RIGHT);
+                        case OUTER_LEFT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.OUTER_RIGHT);
+                        case OUTER_RIGHT ->
+                                state.rotate(Rotation.CLOCKWISE_180).setValue(EdgeBlock.SHAPE, StairsShape.OUTER_LEFT);
+                        case STRAIGHT -> state.rotate(Rotation.CLOCKWISE_180);
+                    };
                 }
             default:
                 break;

@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
 
 public interface IBlockChain extends IBlockPillar {
     /**
@@ -43,12 +43,12 @@ public interface IBlockChain extends IBlockPillar {
     }
 
     @Override
-    default DoTBBlockStateProperties.PillarConnection getBlockPillarConnectionAbove(BlockState state) {
-        return this.canConnectToChainAbove(state) ? DoTBBlockStateProperties.PillarConnection.FOUR_PX : DoTBBlockStateProperties.PillarConnection.NOTHING;
+    default BlockStatePropertiesAA.PillarConnection getBlockPillarConnectionAbove(BlockState state) {
+        return this.canConnectToChainAbove(state) ? BlockStatePropertiesAA.PillarConnection.FOUR_PX : BlockStatePropertiesAA.PillarConnection.NOTHING;
     }
 
     @Override
-    default DoTBBlockStateProperties.PillarConnection getBlockPillarConnectionUnder(BlockState state) {
-        return this.canConnectToChainUnder(state) ? DoTBBlockStateProperties.PillarConnection.FOUR_PX : DoTBBlockStateProperties.PillarConnection.NOTHING;
+    default BlockStatePropertiesAA.PillarConnection getBlockPillarConnectionUnder(BlockState state) {
+        return this.canConnectToChainUnder(state) ? BlockStatePropertiesAA.PillarConnection.FOUR_PX : BlockStatePropertiesAA.PillarConnection.NOTHING;
     }
 }

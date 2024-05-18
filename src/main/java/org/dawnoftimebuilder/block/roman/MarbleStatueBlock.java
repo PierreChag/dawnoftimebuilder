@@ -21,18 +21,19 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+import static org.dawnoftimebuilder.util.VoxelShapes.MARBLE_STATUE_SHAPES;
+
 public class MarbleStatueBlock extends WaterloggedBlock {
-    private static final VoxelShape VS = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
-    private static final VoxelShape VS_TOP = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final IntegerProperty MULTIBLOCK = DoTBBlockStateProperties.MULTIBLOCK_0_2;
+    public static final IntegerProperty MULTIBLOCK = BlockStatePropertiesAA.MULTIBLOCK_0_2;
 
     public MarbleStatueBlock(final Properties properties) {
-        super(properties);
+        super(properties, MARBLE_STATUE_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(MarbleStatueBlock.FACING, Direction.NORTH).setValue(MarbleStatueBlock.MULTIBLOCK, 0).setValue(WaterloggedBlock.WATERLOGGED, false));
     }
 
@@ -60,8 +61,8 @@ public class MarbleStatueBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
-        return state.getValue(MarbleStatueBlock.MULTIBLOCK) == 2 ? MarbleStatueBlock.VS_TOP : MarbleStatueBlock.VS;
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
+        return state.getValue(MarbleStatueBlock.MULTIBLOCK) == 2 ? 1 : 0;
     }
 
     @Nullable
@@ -84,7 +85,7 @@ public class MarbleStatueBlock extends WaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(final BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(final BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         if(facing.getAxis().isHorizontal()) {
             return stateIn;
         }

@@ -18,14 +18,14 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
 
 import java.util.Map;
 
 import static net.minecraft.world.phys.shapes.BooleanOp.ONLY_FIRST;
 
 public class CappedWallBlock extends Block implements SimpleWaterloggedBlock {
-    public static final EnumProperty<WallSide> PILLAR = DoTBBlockStateProperties.PILLAR_WALL;
+    public static final EnumProperty<WallSide> PILLAR = BlockStatePropertiesAA.PILLAR_WALL;
     public static final EnumProperty<WallSide> EAST_WALL = BlockStateProperties.EAST_WALL;
     public static final EnumProperty<WallSide> NORTH_WALL = BlockStateProperties.NORTH_WALL;
     public static final EnumProperty<WallSide> SOUTH_WALL = BlockStateProperties.SOUTH_WALL;
@@ -109,7 +109,7 @@ public class CappedWallBlock extends Block implements SimpleWaterloggedBlock {
 
     private boolean connectsTo(BlockState state, boolean p_220113_2_, Direction direction) {
         Block block = state.getBlock();
-        boolean flag = block instanceof FenceGateBlockDoTB && FenceGateBlockDoTB.connectsToDirection(state, direction);
+        boolean flag = block instanceof WaterloggedFenceGateBlock && WaterloggedFenceGateBlock.connectsToDirection(state, direction);
         return state.is(BlockTags.WALLS) || !isExceptionForConnection(state) && p_220113_2_ || block instanceof StainedGlassPaneBlock || flag;
     }
 

@@ -34,27 +34,24 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.dawnoftimebuilder.block.templates.MultiblockFireplaceBlock;
-import org.dawnoftimebuilder.block.templates.SidedColumnConnectibleBlock;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties.HorizontalConnection;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA.HorizontalConnection;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static org.dawnoftimebuilder.util.VoxelShapes.FIREPLACE_SHAPES;
+
 public class FireplaceBlock extends WaterloggedBlock {
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final EnumProperty<DoTBBlockStateProperties.HorizontalConnection> HORIZONTAL_CONNECTION = DoTBBlockStateProperties.HORIZONTAL_CONNECTION;
-    private static final VoxelShape ON_X_SHAPE = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 14.0D, 14.0D);
-    private static final VoxelShape OFF_X_SHAPE = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 5.0D, 14.0D);
-    private static final VoxelShape ON_Z_SHAPE = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 14.0D, 16.0D);
-    private static final VoxelShape OFF_Z_SHAPE = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 5.0D, 16.0D);
+    public static final EnumProperty<BlockStatePropertiesAA.HorizontalConnection> HORIZONTAL_CONNECTION = BlockStatePropertiesAA.HORIZONTAL_CONNECTION;
 
     public FireplaceBlock(final Properties properties) {
-        super(properties);
+        super(properties, FIREPLACE_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(FireplaceBlock.LIT, false).setValue(FireplaceBlock.HORIZONTAL_AXIS, Direction.Axis.X).setValue(FireplaceBlock.HORIZONTAL_CONNECTION, HorizontalConnection.NONE));
     }
 
@@ -65,20 +62,20 @@ public class FireplaceBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getCollisionShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
-        return state.getValue(FireplaceBlock.HORIZONTAL_AXIS) == Direction.Axis.X ? FireplaceBlock.OFF_X_SHAPE : FireplaceBlock.OFF_Z_SHAPE;
+    public @NotNull VoxelShape getCollisionShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
+        return this.getShape(state.getValue(FireplaceBlock.HORIZONTAL_AXIS) == Direction.Axis.X ? 1 : 3);
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
         if(state.getValue(FireplaceBlock.HORIZONTAL_AXIS) == Direction.Axis.X) {
-            return state.getValue(FireplaceBlock.LIT) ? FireplaceBlock.ON_X_SHAPE : FireplaceBlock.OFF_X_SHAPE;
+            return state.getValue(FireplaceBlock.LIT) ? 0 : 1;
         }
-        return state.getValue(FireplaceBlock.LIT) ? FireplaceBlock.ON_Z_SHAPE : FireplaceBlock.OFF_Z_SHAPE;
+        return state.getValue(FireplaceBlock.LIT) ? 2 : 3;
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         if(stateIn.getValue(WATERLOGGED)){
             stateIn = stateIn.setValue(LIT, false);
@@ -99,7 +96,7 @@ public class FireplaceBlock extends WaterloggedBlock {
 
     @Override
     public InteractionResult use(final BlockState state, final Level worldIn, final BlockPos pos, final Player player, final InteractionHand handIn, final BlockHitResult hit) {
-        return DoTBUtils.changeBlockLitStateWithItemOrCreativePlayer(state, worldIn, pos, player, handIn) >= 0 ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return Utils.changeBlockLitStateWithItemOrCreativePlayer(state, worldIn, pos, player, handIn) >= 0 ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     @Override
@@ -136,6 +133,7 @@ public class FireplaceBlock extends WaterloggedBlock {
         super.entityInside(state, world, pos, entityIn);
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         final BlockState state = super.getStateForPlacement(context);
@@ -144,7 +142,7 @@ public class FireplaceBlock extends WaterloggedBlock {
     }
 
 
-    private DoTBBlockStateProperties.HorizontalConnection getHorizontalShape(final Level worldIn, final BlockPos pos, final Direction.Axis axis) {
+    private BlockStatePropertiesAA.HorizontalConnection getHorizontalShape(final Level worldIn, final BlockPos pos, final Direction.Axis axis) {
 
         final BlockState left = worldIn.getBlockState(pos.relative(axis == Direction.Axis.X ? Direction.EAST : Direction.SOUTH, 1));
         final BlockState right = worldIn.getBlockState(pos.relative(axis == Direction.Axis.X ? Direction.EAST : Direction.SOUTH, -1));
@@ -160,9 +158,9 @@ public class FireplaceBlock extends WaterloggedBlock {
         }
 
         if(blockLeft) {
-            return blockRight ? DoTBBlockStateProperties.HorizontalConnection.BOTH : DoTBBlockStateProperties.HorizontalConnection.LEFT;
+            return blockRight ? BlockStatePropertiesAA.HorizontalConnection.BOTH : BlockStatePropertiesAA.HorizontalConnection.LEFT;
         }
-        return blockRight ? DoTBBlockStateProperties.HorizontalConnection.RIGHT : DoTBBlockStateProperties.HorizontalConnection.NONE;
+        return blockRight ? BlockStatePropertiesAA.HorizontalConnection.RIGHT : BlockStatePropertiesAA.HorizontalConnection.NONE;
     }
 
     @Override
@@ -204,6 +202,6 @@ public class FireplaceBlock extends WaterloggedBlock {
     @Override
     public void appendHoverText(final ItemStack stack, @Nullable final BlockGetter worldIn, final List<Component> tooltip, final TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, DoTBUtils.TOOLTIP_FIREPLACE);
+        Utils.addTooltip(tooltip, Utils.TOOLTIP_FIREPLACE);
     }
 }

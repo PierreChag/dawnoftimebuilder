@@ -1,0 +1,39 @@
+{
+	"credit": "mr_ch0c0late",
+	"textures": {
+		"1": "dawnoftimebuilder:block/street_light_iron_middle",
+		"particle": "dawnoftimebuilder:block/street_light_iron_top"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 7],
+			"to": [9, 15, 9],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 15], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 15], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 15], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 15], "texture": "#1"}
+			}
+		},
+		{
+			"from": [6.5, 15, 6.5],
+			"to": [9.5, 16, 9.5],
+			"faces": {
+				"north": {"uv": [2, 0, 5, 1], "texture": "#1"},
+				"east": {"uv": [2, 0, 5, 1], "texture": "#1"},
+				"south": {"uv": [2, 0, 5, 1], "texture": "#1"},
+				"west": {"uv": [2, 0, 5, 1], "texture": "#1"},
+				"up": {"uv": [2, 1, 5, 4], "texture": "#1", "cullface": "up"},
+				"down": {"uv": [2, 1, 5, 4], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "middle",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

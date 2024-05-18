@@ -13,16 +13,18 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.DisplayerBlock;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.SPRUCE_LOW_TABLE_SHAPES;
 
 public class SpruceLowTableBlock extends DisplayerBlock {
-    private static final VoxelShape X_AXIS_VS = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 8.0D, 14.0D);
-    private static final VoxelShape Z_AXIS_VS = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 8.0D, 16.0D);
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     public SpruceLowTableBlock(Properties properties) {
-        super(properties);
+        super(properties, SPRUCE_LOW_TABLE_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(HORIZONTAL_AXIS, Direction.Axis.X).setValue(WATERLOGGED, Boolean.FALSE).setValue(LIT, false));
     }
 
@@ -32,13 +34,12 @@ public class SpruceLowTableBlock extends DisplayerBlock {
         builder.add(HORIZONTAL_AXIS);
     }
 
-    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
-        return (state.getValue(HORIZONTAL_AXIS) == Direction.Axis.X) ? X_AXIS_VS : Z_AXIS_VS;
+    public int getShapeIndex(@NotNull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+        return (state.getValue(HORIZONTAL_AXIS) == Direction.Axis.X) ? 0 : 1;
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(HORIZONTAL_AXIS, context.getHorizontalDirection().getAxis() == Direction.Axis.Z ? Direction.Axis.X : Direction.Axis.Z);

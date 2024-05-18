@@ -25,8 +25,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.dawnoftimebuilder.DoTBConfig;
 import org.dawnoftimebuilder.block.IBlockChain;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.block.templates.BlockAA;
+import org.dawnoftimebuilder.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -34,21 +34,20 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.dawnoftimebuilder.registry.DoTBItemsRegistry.SILK_WORMS;
+import static org.dawnoftimebuilder.util.VoxelShapes.STICK_BUNDLE_SHAPES;
 
-public class StickBundleBlock extends BlockDoTB implements IBlockChain {
-    private static final VoxelShape VS_TOP = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
-    private static final VoxelShape VS_BOTTOM = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 16.0D, 12.0D);
+public class StickBundleBlock extends BlockAA implements IBlockChain {
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
     private static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 
     public StickBundleBlock(Properties properties) {
-        super(properties);
+        super(properties, STICK_BUNDLE_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(AGE, 0).setValue(HALF, Half.TOP));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return state.getValue(HALF) == Half.BOTTOM ? VS_BOTTOM : VS_TOP;
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return state.getValue(HALF) == Half.BOTTOM ? 1 : 0;
     }
 
     @Override
@@ -121,8 +120,8 @@ public class StickBundleBlock extends BlockDoTB implements IBlockChain {
 
             //The StickBundle has fully grown worms, it's time to harvest !
             if(state.getValue(AGE) == 3) {
-                List<ItemStack> drops = DoTBUtils.getLootList((ServerLevel) worldIn, state, player.getItemInHand(handIn), Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(this)).getPath() + "_harvest");
-                DoTBUtils.dropLootFromList(worldIn, pos, drops, 1.0F);
+                List<ItemStack> drops = Utils.getLootList((ServerLevel) worldIn, state, player.getItemInHand(handIn), Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(this)).getPath() + "_harvest");
+                Utils.dropLootFromList(worldIn, pos, drops, 1.0F);
                 worldIn.setBlock(pos, state.setValue(AGE, 0), 10);
                 worldIn.playSound(null, pos, SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
                 if(state.getValue(HALF) == Half.TOP) {

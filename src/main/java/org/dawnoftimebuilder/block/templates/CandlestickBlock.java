@@ -18,23 +18,24 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.ArrayUtils;
 import org.dawnoftimebuilder.block.IBlockSpecialDisplay;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CandlestickBlock extends CandleLampBlock implements IBlockSpecialDisplay {
-    private static final VoxelShape VS_BOTTOM = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 15.0D, 11.0D);
-    private static final VoxelShape[] VS_SIDE = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(4.0D, 1.0D, 0.0D, 12.0D, 15.0D, 14.0D) });
     public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
     private static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    public CandlestickBlock(Properties properties) {
-        super(properties);
+    public CandlestickBlock(Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(FACING, Direction.DOWN).setValue(LIT, false));
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getClickedFace();
@@ -54,9 +55,9 @@ public class CandlestickBlock extends CandleLampBlock implements IBlockSpecialDi
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Direction facing = state.getValue(FACING);
-        return facing == Direction.DOWN ? VS_BOTTOM : VS_SIDE[facing.get2DDataValue()];
+        return facing.getAxis() == Direction.Axis.Y ? 4 : facing.get2DDataValue();
     }
 
     @Override

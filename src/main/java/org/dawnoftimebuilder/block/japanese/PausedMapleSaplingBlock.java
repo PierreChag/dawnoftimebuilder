@@ -12,19 +12,17 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.templates.BushBlockDoT;
 import org.dawnoftimebuilder.registry.DoTBBlocksRegistry;
 
-import static org.dawnoftimebuilder.util.DoTBVoxelShapes.SAPLING_SHAPE;
+import static org.dawnoftimebuilder.util.VoxelShapes.SAPLING_SHAPES;
 
 public class PausedMapleSaplingBlock extends BushBlockDoT {
 
     public PausedMapleSaplingBlock(final Properties properties) {
-        super(properties, SAPLING_SHAPE);
+        super(properties, SAPLING_SHAPES);
     }
 
     @Override

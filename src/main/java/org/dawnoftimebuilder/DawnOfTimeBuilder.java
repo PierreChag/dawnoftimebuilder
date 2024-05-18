@@ -10,12 +10,15 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.dawnoftimebuilder.item.IconItem;
 import org.dawnoftimebuilder.registry.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 @Mod(DawnOfTimeBuilder.MOD_ID)
 public class DawnOfTimeBuilder {
     public static final String MOD_ID = "dawnoftimebuilder";
+    public static final Logger LOG = LoggerFactory.getLogger(MOD_ID);
 
     public DawnOfTimeBuilder() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

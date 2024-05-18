@@ -12,28 +12,30 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
-public class PlanterBlock extends Block {
+import static org.dawnoftimebuilder.util.VoxelShapes.PLANTER_SHAPES;
+
+public class PlanterBlock extends BlockAA {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
-    private static final VoxelShape[] SHAPES_TOP = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(0.0D, 8.0D, 8.0D, 16.0D, 16.0D, 16.0D) });
-    private static final VoxelShape[] SHAPES_BOTTOM = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] { Block.box(0.0D, 0.0D, 8.0D, 16.0D, 8.0D, 16.0D) });
 
     public PlanterBlock(Properties properties) {
-        super(properties);
+        super(properties, PLANTER_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(HALF, Half.BOTTOM));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(FACING, HALF);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return state.getValue(HALF) == Half.BOTTOM ? SHAPES_BOTTOM[state.getValue(FACING).get2DDataValue()] : SHAPES_TOP[state.getValue(FACING).get2DDataValue()];
+    public int getShapeIndex(BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        int index = 2 * state.getValue(FACING).get2DDataValue();
+        return state.getValue(HALF) == Half.BOTTOM ? index : index + 1;
     }
 
     @Override

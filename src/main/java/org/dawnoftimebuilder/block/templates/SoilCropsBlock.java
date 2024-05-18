@@ -26,21 +26,21 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.PlantType;
 import org.dawnoftimebuilder.block.IBlockGeneration;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_CROP;
+import static org.dawnoftimebuilder.util.Utils.TOOLTIP_CROP;
 
 public class SoilCropsBlock extends CropBlock implements IBlockGeneration {
     private final PlantType plantType;
     public static final BooleanProperty PERSISTENT = BlockStateProperties.PERSISTENT;
 
     public SoilCropsBlock(PlantType plantType) {
-        super(BlockDoTB.Properties.copy(Blocks.SUNFLOWER).offsetType(BlockBehaviour.OffsetType.NONE).randomTicks().sound(SoundType.CROP));
+        super(BlockAA.Properties.copy(Blocks.SUNFLOWER).offsetType(BlockBehaviour.OffsetType.NONE).randomTicks().sound(SoundType.CROP));
         this.plantType = plantType;
         this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0).setValue(PERSISTENT, false));
     }
@@ -151,7 +151,7 @@ public class SoilCropsBlock extends CropBlock implements IBlockGeneration {
                 }
             }
         } else {
-            if(DoTBUtils.useLighter(worldIn, pos, player, handIn)) {
+            if(Utils.useLighter(worldIn, pos, player, handIn)) {
                 Random rand = new Random();
                 for(int i = 0; i < 5; i++) {
                     worldIn.addAlwaysVisibleParticle(ParticleTypes.SMOKE, (double) pos.getX() + rand.nextDouble(), (double) pos.getY() + 0.5D + rand.nextDouble() / 2, (double) pos.getZ() + rand.nextDouble(), 0.0D, 0.07D, 0.0D);
@@ -181,7 +181,7 @@ public class SoilCropsBlock extends CropBlock implements IBlockGeneration {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, TOOLTIP_CROP);
+        Utils.addTooltip(tooltip, TOOLTIP_CROP);
     }
 
     @Override

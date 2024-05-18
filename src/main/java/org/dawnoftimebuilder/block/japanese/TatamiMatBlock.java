@@ -22,26 +22,27 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 import static net.minecraft.world.level.block.Blocks.SPRUCE_PLANKS;
 import static org.dawnoftimebuilder.registry.DoTBBlocksRegistry.TATAMI_FLOOR;
-import static org.dawnoftimebuilder.util.DoTBUtils.COVERED_BLOCKS;
+import static org.dawnoftimebuilder.util.Utils.COVERED_BLOCKS;
+import static org.dawnoftimebuilder.util.VoxelShapes.TATAMI_MAT_SHAPES;
 
 public class TatamiMatBlock extends WaterloggedBlock {
-    private static final VoxelShape VS = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
-    private static final VoxelShape[] SHAPES = DoTBUtils.GenerateHorizontalShapes(makeShapes());
+
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty ROLLED = DoTBBlockStateProperties.ROLLED;
-    public static final IntegerProperty STACK = DoTBBlockStateProperties.STACK;
+    public static final BooleanProperty ROLLED = BlockStatePropertiesAA.ROLLED;
+    public static final IntegerProperty STACK = BlockStatePropertiesAA.STACK;
 
     public TatamiMatBlock(Properties properties) {
-        super(properties);
+        super(properties, TATAMI_MAT_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(ROLLED, false).setValue(HALF, Half.TOP).setValue(STACK, 1));
     }
 
@@ -52,28 +53,12 @@ public class TatamiMatBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        if(!state.getValue(ROLLED))
-            return VS;
-        return SHAPES[state.getValue(STACK) - 1 + state.getValue(FACING).get2DDataValue() * 3];
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return state.getValue(ROLLED) ? state.getValue(STACK) - 1 + state.getValue(FACING).get2DDataValue() * 3 : 12;
     }
 
-    /**
-     * @return Stores VoxelShape for "South" with index : <p/>
-     * 0 : S Rolled <p/>
-     * 1 : S Rolled stack 2 <p/>
-     * 2 : S Rolled stack 3 <p/>
-     */
-    private static VoxelShape[] makeShapes() {
-        return new VoxelShape[] {
-                Block.box(0.0D, 0.0D, 8.5D, 16.0D, 7.0D, 15.5D),
-                Block.box(0.0D, 0.0D, 0.5D, 16.0D, 7.0D, 15.5D),
-                Block.box(0.0D, 0.0D, 0.5D, 16.0D, 14.0D, 15.5D)
-        };
-    }
-
-    @Override
     @Nullable
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();
@@ -114,7 +99,7 @@ public class TatamiMatBlock extends WaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         if(facing.getAxis().isVertical()) {
             return !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : this.tryMergingWithSprucePlanks(stateIn, worldIn, currentPos);
@@ -222,6 +207,6 @@ public class TatamiMatBlock extends WaterloggedBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, this);
+        Utils.addTooltip(tooltip, this);
     }
 }

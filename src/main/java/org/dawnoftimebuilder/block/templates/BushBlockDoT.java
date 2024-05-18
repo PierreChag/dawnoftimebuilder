@@ -14,7 +14,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockGeneration;
 
-import static org.dawnoftimebuilder.util.DoTBVoxelShapes.FULL_SHAPE;
+import static org.dawnoftimebuilder.util.VoxelShapes.FULL_SHAPE;
 
 public class BushBlockDoT extends BushBlock implements IBlockGeneration {
     private int fireSpreadSpeed = 0;

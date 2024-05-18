@@ -23,8 +23,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class GrowingBushBlock extends SoilCropsBlock {
     public final VoxelShape[] SHAPES;
     public final int cutAge;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
-    private static final BooleanProperty CUT = DoTBBlockStateProperties.CUT;
+    private static final BooleanProperty CUT = BlockStatePropertiesAA.CUT;
 
     public GrowingBushBlock(PlantType plantType, int cutAge) {
         super(plantType);
@@ -115,8 +115,8 @@ public class GrowingBushBlock extends SoilCropsBlock {
     }
 
     public void harvestWithoutBreaking(BlockState state, Level worldIn, BlockPos pos, ItemStack itemStackHand, String blockName, float dropMultiplier) {
-        List<ItemStack> drops = DoTBUtils.getLootList((ServerLevel) worldIn, state, itemStackHand, blockName);
-        DoTBUtils.dropLootFromList(worldIn, pos, drops, dropMultiplier);
+        List<ItemStack> drops = Utils.getLootList((ServerLevel) worldIn, state, itemStackHand, blockName);
+        Utils.dropLootFromList(worldIn, pos, drops, dropMultiplier);
 
         worldIn.playSound(null, pos, SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
         worldIn.setBlock(pos, state.setValue(AGE, this.cutAge).setValue(CUT, true), 2);

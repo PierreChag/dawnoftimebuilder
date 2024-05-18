@@ -9,12 +9,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class PillarPaneBlock extends PaneBlockDoTB {
+public class PillarPaneBlock extends PaneBlockAA {
     private static final VoxelShape[] SHAPES_PILLAR = makeShapesPillar(true);
     private static final VoxelShape[] SHAPES_NO_PILLAR = makeShapesPillar(false);
 
-    public PillarPaneBlock(DyeColor dyeColor, Properties properties) {
-        super(dyeColor, properties);
+    public PillarPaneBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

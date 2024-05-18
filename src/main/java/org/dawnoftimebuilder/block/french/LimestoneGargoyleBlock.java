@@ -27,24 +27,24 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
+import static org.dawnoftimebuilder.util.VoxelShapes.LIMESTONE_GARGOYLE_SHAPES;
+
 public class LimestoneGargoyleBlock extends WaterloggedBlock {
-    private static final IntegerProperty HUMIDITY = DoTBBlockStateProperties.HUMIDITY_0_8;
+    private static final IntegerProperty HUMIDITY = BlockStatePropertiesAA.HUMIDITY_0_8;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty PERSISTENT = BlockStateProperties.PERSISTENT;
-    private static final VoxelShape[] SHAPES = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] {
-            Block.box(4.0D, 7.0D, 0.0D, 12.0D, 14.0D, 16.0D)
-    });
 
     public LimestoneGargoyleBlock(Properties properties) {
-        super(properties);
+        super(properties, LIMESTONE_GARGOYLE_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(HUMIDITY, 0).setValue(PERSISTENT, false));
     }
 
@@ -59,11 +59,11 @@ public class LimestoneGargoyleBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return SHAPES[state.getValue(FACING).get2DDataValue()];
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return state.getValue(FACING).get2DDataValue();
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
@@ -92,7 +92,7 @@ public class LimestoneGargoyleBlock extends WaterloggedBlock {
                 }
             }
         } else {
-            if(DoTBUtils.useLighter(worldIn, pos, player, handIn)) {
+            if(Utils.useLighter(worldIn, pos, player, handIn)) {
                 Random rand = new Random();
                 for(int i = 0; i < 5; i++) {
                     worldIn.addAlwaysVisibleParticle(ParticleTypes.SMOKE, (double) pos.getX() +
@@ -168,6 +168,6 @@ public class LimestoneGargoyleBlock extends WaterloggedBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, this);
+        Utils.addTooltip(tooltip, this);
     }
 }

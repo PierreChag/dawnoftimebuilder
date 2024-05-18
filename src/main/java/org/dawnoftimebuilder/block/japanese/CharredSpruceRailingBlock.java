@@ -19,15 +19,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties.FencePillar;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA.FencePillar;
+import org.dawnoftimebuilder.util.Utils;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class CharredSpruceRailingBlock extends FenceBlock {
-    private static final EnumProperty<FencePillar> FENCE_PILLAR = DoTBBlockStateProperties.FENCE_PILLAR;
+    private static final EnumProperty<FencePillar> FENCE_PILLAR = BlockStatePropertiesAA.FENCE_PILLAR;
 
     public CharredSpruceRailingBlock(Properties properties) {
         super(properties);
@@ -102,7 +102,7 @@ public class CharredSpruceRailingBlock extends FenceBlock {
         return state.getValue(FENCE_PILLAR) == FencePillar.NONE || state.getValue(FENCE_PILLAR) == FencePillar.PILLAR_SMALL;
     }
 
-    private DoTBBlockStateProperties.FencePillar getBigPillar(LevelAccessor world, BlockPos pos) {
+    private BlockStatePropertiesAA.FencePillar getBigPillar(LevelAccessor world, BlockPos pos) {
         pos = pos.above();
         return (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()) ? FencePillar.CAP_PILLAR_BIG : FencePillar.PILLAR_BIG;
     }
@@ -110,6 +110,6 @@ public class CharredSpruceRailingBlock extends FenceBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, this);
+        Utils.addTooltip(tooltip, this);
     }
 }

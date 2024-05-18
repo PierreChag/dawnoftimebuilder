@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
 
 public class WaterSourceTrickleBlock extends WaterTrickleBlock {
     public WaterSourceTrickleBlock(Properties propertiesIn) {
@@ -18,7 +18,7 @@ public class WaterSourceTrickleBlock extends WaterTrickleBlock {
                 .setValue(BlockStateProperties.EAST, false)
                 .setValue(BlockStateProperties.SOUTH, false)
                 .setValue(BlockStateProperties.WEST, false)
-                .setValue(DoTBBlockStateProperties.CENTER, false));
+                .setValue(BlockStatePropertiesAA.CENTER, false));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class WaterSourceTrickleBlock extends WaterTrickleBlock {
                 BlockStateProperties.EAST,
                 BlockStateProperties.SOUTH,
                 BlockStateProperties.WEST,
-                DoTBBlockStateProperties.CENTER);
+                BlockStatePropertiesAA.CENTER);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class WaterSourceTrickleBlock extends WaterTrickleBlock {
                 trickleOutput[1] || currentState.getValue(BlockStateProperties.EAST),
                 trickleOutput[2] || currentState.getValue(BlockStateProperties.SOUTH),
                 trickleOutput[3] || currentState.getValue(BlockStateProperties.WEST),
-                trickleOutput[4] || currentState.getValue(DoTBBlockStateProperties.CENTER) };
+                trickleOutput[4] || currentState.getValue(BlockStatePropertiesAA.CENTER) };
     }
 
     @Override

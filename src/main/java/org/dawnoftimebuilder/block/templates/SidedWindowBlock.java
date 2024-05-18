@@ -17,18 +17,18 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties.SidedWindow;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA.SidedWindow;
+import org.dawnoftimebuilder.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_SIDED_WINDOW;
+import static org.dawnoftimebuilder.util.Utils.TOOLTIP_SIDED_WINDOW;
 
-public class SidedWindowBlock extends BlockDoTB {
-    public static final EnumProperty<SidedWindow> SIDED_WINDOW = DoTBBlockStateProperties.SIDED_WINDOW;
+public class SidedWindowBlock extends BlockAA {
+    public static final EnumProperty<SidedWindow> SIDED_WINDOW = BlockStatePropertiesAA.SIDED_WINDOW;
     private static final BooleanProperty UP = BlockStateProperties.UP;
     private static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
     private static final VoxelShape NORTH_VS = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 16.0D, 6.0D);
@@ -49,7 +49,7 @@ public class SidedWindowBlock extends BlockDoTB {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return switch (state.getValue(SIDED_WINDOW)) {
             default -> NORTH_VS;
             case EAST -> EAST_VS;
@@ -119,6 +119,6 @@ public class SidedWindowBlock extends BlockDoTB {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, TOOLTIP_SIDED_WINDOW);
+        Utils.addTooltip(tooltip, TOOLTIP_SIDED_WINDOW);
     }
 }

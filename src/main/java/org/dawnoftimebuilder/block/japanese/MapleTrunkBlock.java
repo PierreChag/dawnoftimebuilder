@@ -21,15 +21,15 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
+import org.dawnoftimebuilder.block.templates.BlockAA;
 import org.dawnoftimebuilder.registry.DoTBBlocksRegistry;
+import org.jetbrains.annotations.NotNull;
 
-public class MapleTrunkBlock extends BlockDoTB {
+public class MapleTrunkBlock extends BlockAA {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public MapleTrunkBlock(final Properties properties) {
         super(properties);
-
         this.registerDefaultState(this.defaultBlockState().setValue(MapleTrunkBlock.FACING, Direction.NORTH));
     }
 
@@ -65,7 +65,7 @@ public class MapleTrunkBlock extends BlockDoTB {
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
+    public @NotNull VoxelShape getShape(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
         return Shapes.block();
     }
 

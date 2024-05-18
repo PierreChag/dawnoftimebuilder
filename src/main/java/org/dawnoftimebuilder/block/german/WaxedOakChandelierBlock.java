@@ -13,19 +13,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.IBlockChain;
 import org.dawnoftimebuilder.block.templates.CandleLampBlock;
+import org.jetbrains.annotations.NotNull;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.WAXED_OAK_CHANDELIER_SHAPES;
 
 public class WaxedOakChandelierBlock extends CandleLampBlock implements IBlockChain {
-    private static final VoxelShape VS = Shapes.or(
-            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
-            Block.box(6.0D, 8.0D, 6.0D, 10.0D, 16.0D, 10.0D));
-
     public WaxedOakChandelierBlock(Properties properties) {
-        super(properties);
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return VS;
+        super(properties, WAXED_OAK_CHANDELIER_SHAPES);
     }
 
     @OnlyIn(Dist.CLIENT)

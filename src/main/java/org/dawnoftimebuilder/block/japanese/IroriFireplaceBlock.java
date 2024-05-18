@@ -13,14 +13,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.templates.CandleLampBlock;
 
+import static org.dawnoftimebuilder.util.VoxelShapes.FULL_SHAPE;
+
 public class IroriFireplaceBlock extends CandleLampBlock {
     public IroriFireplaceBlock(Properties properties) {
-        super(properties);
-    }
-
-    @Override
-    public boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluid) {
-        return super.placeLiquid(world, pos, state, fluid);
+        super(properties, FULL_SHAPE);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -30,7 +27,6 @@ public class IroriFireplaceBlock extends CandleLampBlock {
             if(rand.nextInt(10) == 0) {
                 worldIn.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS, 0.5F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.6F, false);
             }
-
             if(rand.nextInt(10) == 0) {
                 for(int i = 0; i < rand.nextInt(1) + 1; ++i) {
                     worldIn.addParticle(ParticleTypes.LAVA, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, rand.nextFloat() / 4.0F, 2.5E-5D, rand.nextFloat() / 4.0F);

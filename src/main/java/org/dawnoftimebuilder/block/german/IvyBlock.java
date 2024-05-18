@@ -3,15 +3,17 @@ package org.dawnoftimebuilder.block.german;
 import static net.minecraft.tags.BlockTags.DIRT;
 import static net.minecraft.tags.BlockTags.SAND;
 import static net.minecraftforge.common.Tags.Blocks.GRAVEL;
-import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_CROP;
+import static org.dawnoftimebuilder.util.Utils.TOOLTIP_CROP;
+import static org.dawnoftimebuilder.util.VoxelShapes.IVY_SHAPES;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.Nullable;
 import org.dawnoftimebuilder.DoTBConfig;
 import org.dawnoftimebuilder.block.IBlockGeneration;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.block.templates.BlockAA;
+import org.dawnoftimebuilder.util.Utils;
 import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +24,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -46,17 +47,16 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 
-public class IvyBlock extends BlockDoTB implements IBlockGeneration {
+public class IvyBlock extends BlockAA implements IBlockGeneration {
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
     private static final IntegerProperty AGE = BlockStateProperties.AGE_2;
     public static final BooleanProperty PERSISTENT = BlockStateProperties.PERSISTENT;
-    private static final VoxelShape[] SHAPES = makeShapes();
 
     public IvyBlock(Properties properties) {
-        super(properties);
+        super(properties, IVY_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(AGE, 0).setValue(NORTH, false).setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false).setValue(PERSISTENT, false));
     }
 
@@ -67,7 +67,7 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter levelIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter levelIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         int index = 0;
         if(state.getValue(SOUTH))
             index += 1;
@@ -79,54 +79,7 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
             index += 8;
         if(index > 14)
             index = 0;
-        return SHAPES[index];
-    }
-
-    /**
-     * @return Stores VoxelShape with index following binary system : <p/>
-     * 8+4+2+1 with 1 = SOUTH, 2 = WEST, 4 = NORTH, 8 = EAST
-     * 0 : SWNE <p/>
-     * 1 : S <p/>
-     * 2 : W <p/>
-     * 3 : SW <p/>
-     * 4 : N <p/>
-     * 5 : SN <p/>
-     * 6 : WN <p/>
-     * 7 : SWN <p/>
-     * 8 : E <p/>
-     * 9 : SE <p/>
-     * 10 : WE <p/>
-     * 11 : SWE <p/>
-     * 12 : NE <p/>
-     * 13 : SNE <p/>
-     * 14 : WNE <p/>
-     */
-    private static VoxelShape[] makeShapes() {
-        VoxelShape vsSouth = Block.box(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vsWest = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
-        VoxelShape vsNorth = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 4.0D);
-        VoxelShape vsEast = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        VoxelShape vsSouthWest = Shapes.or(vsSouth, vsWest);
-        VoxelShape vsNorthWest = Shapes.or(vsWest, vsNorth);
-        VoxelShape vsNorthEst = Shapes.or(vsNorth, vsEast);
-        VoxelShape vsSouthEst = Shapes.or(vsEast, vsSouth);
-        return new VoxelShape[] {
-                Shapes.or(vsSouthWest, vsNorthEst),
-                vsSouth,
-                vsWest,
-                vsSouthWest,
-                vsNorth,
-                Shapes.or(vsSouth, vsNorth),
-                vsNorthWest,
-                Shapes.or(vsSouthWest, vsNorth),
-                vsEast,
-                vsSouthEst,
-                Shapes.or(vsWest, vsEast),
-                Shapes.or(vsSouthWest, vsEast),
-                vsNorthEst,
-                Shapes.or(vsSouth, vsNorthEst),
-                Shapes.or(vsNorthWest, vsEast),
-        };
+        return index;
     }
 
     @Override
@@ -305,7 +258,7 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
                 }
             }
         } else {
-            if(DoTBUtils.useLighter(levelIn, pos, player, handIn)) {
+            if(Utils.useLighter(levelIn, pos, player, handIn)) {
                 Random rand = new Random();
                 for(int i = 0; i < 5; i++) {
                     levelIn.addAlwaysVisibleParticle(ParticleTypes.SMOKE, (double) pos.getX() + rand.nextDouble(), (double) pos.getY() + 0.5D + rand.nextDouble() / 2, (double) pos.getZ() + rand.nextDouble(), 0.0D, 0.07D, 0.0D);
@@ -325,7 +278,7 @@ public class IvyBlock extends BlockDoTB implements IBlockGeneration {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable BlockGetter levelIn,@NotNull List<Component> tooltip,@NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, levelIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, TOOLTIP_CROP);
+        Utils.addTooltip(tooltip, TOOLTIP_CROP);
     }
 
     @Override

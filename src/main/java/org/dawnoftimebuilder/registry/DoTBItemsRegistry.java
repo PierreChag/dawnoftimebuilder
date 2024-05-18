@@ -8,11 +8,11 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.dawnoftimebuilder.DawnOfTimeBuilder;
-import org.dawnoftimebuilder.block.templates.FlowerPotBlockDoTB;
+import org.dawnoftimebuilder.block.templates.FlowerPotBlockAA;
 import org.dawnoftimebuilder.item.IHasFlowerPot;
 import org.dawnoftimebuilder.item.templates.ItemDoTB;
 import org.dawnoftimebuilder.item.templates.PotItem;
-import org.dawnoftimebuilder.util.DoTBFoods;
+import org.dawnoftimebuilder.util.Foods;
 
 import java.util.function.Supplier;
 
@@ -38,7 +38,7 @@ public class DoTBItemsRegistry {
     public static final RegistryObject<Item> UNFIRED_CLAY_ROOF_TILE = DoTBItemsRegistry.reg("unfired_clay_roof_tile", ItemDoTB::new);
     public static final RegistryObject<Item> GRAY_CLAY_ROOF_TILE = DoTBItemsRegistry.reg("gray_clay_roof_tile", ItemDoTB::new);
     public static final RegistryObject<Item> MULBERRY_LEAVES = DoTBItemsRegistry.reg("mulberry_leaves", ItemDoTB::new);
-    public static final RegistryObject<Item> GRAPE = DoTBItemsRegistry.reg("grape", () -> new ItemDoTB(new Item.Properties().food(DoTBFoods.GRAPE)));
+    public static final RegistryObject<Item> GRAPE = DoTBItemsRegistry.reg("grape", () -> new ItemDoTB(new Item.Properties().food(Foods.GRAPE)));
     public static final RegistryObject<Item> GRAPE_SEEDS = DoTBItemsRegistry.regWithFlowerPot("grape_seeds", PotItem::new);
     public static final RegistryObject<Item> SILKMOTH_SPAWN_EGG = DoTBItemsRegistry.reg("silkmoth_spawn_egg", () -> new ForgeSpawnEggItem(DoTBEntitiesRegistry.SILKMOTH_ENTITY, 0xDBD8BD, 0xFEFEFC, new Item.Properties()));
 
@@ -53,15 +53,15 @@ public class DoTBItemsRegistry {
         @SuppressWarnings("unchecked")
     public static <T extends Item & IHasFlowerPot> RegistryObject<Item> regWithFlowerPot(final String plantName, final String seedName, final Supplier<T> itemSupplier) {
         final String potName = plantName + "_flower_pot";
-        RegistryObject<FlowerPotBlockDoTB> potBlockObject = (RegistryObject<FlowerPotBlockDoTB>) (Object) DoTBBlocksRegistry.reg(potName, () -> {
-            final FlowerPotBlockDoTB potBlock = new FlowerPotBlockDoTB(null);
+        RegistryObject<FlowerPotBlockAA> potBlockObject = (RegistryObject<FlowerPotBlockAA>) (Object) DoTBBlocksRegistry.reg(potName, () -> {
+            final FlowerPotBlockAA potBlock = new FlowerPotBlockAA(null);
             DoTBBlocksRegistry.POT_BLOCKS.put(potName, potBlock);
             return potBlock;
         }, BlockTags.MINEABLE_WITH_PICKAXE);
 
         RegistryObject<T> toReturn = DoTBItemsRegistry.ITEMS.register(seedName, () -> {
             T item = itemSupplier.get();
-            FlowerPotBlockDoTB potBlock = potBlockObject.get();
+            FlowerPotBlockAA potBlock = potBlockObject.get();
 
             item.setPotBlock(potBlock);
             potBlock.setItemInPot(item);
