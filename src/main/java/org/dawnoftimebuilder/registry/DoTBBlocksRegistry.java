@@ -130,6 +130,7 @@ public class DoTBBlocksRegistry {
     public static final RegistryObject<Block> WROUGHT_IRON_FENCE = DoTBBlocksRegistry.reg("wrought_iron_fence", () -> new IronFenceBlock(Block.Properties.copy(Blocks.IRON_BARS)));
     public static final RegistryObject<Block> WATER_FLOWING_TRICKLE = DoTBBlocksRegistry.regWithItem("water_flowing_trickle", () -> new WaterFlowingTrickleBlock(Block.Properties.copy(Blocks.WATER).randomTicks()), null);
     public static final RegistryObject<Block> WATER_SOURCE_TRICKLE = DoTBBlocksRegistry.reg("water_source_trickle", () -> new WaterSourceTrickleBlock(Block.Properties.copy(Blocks.SEAGRASS).randomTicks()));
+    public static final RegistryObject<Block> IRON_COLUMN = DoTBBlocksRegistry.reg("iron_column", () -> new IronColumnBlock(Block.Properties.copy(Blocks.IRON_BARS)));
     // French
     public static final RegistryObject<Block> COBBLED_LIMESTONE = DoTBBlocksRegistry.reg("cobbled_limestone", () -> new BlockAA(Block.Properties.copy(Blocks.STONE_BRICKS)));
     public static final RegistryObject<Block> LIMESTONE_BRICKS = DoTBBlocksRegistry.reg("limestone_bricks", () -> new BlockAA(Block.Properties.copy(Blocks.STONE_BRICKS)));

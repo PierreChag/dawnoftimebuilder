@@ -1,0 +1,45 @@
+{
+	"credit": "mr_ch0c0late",
+	"textures": {
+		"particle": "dawnoftimebuilder:block/iron_column"
+	},
+	"elements": [
+		{
+			"from": [7, 8, 7],
+			"to": [9, 16, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
+			"faces": {
+				"north": {"uv": [2, 4, 4, 12], "texture": "#particle"},
+				"east": {"uv": [2, 4, 4, 12], "texture": "#particle"},
+				"south": {"uv": [2, 4, 4, 12], "texture": "#particle"},
+				"west": {"uv": [2, 4, 4, 12], "texture": "#particle"}
+			}
+		},
+		{
+			"from": [6, 10, 6],
+			"to": [10, 12, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
+			"faces": {
+				"north": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"east": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"south": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"west": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"up": {"uv": [8, 9, 12, 13], "texture": "#particle"},
+				"down": {"uv": [8, 9, 12, 13], "texture": "#particle"}
+			}
+		},
+		{
+			"from": [6, 0, 6],
+			"to": [10, 8, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
+			"faces": {
+				"north": {"uv": [4, 4, 8, 12], "texture": "#particle"},
+				"east": {"uv": [4, 4, 8, 12], "texture": "#particle"},
+				"south": {"uv": [4, 4, 8, 12], "texture": "#particle"},
+				"west": {"uv": [4, 4, 8, 12], "texture": "#particle"},
+				"up": {"uv": [12, 9, 16, 13], "texture": "#particle"},
+				"down": {"uv": [2, 12, 6, 16], "texture": "#particle", "cullface": "down"}
+			}
+		}
+	]
+}

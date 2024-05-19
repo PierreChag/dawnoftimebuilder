@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "vertical_connection=under,small_top=true": { "model": "dawnoftimebuilder:block/general/iron_column_top_small" },
+        "vertical_connection=under,small_top=false": { "model": "dawnoftimebuilder:block/general/iron_column_top" },
+        "vertical_connection=both,small_top=true": { "model": "dawnoftimebuilder:block/general/iron_column_middle" },
+        "vertical_connection=both,small_top=false": { "model": "dawnoftimebuilder:block/general/iron_column_middle" },
+        "vertical_connection=above,small_top=true": { "model": "dawnoftimebuilder:block/general/iron_column_bottom" },
+        "vertical_connection=above,small_top=false": { "model": "dawnoftimebuilder:block/general/iron_column_bottom" },
+        "vertical_connection=none,small_top=true": { "model": "dawnoftimebuilder:block/general/iron_column_lone_small" },
+        "vertical_connection=none,small_top=false": { "model": "dawnoftimebuilder:block/general/iron_column_lone" }
+    }
+}

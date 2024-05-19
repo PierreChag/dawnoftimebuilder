@@ -24,6 +24,7 @@ public class BlockStatePropertiesAA {
     public static final BooleanProperty WEST_TRICKLE = BooleanProperty.create("west_trickle");
     public static final BooleanProperty CENTER_TRICKLE = BooleanProperty.create("center_trickle");
     public static final BooleanProperty ACTIVATED = BooleanProperty.create("activated");
+    public static final BooleanProperty SMALL_TOP = BooleanProperty.create("small_top");
     public static final IntegerProperty MULTIBLOCK_0_2 = IntegerProperty.create("multiblock", 0, 2);
     public static final IntegerProperty MULTIBLOCK_3X = IntegerProperty.create("multiblock_3x", 0, 2);
     public static final IntegerProperty MULTIBLOCK_2Y = IntegerProperty.create("multiblock_2y", 0, 1);

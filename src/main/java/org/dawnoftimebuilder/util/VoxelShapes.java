@@ -7,7 +7,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import static org.dawnoftimebuilder.util.VoxelShapesBuilder.*;
 
 public class VoxelShapes {
-    // Default shape.
+
+    // Test shape
+    // The Y are decimals defined so that it still accept 0.01 or 0.5, values used to avoid overlapping textures or in fancy models.
+    public static final VoxelShape SHAPE_DOWN_16x16 = Block.box(0.0F, 0.05F, 0.0F, 16.0F, 0.1F, 16.0F);
+    public static final VoxelShape SHAPE_DOWN_4x4 = Block.box(6.0F, 0.05F, 6.0F, 10.0F, 0.1F, 10.0F);
+
+    // Default shapes
     public static final VoxelShape[] FULL_SHAPE = new VoxelShape[]{Shapes.block()};
 
     // Custom shapes
@@ -52,6 +58,7 @@ public class VoxelShapes {
     public static final VoxelShape[] FLOWER_POT_SHAPE = new VoxelShape[]{Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D)};
     public static final VoxelShape[] GREEN_SCULPTED_PLASTERED_STONE_FRIEZE_SHAPES = makeGreenSculptedPlasteredStoneFriezeShapes();
     public static final VoxelShape[] GERANIUM_SHAPE = new VoxelShape[]{Block.box(-2.0D, -7.0D, -2.0D, 17.0D, 15.0D, 17.0D)};
+    public static final VoxelShape[] IRON_COLUMN_SHAPES = makeIronColumnShapes();
     public static final VoxelShape[] IRON_FENCE_SHAPES = makeIronFenceShapes();
     public static final VoxelShape[] IVY_SHAPES = makeIvyShapes();
     public static final VoxelShape[] LATTICE_SHAPES = makeLatticeShapes();
@@ -134,9 +141,7 @@ public class VoxelShapes {
     public static final VoxelShape[] STONE_BRICKS_ARROWSLIT_SHAPES = makeStoneBricksArrowslitShapes();
     public static final VoxelShape[] STONE_BRICKS_CHIMNEY_SHAPES = makeStoneBricksChimneyShapes();
     public static final VoxelShape[] STONE_BRICKS_MACHICOLATION_SHAPES = makeStoneBricksMachicolationShapes();
-    public static final VoxelShape[] STONE_LANTERN_SHAPES = Utils.generateHorizontalShapes(
-            new VoxelShape[] { Block.box(2.0D, 0.0D, 0.0D, 14.0D, 16.0D, 14.0D)},
-            Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D));
+    public static final VoxelShape[] STONE_LANTERN_SHAPES = makeStoneLanternShapes();
     public static final VoxelShape[] SUPPORT_BEAM_SHAPES = makeSupportBeamShapes();
     public static final VoxelShape[] SUPPORT_SLAB_SHAPES = makeSupportSlabShapes();
     public static final VoxelShape[] TATAMI_FLOOR_SHAPES = new VoxelShape[]{Block.box(0.0D, 0.0D, 0.0D, 16.0D, 17.0D, 16.0D)};

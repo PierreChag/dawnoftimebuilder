@@ -30,6 +30,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -38,6 +39,8 @@ import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.SHAPE_DOWN_4x4;
 
 public class Utils {
     //General
@@ -288,5 +291,18 @@ public class Utils {
     public static int getHighestSectionPosition(ChunkAccess chunkAccess) {
         int i = chunkAccess.getHighestFilledSectionIndex();
         return i == -1 ? chunkAccess.getMinBuildHeight() : SectionPos.sectionToBlockCoord(chunkAccess.getSectionYFromSectionIndex(i));
+    }
+
+    /**
+     * First, keeps only the part of the testedShape that is on the tested face of the block (within faceShape).
+     * Then, compares this shapeOnFace to inShape : if the shapeOnFace has a part outside the inShape, return false.
+     * @param testedShape Shape that will be tested.
+     * @param faceShape Shape that correspond the full face of the block tested for the direction.
+     * @param inShape Shape to which the testedShape will be compared.
+     * @return False is the testedShape has a part that is not within the inShape, true otherwise.
+     */
+    public static boolean isShapeIncludedInShape(VoxelShape testedShape, VoxelShape faceShape, VoxelShape inShape){
+        VoxelShape shapeOnFace = Shapes.join(testedShape, faceShape, BooleanOp.AND);
+        return !Shapes.joinIsNotEmpty(shapeOnFace, inShape, BooleanOp.ONLY_FIRST);
     }
 }

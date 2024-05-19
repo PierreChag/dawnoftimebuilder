@@ -1,0 +1,56 @@
+{
+	"credit": "mr_ch0c0late",
+	"textures": {
+		"particle": "dawnoftimebuilder:block/iron_column"
+	},
+	"elements": [
+		{
+			"from": [6, 12, 6],
+			"to": [10, 15, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 19, 0]},
+			"faces": {
+				"north": {"uv": [10, 13, 14, 16], "texture": "#particle"},
+				"east": {"uv": [10, 13, 14, 16], "texture": "#particle"},
+				"south": {"uv": [10, 13, 14, 16], "texture": "#particle"},
+				"west": {"uv": [10, 13, 14, 16], "texture": "#particle"},
+				"down": {"uv": [2, 12, 6, 16], "texture": "#particle"}
+			}
+		},
+		{
+			"from": [4, 15, 4],
+			"to": [12, 16, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0.5, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [8, 8, 16, 9], "texture": "#particle"},
+				"east": {"uv": [8, 8, 16, 9], "texture": "#particle"},
+				"south": {"uv": [8, 8, 16, 9], "texture": "#particle"},
+				"west": {"uv": [8, 8, 16, 9], "texture": "#particle"},
+				"up": {"uv": [8, 0, 16, 8], "texture": "#particle", "cullface": "up"},
+				"down": {"uv": [8, 0, 16, 8], "texture": "#particle"}
+			}
+		},
+		{
+			"from": [7, 2, 7],
+			"to": [9, 12, 9],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 10], "texture": "#particle"},
+				"east": {"uv": [0, 0, 2, 10], "texture": "#particle"},
+				"south": {"uv": [0, 0, 2, 10], "texture": "#particle"},
+				"west": {"uv": [0, 0, 2, 10], "texture": "#particle"}
+			}
+		},
+		{
+			"from": [6, 0, 6],
+			"to": [10, 2, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 6, 0]},
+			"faces": {
+				"north": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"east": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"south": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"west": {"uv": [6, 13, 10, 15], "texture": "#particle"},
+				"up": {"uv": [8, 9, 12, 13], "texture": "#particle"},
+				"down": {"uv": [8, 9, 12, 13], "texture": "#particle", "cullface": "down"}
+			}
+		}
+	]
+}

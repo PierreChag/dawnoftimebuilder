@@ -908,4 +908,51 @@ public class VoxelShapesBuilder {
                 vsColumn
         });
     }
+
+    /**
+     * @return Stores VoxelShape with index : <p/>
+     * {0 : NONE_SMALL, 1 : NONE, 2 : UNDER_SMALL, 3 : UNDER, 4 : ABOVE, 5 : BOTH}
+     */
+    protected static VoxelShape[] makeIronColumnShapes() {
+        VoxelShape vsColumn = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
+        return new VoxelShape[] {
+                Shapes.or(
+                        vsColumn,
+                        Block.box(6.0D, 0.0D, 6.0D, 10.0D, 2.0D, 10.0D),
+                        Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D)),
+                Shapes.or(
+                        vsColumn,
+                        Block.box(6.0D, 0.0D, 6.0D, 10.0D, 2.0D, 10.0D),
+                        Block.box(6.0D, 12.0D, 6.0D, 10.0D, 15.0D, 10.0D),
+                        Block.box(4.0D, 15.0D, 4.0D, 12.0D, 16.0D, 12.0D)),
+                Shapes.or(
+                        vsColumn,
+                        Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D)),
+                Shapes.or(
+                        vsColumn,
+                        Block.box(6.0D, 8.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                        Block.box(6.0D, 12.0D, 6.0D, 10.0D, 15.0D, 10.0D),
+                        Block.box(4.0D, 15.0D, 4.0D, 12.0D, 16.0D, 12.0D)),
+                Shapes.or(
+                        vsColumn,
+                        Block.box(6.0D, 0.0D, 6.0D, 10.0D, 8.0D, 10.0D),
+                        Block.box(6.0D, 10.0D, 6.0D, 10.0D, 12.0D, 10.0D)),
+                Shapes.or(
+                        vsColumn,
+                        Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D))};
+    }
+
+    protected static VoxelShape[] makeStoneLanternShapes(){
+        return Utils.generateHorizontalShapes(
+                new VoxelShape[] {Shapes.or(
+                        Block.box(4.0D, 1.0D, 4.0D, 12.0D, 2.0D, 12.0D),
+                        Block.box(5.0D, 2.0D, 5.0D, 11.0D, 10.5D, 11.0D),
+                        Block.box(7.0D, 6.0D, 0.0D, 9.0D, 16.0D, 9.0D),
+                        Block.box(2.0D, 7.5D, 2.0D, 14.0D, 9.0D, 14.0D))},
+                Shapes.or(
+                        Block.box(7.0D, 0.0D, 7.0D, 9.0D, 13.5D, 9.0D),
+                        Block.box(4.0D, 2.0D, 4.0D, 12.0D, 3.0D, 12.0D),
+                        Block.box(5.0D, 3.0D, 5.0D, 11.0D, 11.5D, 11.0D),
+                        Block.box(2.0D, 8.5D, 2.0D, 14.0D, 10.0D, 14.0D)));
+    }
 }
