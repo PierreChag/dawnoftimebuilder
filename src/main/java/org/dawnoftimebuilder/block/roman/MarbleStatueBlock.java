@@ -47,7 +47,7 @@ public class MarbleStatueBlock extends WaterloggedBlock {
     public void playerWillDestroy(final Level worldIn, final BlockPos blockPosIn, final BlockState blockStateIn, final Player playerEntityIn) {
         // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
         if(!worldIn.isClientSide() && playerEntityIn.isCreative()) {
-            BlockPos blockPos = blockPosIn;
+            BlockPos blockPos;
             int multiblockValue = blockStateIn.getValue(MarbleStatueBlock.MULTIBLOCK);
             if(multiblockValue > 0) {
                 blockPos = blockPosIn.below(multiblockValue);

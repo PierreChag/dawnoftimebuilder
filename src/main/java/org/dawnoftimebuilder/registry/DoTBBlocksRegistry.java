@@ -22,6 +22,7 @@ import org.dawnoftimebuilder.block.french.*;
 import org.dawnoftimebuilder.block.general.*;
 import org.dawnoftimebuilder.block.german.*;
 import org.dawnoftimebuilder.block.japanese.*;
+import org.dawnoftimebuilder.block.templates.LanternBlock;
 import org.dawnoftimebuilder.block.persian.MoraqMosaicColumnBlock;
 import org.dawnoftimebuilder.block.precolumbian.*;
 import org.dawnoftimebuilder.block.roman.*;
@@ -127,10 +128,11 @@ public class DoTBBlocksRegistry {
     public static final RegistryObject<Block> GOLD_PLATED_SMOOTH_WALL = DoTBBlocksRegistry.reg("gold_plated_smooth_wall", () -> new WallBlock(Block.Properties.copy(Blocks.GOLD_BLOCK)));
     public static final RegistryObject<Block> FIREPLACE = DoTBBlocksRegistry.reg("fireplace", () -> new FireplaceBlock(Block.Properties.copy(Blocks.STONE).strength(1.5F, 6.0F).lightLevel(DoTBBlocksRegistry.litBlockEmission(15))));
     public static final RegistryObject<Block> IRON_PORTCULLIS = DoTBBlocksRegistry.reg("iron_portcullis", () -> new PortcullisBlock(Block.Properties.copy(Blocks.IRON_DOOR)));
+    public static final RegistryObject<Block> IRON_FANCY_LANTERN = DoTBBlocksRegistry.reg("iron_fancy_lantern", () -> new LanternBlock(Block.Properties.copy(Blocks.IRON_BARS).noOcclusion().lightLevel(state -> 15), IRON_FANCY_LANTERN_SHAPES));
+    public static final RegistryObject<Block> IRON_COLUMN = DoTBBlocksRegistry.reg("iron_column", () -> new IronColumnBlock(Block.Properties.copy(Blocks.IRON_BARS)));
     public static final RegistryObject<Block> WROUGHT_IRON_FENCE = DoTBBlocksRegistry.reg("wrought_iron_fence", () -> new IronFenceBlock(Block.Properties.copy(Blocks.IRON_BARS)));
     public static final RegistryObject<Block> WATER_FLOWING_TRICKLE = DoTBBlocksRegistry.regWithItem("water_flowing_trickle", () -> new WaterFlowingTrickleBlock(Block.Properties.copy(Blocks.WATER).randomTicks()), null);
     public static final RegistryObject<Block> WATER_SOURCE_TRICKLE = DoTBBlocksRegistry.reg("water_source_trickle", () -> new WaterSourceTrickleBlock(Block.Properties.copy(Blocks.SEAGRASS).randomTicks()));
-    public static final RegistryObject<Block> IRON_COLUMN = DoTBBlocksRegistry.reg("iron_column", () -> new IronColumnBlock(Block.Properties.copy(Blocks.IRON_BARS)));
     // French
     public static final RegistryObject<Block> COBBLED_LIMESTONE = DoTBBlocksRegistry.reg("cobbled_limestone", () -> new BlockAA(Block.Properties.copy(Blocks.STONE_BRICKS)));
     public static final RegistryObject<Block> LIMESTONE_BRICKS = DoTBBlocksRegistry.reg("limestone_bricks", () -> new BlockAA(Block.Properties.copy(Blocks.STONE_BRICKS)));
@@ -209,6 +211,8 @@ public class DoTBBlocksRegistry {
     public static final RegistryObject<Block> WAXED_OAK_CHANDELIER = DoTBBlocksRegistry.reg("waxed_oak_chandelier", () -> new WaxedOakChandelierBlock(Block.Properties.copy(Blocks.OAK_WOOD).strength(3.0F, 5.0F).noOcclusion().lightLevel(DoTBBlocksRegistry.litBlockEmission(15))), BlockTags.MINEABLE_WITH_AXE);
     public static final RegistryObject<Block> WAXED_OAK_CHAIR = DoTBBlocksRegistry.reg("waxed_oak_chair", () -> new DoubleChairBlock(Block.Properties.copy(Blocks.OAK_WOOD).strength(3.0F, 5.0F).noOcclusion(), 11.0F, WAXED_OAK_CHAIR_SHAPES), BlockTags.MINEABLE_WITH_AXE);
     public static final RegistryObject<Block> WAXED_OAK_TABLE = DoTBBlocksRegistry.reg("waxed_oak_table", () -> new ConnectedHorizontalPlanDoubleTableBlock(Block.Properties.copy(Blocks.OAK_WOOD).strength(3.0F, 5.0F).noOcclusion(), WAXED_OAK_TABLE_SHAPES), BlockTags.MINEABLE_WITH_AXE);
+    //public static final RegistryObject<Block> WAXED_OAK_CANOPY_BED = DoTBBlocksRegistry.reg("waxed_oak_canopy_bed", () -> new WaxedOakCanopyBedBlock(DyeColor.RED, BlockBehaviour.Properties.copy(Blocks.WHITE_BED).noOcclusion()), BlockTags.MINEABLE_WITH_AXE);
+    //public static final RegistryObject<Block> WAXED_OAK_CANOPY_BED_WOOD = DoTBBlocksRegistry.regWithItem("waxed_oak_canopy_bed", () -> new WaxedOakCanopyBedWoodBlock(BlockBehaviour.Properties.copy(WAXED_OAK_PLANKS.get()).noOcclusion()), null, BlockTags.MINEABLE_WITH_AXE);
     public static final RegistryObject<Block> IVY = DoTBBlocksRegistry.regWithFlowerPotItem("ivy", () -> new IvyBlock(Block.Properties.copy(Blocks.VINE).randomTicks().strength(0.2F).sound(SoundType.VINE)), (block) -> new PotAndBlockItem(block, new Item.Properties()));
     public static final RegistryObject<Block> GERANIUM_PINK = DoTBBlocksRegistry.regWithFlowerPotItem("geranium_pink", () -> new GeraniumBlock(Block.Properties.copy(Blocks.SUNFLOWER).offsetType(BlockBehaviour.OffsetType.NONE).instabreak().sound(SoundType.GRASS)), (block) -> new PotAndBlockItem(block, new Item.Properties()));
     public static final RegistryObject<Block> PLANTER_GERANIUM_PINK = DoTBBlocksRegistry.reg("planter_geranium_pink", () -> new PlanterBlock(Block.Properties.copy(Blocks.CLAY).strength(0.6F).noOcclusion()));
@@ -275,7 +279,7 @@ public class DoTBBlocksRegistry {
     public static final RegistryObject<Block> PAPER_FOLDING_SCREEN = DoTBBlocksRegistry.reg("paper_folding_screen", () -> new FoldingScreenBlock(Block.Properties.copy(Blocks.WHITE_WOOL).strength(1.5F, 1.5F).noOcclusion(), FULL_SHAPE), BlockTags.MINEABLE_WITH_AXE);
     public static final RegistryObject<Block> RED_PAPER_LANTERN = DoTBBlocksRegistry.reg("red_paper_lantern", () -> new PaperLanternBlock(Block.Properties.copy(Blocks.RED_WOOL).noOcclusion().noCollission().lightLevel(state -> 12)), BlockTags.MINEABLE_WITH_AXE);
     public static final RegistryObject<Block> PAPER_LAMP = DoTBBlocksRegistry.reg("paper_lamp", () -> new PaperLampBlock(Block.Properties.copy(Blocks.WHITE_WOOL).noOcclusion().lightLevel(state -> 14)), BlockTags.MINEABLE_WITH_AXE);
-    public static final RegistryObject<Block> STONE_LANTERN = DoTBBlocksRegistry.reg("stone_lantern", () -> new StoneLanternBlock(Block.Properties.copy(Blocks.STONE_BRICKS).noOcclusion().lightLevel(state -> 15)));
+    public static final RegistryObject<Block> STONE_LANTERN = DoTBBlocksRegistry.reg("stone_lantern", () -> new LanternBlock(Block.Properties.copy(Blocks.STONE_BRICKS).noOcclusion().lightLevel(state -> 15), STONE_LANTERN_SHAPES));
     public static final RegistryObject<Block> RICE = DoTBBlocksRegistry.regWithItem("rice", () -> new WaterDoubleCropsBlock(2), (block) -> new SoilSeedsItem(block, null), BlockTags.MINEABLE_WITH_AXE);
     public static final RegistryObject<Block> SMALL_TATAMI_MAT = DoTBBlocksRegistry.reg("small_tatami_mat", () -> new SmallTatamiMatBlock(Block.Properties.copy(Blocks.WHITE_CARPET)), BlockTags.MINEABLE_WITH_AXE);
     public static final RegistryObject<Block> SMALL_TATAMI_FLOOR = DoTBBlocksRegistry.regWithItem("small_tatami_floor", () -> new SmallTatamiFloorBlock(Block.Properties.copy(Blocks.WHITE_CARPET)), null, BlockTags.MINEABLE_WITH_AXE);

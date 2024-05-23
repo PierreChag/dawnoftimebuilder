@@ -1,4 +1,4 @@
-package org.dawnoftimebuilder.block.japanese;
+package org.dawnoftimebuilder.block.templates;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,23 +14,19 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockChain;
-import org.dawnoftimebuilder.block.IBlockSpecialDisplay;
 import org.dawnoftimebuilder.block.templates.SpecialDisplayBlock;
-import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.dawnoftimebuilder.util.VoxelShapes.STONE_LANTERN_SHAPES;
 
-public class StoneLanternBlock extends SpecialDisplayBlock implements IBlockChain {
+public class LanternBlock extends SpecialDisplayBlock implements IBlockChain {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-    public StoneLanternBlock(Properties properties) {
-        super(properties, STONE_LANTERN_SHAPES);
+    public LanternBlock(Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.DOWN));
     }
 
@@ -49,7 +45,11 @@ public class StoneLanternBlock extends SpecialDisplayBlock implements IBlockChai
     @Override
     public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Direction facing = state.getValue(FACING);
-        return facing.getAxis() == Direction.Axis.Y ? 4 : facing.get2DDataValue();
+        return switch (facing){
+            default -> facing.get2DDataValue();
+            case DOWN -> 4;
+            case UP -> 5;
+        };
     }
 
     @Override

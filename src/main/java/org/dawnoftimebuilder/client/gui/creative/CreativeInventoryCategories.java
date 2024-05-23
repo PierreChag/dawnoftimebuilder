@@ -175,6 +175,7 @@ public enum CreativeInventoryCategories {
             IRON_COLUMN.get().asItem(),
             IRON_PORTCULLIS.get().asItem(),
             WROUGHT_IRON_FENCE.get().asItem(),
+            IRON_FANCY_LANTERN.get().asItem(),
             FIREPLACE.get().asItem(),
             FLINT_AND_STEEL
     ),
@@ -279,7 +280,6 @@ public enum CreativeInventoryCategories {
             WAXED_OAK_CHANDELIER.get().asItem(),
             WAXED_OAK_TABLE.get().asItem(),
             WAXED_OAK_CHAIR.get().asItem(),
-            IRON_COLUMN.get().asItem(),
             IRON_PORTCULLIS.get().asItem(),
             WROUGHT_IRON_FENCE.get().asItem(),
             STONE_BRICKS_POOL.get().asItem(),

@@ -59,6 +59,7 @@ public class VoxelShapes {
     public static final VoxelShape[] GREEN_SCULPTED_PLASTERED_STONE_FRIEZE_SHAPES = makeGreenSculptedPlasteredStoneFriezeShapes();
     public static final VoxelShape[] GERANIUM_SHAPE = new VoxelShape[]{Block.box(-2.0D, -7.0D, -2.0D, 17.0D, 15.0D, 17.0D)};
     public static final VoxelShape[] IRON_COLUMN_SHAPES = makeIronColumnShapes();
+    public static final VoxelShape[] IRON_FANCY_LANTERN_SHAPES = makeIronFancyLanternShapes();
     public static final VoxelShape[] IRON_FENCE_SHAPES = makeIronFenceShapes();
     public static final VoxelShape[] IVY_SHAPES = makeIvyShapes();
     public static final VoxelShape[] LATTICE_SHAPES = makeLatticeShapes();
