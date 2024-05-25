@@ -83,8 +83,9 @@ public class BeamBlock extends WaterloggedBlock implements IBlockPillar, IBlockC
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = context.getLevel().getBlockState(context.getClickedPos());
-        if(state.getBlock() != this)
+        if(state.getBlock() != this) {
             state = super.getStateForPlacement(context);
+        }
         switch (context.getClickedFace().getAxis()) {
             default -> {
                 BlockState stateUnder = context.getLevel().getBlockState(context.getClickedPos().below());

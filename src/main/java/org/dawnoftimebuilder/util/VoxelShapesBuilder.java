@@ -911,35 +911,34 @@ public class VoxelShapesBuilder {
 
     /**
      * @return Stores VoxelShape with index : <p/>
-     * {0 : NONE_SMALL, 1 : NONE, 2 : UNDER_SMALL, 3 : UNDER, 4 : ABOVE, 5 : BOTH}
+     * {0: axis_x, 1: axis_z, 2: axis_xz, 3-8: axis_y, 9-14: axis_xy, 15-20: axis_yz, 21-27: axis_xyz}
      */
     protected static VoxelShape[] makeIronColumnShapes() {
-        VoxelShape vsColumn = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
-        return new VoxelShape[] {
-                Shapes.or(
-                        vsColumn,
-                        Block.box(6.0D, 0.0D, 6.0D, 10.0D, 2.0D, 10.0D),
-                        Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D)),
-                Shapes.or(
-                        vsColumn,
-                        Block.box(6.0D, 0.0D, 6.0D, 10.0D, 2.0D, 10.0D),
-                        Block.box(6.0D, 12.0D, 6.0D, 10.0D, 15.0D, 10.0D),
-                        Block.box(4.0D, 15.0D, 4.0D, 12.0D, 16.0D, 12.0D)),
-                Shapes.or(
-                        vsColumn,
-                        Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D)),
-                Shapes.or(
-                        vsColumn,
-                        Block.box(6.0D, 8.0D, 6.0D, 10.0D, 10.0D, 10.0D),
-                        Block.box(6.0D, 12.0D, 6.0D, 10.0D, 15.0D, 10.0D),
-                        Block.box(4.0D, 15.0D, 4.0D, 12.0D, 16.0D, 12.0D)),
-                Shapes.or(
-                        vsColumn,
-                        Block.box(6.0D, 0.0D, 6.0D, 10.0D, 8.0D, 10.0D),
-                        Block.box(6.0D, 10.0D, 6.0D, 10.0D, 12.0D, 10.0D)),
-                Shapes.or(
-                        vsColumn,
-                        Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D))};
+        VoxelShape axisY = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
+        VoxelShape axisX = Block.box(0.0D, 7.0D, 7.0D, 16.0D, 9.0D, 9.0D);
+        VoxelShape axisZ = Block.box(7.0D, 7.0D, 0.0D, 9.0D, 9.0D, 16.0D);
+        VoxelShape axisXZ = Shapes.or(axisX, axisZ);
+        VoxelShape smallNone = Shapes.or(axisY,
+                Block.box(6.0D, 0.0D, 6.0D, 10.0D, 2.0D, 10.0D),
+                Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D));
+        VoxelShape largeNone = Shapes.or(axisY,
+                Block.box(6.0D, 0.0D, 6.0D, 10.0D, 2.0D, 10.0D),
+                Block.box(6.0D, 12.0D, 6.0D, 10.0D, 15.0D, 10.0D),
+                Block.box(4.0D, 15.0D, 4.0D, 12.0D, 16.0D, 12.0D));
+        VoxelShape smallUnder = Shapes.or(axisY, Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D));
+        VoxelShape largeUnder = Shapes.or(axisY,
+                Block.box(6.0D, 8.0D, 6.0D, 10.0D, 10.0D, 10.0D),
+                Block.box(6.0D, 12.0D, 6.0D, 10.0D, 15.0D, 10.0D),
+                Block.box(4.0D, 15.0D, 4.0D, 12.0D, 16.0D, 12.0D));
+        VoxelShape above = Shapes.or(axisY,
+                Block.box(6.0D, 0.0D, 6.0D, 10.0D, 8.0D, 10.0D),
+                Block.box(6.0D, 10.0D, 6.0D, 10.0D, 12.0D, 10.0D));
+        VoxelShape both = Shapes.or(axisY, Block.box(6.5D, 15.0D, 6.5D, 9.5D, 16.0D, 9.5D));
+        return new VoxelShape[] {axisX, axisZ, Shapes.or(axisX, axisZ),
+                smallNone, largeNone, smallUnder, largeUnder, above, both,
+                Shapes.or(axisX, smallNone), Shapes.or(axisX, largeNone), Shapes.or(axisX, smallUnder), Shapes.or(axisX, largeUnder), Shapes.or(axisX, above), Shapes.or(axisX, both),
+                Shapes.or(axisZ, smallNone), Shapes.or(axisZ, largeNone), Shapes.or(axisZ, smallUnder), Shapes.or(axisZ, largeUnder), Shapes.or(axisZ, above), Shapes.or(axisZ, both),
+                Shapes.or(axisXZ, smallNone), Shapes.or(axisXZ, largeNone), Shapes.or(axisXZ, smallUnder), Shapes.or(axisXZ, largeUnder), Shapes.or(axisXZ, above), Shapes.or(axisXZ, both)};
     }
 
     protected static VoxelShape[] makeStoneLanternShapes(){
@@ -965,11 +964,11 @@ public class VoxelShapesBuilder {
     protected static VoxelShape[] makeIronFancyLanternShapes(){
         return Utils.generateHorizontalShapes(
                 new VoxelShape[] {Shapes.or(
-                        Block.box(7.0D, 16.0D, 7.0D, 9.0D, 18.0D, 9.0D),
-                        Block.box(6.0D, 15.0D, 6.0D, 10.0D, 16.0D, 10.0D),
-                        Block.box(5.0D, 6.0D, 5.0D, 11.0D, 15.0D, 11.0D),
-                        Block.box(6.0D, -1.0D, 0.0D, 10.0D, 7.0D, 1.0D),
-                        Block.box(7.0D, 5.0D, 1.0D, 9.0D, 6.0D, 11.0D))
+                        Block.box(7.0D, 17.0D, 7.0D, 9.0D, 19.0D, 9.0D),
+                        Block.box(6.0D, 16.0D, 6.0D, 10.0D, 17.0D, 10.0D),
+                        Block.box(5.0D, 7.0D, 5.0D, 11.0D, 16.0D, 11.0D),
+                        Block.box(6.0D, 0.0D, 0.0D, 10.0D, 8.0D, 1.0D),
+                        Block.box(7.0D, 6.0D, 1.0D, 9.0D, 7.0D, 10.0D))
                 },
                 Shapes.or(
                         Block.box(7.0D, 12.0D, 7.0D, 9.0D, 16.0D, 9.0D),

@@ -1,0 +1,53 @@
+{
+	"credit": "mr_ch0c0late",
+	"textures": {
+		"particle": "dawnoftimebuilder:block/iron_column"
+	},
+	"elements": [
+		{
+			"from": [7.01, 7, 0],
+			"to": [9.01, 9, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 7, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#particle", "cullface": "north"},
+				"east": {"uv": [0, 0, 2, 16], "rotation": 90, "texture": "#particle"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#particle", "cullface": "south"},
+				"west": {"uv": [0, 0, 2, 16], "rotation": 90, "texture": "#particle"},
+				"up": {"uv": [0, 0, 2, 16], "texture": "#particle"},
+				"down": {"uv": [0, 0, 2, 16], "texture": "#particle"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 1.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 1.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 90, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 90, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.3, 0.3, 0.3]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"translation": [0, 0, -1],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}
