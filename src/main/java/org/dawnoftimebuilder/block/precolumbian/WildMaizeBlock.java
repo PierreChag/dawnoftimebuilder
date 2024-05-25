@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
@@ -61,6 +62,23 @@ public class WildMaizeBlock extends WildPlantBlock implements IBlockGeneration {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         worldIn.setBlock(pos.above(), state.setValue(HALF, Half.TOP), 10);
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            if (state.getValue(HALF) == Half.TOP) {
+                BlockPos adjacentPos = pos.below();
+                BlockState adjacentState = level.getBlockState(adjacentPos);
+                if (adjacentState.is(this) && adjacentState.getValue(HALF) == Half.BOTTOM) {
+                    level.setBlock(adjacentPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, adjacentPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
