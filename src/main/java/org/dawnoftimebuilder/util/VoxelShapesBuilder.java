@@ -964,11 +964,11 @@ public class VoxelShapesBuilder {
     protected static VoxelShape[] makeIronFancyLanternShapes(){
         return Utils.generateHorizontalShapes(
                 new VoxelShape[] {Shapes.or(
-                        Block.box(7.0D, 17.0D, 7.0D, 9.0D, 19.0D, 9.0D),
-                        Block.box(6.0D, 16.0D, 6.0D, 10.0D, 17.0D, 10.0D),
-                        Block.box(5.0D, 7.0D, 5.0D, 11.0D, 16.0D, 11.0D),
-                        Block.box(6.0D, 0.0D, 0.0D, 10.0D, 8.0D, 1.0D),
-                        Block.box(7.0D, 6.0D, 1.0D, 9.0D, 7.0D, 10.0D))
+                        Block.box(7.0D, 18.0D, 7.0D, 9.0D, 20.0D, 9.0D),
+                        Block.box(6.0D, 17.0D, 6.0D, 10.0D, 18.0D, 10.0D),
+                        Block.box(5.0D, 8.0D, 5.0D, 11.0D, 17.0D, 11.0D),
+                        Block.box(6.0D, 1.0D, 0.0D, 10.0D, 9.0D, 1.0D),
+                        Block.box(7.0D, 7.0D, 1.0D, 9.0D, 8.0D, 10.0D))
                 },
                 Shapes.or(
                         Block.box(7.0D, 12.0D, 7.0D, 9.0D, 16.0D, 9.0D),
