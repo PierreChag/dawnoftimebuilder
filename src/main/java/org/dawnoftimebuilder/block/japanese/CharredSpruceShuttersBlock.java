@@ -22,22 +22,18 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
 
 public class CharredSpruceShuttersBlock extends WaterloggedBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-    private static final VoxelShape[] SHAPES = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] {
-            Block.box(0.0D, 0.0D, 14.0D, 16.0D, 16.0D, 16.0D),
-            Shapes.or(
-                    Block.box(0.0D, 12.0D, 12.0D, 16.0D, 16.0D, 16.0D),
-                    Block.box(0.0D, 9.0D, 9.0D, 16.0D, 13.0D, 13.0D),
-                    Block.box(0.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D),
-                    Block.box(0.0D, 3.0D, 3.0D, 16.0D, 7.0D, 7.0D)) });
 
-    public CharredSpruceShuttersBlock(Properties properties) {
-        super(properties);
+    public CharredSpruceShuttersBlock(Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(OPEN, false).setValue(WATERLOGGED, false).setValue(POWERED, false));
     }
 
@@ -48,9 +44,9 @@ public class CharredSpruceShuttersBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         int index = state.getValue(OPEN) ? 1 : 0;
-        return SHAPES[state.getValue(FACING).get2DDataValue() * 2 + index];
+        return state.getValue(FACING).get2DDataValue() * 2 + index;
     }
 
     @Override
@@ -63,6 +59,7 @@ public class CharredSpruceShuttersBlock extends WaterloggedBlock {
         return PushReaction.DESTROY;
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Level world = context.getLevel();

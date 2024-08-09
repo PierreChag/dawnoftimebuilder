@@ -12,28 +12,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.templates.BushBlockDoT;
 import org.dawnoftimebuilder.registry.DoTBBlocksRegistry;
 
+import static org.dawnoftimebuilder.util.VoxelShapes.SAPLING_SHAPES;
+
 public class PausedMapleSaplingBlock extends BushBlockDoT {
-    protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
 
     public PausedMapleSaplingBlock(final Properties properties) {
-        super(properties);
-    }
-
-    @Override
-    public VoxelShape getShape(final BlockState p_220053_1_In, final BlockGetter p_220053_2_In, final BlockPos p_220053_3_In, final CollisionContext p_220053_4_In) {
-        return PausedMapleSaplingBlock.SHAPE;
+        super(properties, SAPLING_SHAPES);
     }
 
     @Override
     public ItemStack getCloneItemStack(final BlockState stateIn, final HitResult targetIn, final BlockGetter worldIn, final BlockPos posIn, final Player playerIn) {
-        return new ItemStack(DoTBBlocksRegistry.ACACIA_BEAM.get().asItem());
+        return new ItemStack(DoTBBlocksRegistry.MAPLE_RED_SAPLING.get().asItem());
     }
 
     @Override

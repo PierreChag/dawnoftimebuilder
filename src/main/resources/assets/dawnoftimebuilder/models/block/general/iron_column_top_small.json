@@ -1,0 +1,30 @@
+{
+	"credit": "mr_ch0c0late",
+	"textures": {
+		"particle": "dawnoftimebuilder:block/iron_column"
+	},
+	"elements": [
+		{
+			"from": [6.5, 15, 6.5],
+			"to": [9.5, 16, 9.5],
+			"faces": {
+				"north": {"uv": [2, 0, 5, 1], "texture": "#particle"},
+				"east": {"uv": [2, 0, 5, 1], "texture": "#particle"},
+				"south": {"uv": [2, 0, 5, 1], "texture": "#particle"},
+				"west": {"uv": [2, 0, 5, 1], "texture": "#particle"},
+				"up": {"uv": [2, 1, 5, 4], "texture": "#particle", "cullface": "up"},
+				"down": {"uv": [2, 1, 5, 4], "texture": "#particle"}
+			}
+		},
+		{
+			"from": [7, 0, 7],
+			"to": [9, 15, 9],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 15], "texture": "#particle"},
+				"east": {"uv": [0, 0, 2, 15], "texture": "#particle"},
+				"south": {"uv": [0, 0, 2, 15], "texture": "#particle"},
+				"west": {"uv": [0, 0, 2, 15], "texture": "#particle"}
+			}
+		}
+	]
+}

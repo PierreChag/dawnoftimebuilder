@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "type=bottom": { "model": "dawnoftimebuilder:block/general/gold_plated_smooth_slab_bottom" },
+        "type=top": { "model": "dawnoftimebuilder:block/general/gold_plated_smooth_slab_top" },
+        "type=double": { "model": "dawnoftimebuilder:block/general/gold_plated_smooth_block" }
+    }
+}

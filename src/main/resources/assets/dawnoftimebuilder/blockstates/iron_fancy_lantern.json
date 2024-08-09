@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=down":  { "model": "dawnoftimebuilder:block/general/iron_fancy_lantern_up" },
+        "facing=up":  { "model": "dawnoftimebuilder:block/general/iron_fancy_lantern_down" },
+        "facing=west":  { "model": "dawnoftimebuilder:block/general/iron_fancy_lantern_side", "y": 90 },
+        "facing=north":  { "model": "dawnoftimebuilder:block/general/iron_fancy_lantern_side", "y": 180 },
+        "facing=south":  { "model": "dawnoftimebuilder:block/general/iron_fancy_lantern_side" },
+        "facing=east":  { "model": "dawnoftimebuilder:block/general/iron_fancy_lantern_side", "y" : 270 }
+    }
+}

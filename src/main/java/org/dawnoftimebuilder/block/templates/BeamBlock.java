@@ -25,30 +25,35 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockClimbingPlant;
 import org.dawnoftimebuilder.block.IBlockPillar;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_BEAM;
-import static org.dawnoftimebuilder.util.DoTBUtils.TOOLTIP_CLIMBING_PLANT;
+import static org.dawnoftimebuilder.util.Utils.TOOLTIP_BEAM;
+import static org.dawnoftimebuilder.util.Utils.TOOLTIP_CLIMBING_PLANT;
+import static org.dawnoftimebuilder.util.VoxelShapes.BEAM_SHAPES;
 
 public class BeamBlock extends WaterloggedBlock implements IBlockPillar, IBlockClimbingPlant {
     public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
-    public static final BooleanProperty AXIS_X = DoTBBlockStateProperties.AXIS_X;
-    public static final BooleanProperty AXIS_Y = DoTBBlockStateProperties.AXIS_Y;
-    public static final BooleanProperty AXIS_Z = DoTBBlockStateProperties.AXIS_Z;
-    public static final EnumProperty<DoTBBlockStateProperties.ClimbingPlant> CLIMBING_PLANT = DoTBBlockStateProperties.CLIMBING_PLANT;
-    private static final IntegerProperty AGE = DoTBBlockStateProperties.AGE_0_6;
+    public static final BooleanProperty AXIS_X = BlockStatePropertiesAA.AXIS_X;
+    public static final BooleanProperty AXIS_Y = BlockStatePropertiesAA.AXIS_Y;
+    public static final BooleanProperty AXIS_Z = BlockStatePropertiesAA.AXIS_Z;
+    public static final EnumProperty<BlockStatePropertiesAA.ClimbingPlant> CLIMBING_PLANT = BlockStatePropertiesAA.CLIMBING_PLANT;
+    private static final IntegerProperty AGE = BlockStatePropertiesAA.AGE_0_6;
     public static final BooleanProperty PERSISTENT = BlockStateProperties.PERSISTENT;
-    private static final VoxelShape[] SHAPES = makeShapes();
 
-    public BeamBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(BOTTOM, false).setValue(AXIS_Y, false).setValue(AXIS_X, false).setValue(AXIS_Z, false).setValue(CLIMBING_PLANT, DoTBBlockStateProperties.ClimbingPlant.NONE).setValue(AGE, 0).setValue(WATERLOGGED, false).setValue(PERSISTENT, false));
+    public BeamBlock(Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
+        this.registerDefaultState(this.defaultBlockState().setValue(BOTTOM, false).setValue(AXIS_Y, false).setValue(AXIS_X, false).setValue(AXIS_Z, false).setValue(CLIMBING_PLANT, BlockStatePropertiesAA.ClimbingPlant.NONE).setValue(AGE, 0).setValue(WATERLOGGED, false).setValue(PERSISTENT, false));
+    }
+
+    public BeamBlock(Properties properties){
+        this(properties, BEAM_SHAPES);
     }
 
     @Override
@@ -58,11 +63,7 @@ public class BeamBlock extends WaterloggedBlock implements IBlockPillar, IBlockC
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return SHAPES[getShapeIndex(state)];
-    }
-
-    protected int getShapeIndex(BlockState state) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         if(state.getValue(AXIS_Y)) {
             int index = 3;
             if(state.getValue(BOTTOM))
@@ -78,56 +79,25 @@ public class BeamBlock extends WaterloggedBlock implements IBlockPillar, IBlockC
         }
     }
 
-    /**
-     * @return Stores VoxelShape with index : <p/>
-     * 0 : Axis X <p/>
-     * 1 : Axis Z <p/>
-     * 2 : Axis X + Z <p/>
-     * 3 : Axis Y <p/>
-     * 4 : Axis Y + Bottom <p/>
-     * 5 : Axis Y + X <p/>
-     * 6 : Axis Y + X + Bottom <p/>
-     * 7 : Axis Y + Z <p/>
-     * 8 : Axis Y + Z + Bottom <p/>
-     * 9 : Axis Y + X + Z <p/>
-     * 10 : Axis Y + X + Z + Bottom
-     */
-    private static VoxelShape[] makeShapes() {
-        VoxelShape vs_axis_x = Block.box(0.0D, 4.0D, 4.0D, 16.0D, 12.0D, 12.0D);
-        VoxelShape vs_axis_z = Block.box(4.0D, 4.0D, 0.0D, 12.0D, 12.0D, 16.0D);
-        VoxelShape vs_axis_x_z = Shapes.or(vs_axis_x, vs_axis_z);
-        VoxelShape vs_axis_y = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
-        VoxelShape vs_axis_y_bottom = Shapes.or(vs_axis_y, Block.box(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D));
-        return new VoxelShape[] {
-                vs_axis_x,
-                vs_axis_z,
-                vs_axis_x_z,
-                vs_axis_y,
-                vs_axis_y_bottom,
-                Shapes.or(vs_axis_y, vs_axis_x),
-                Shapes.or(vs_axis_y_bottom, vs_axis_x),
-                Shapes.or(vs_axis_y, vs_axis_z),
-                Shapes.or(vs_axis_y_bottom, vs_axis_z),
-                Shapes.or(vs_axis_y, vs_axis_x_z),
-                Shapes.or(vs_axis_y_bottom, vs_axis_x_z)
-        };
-    }
-
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = context.getLevel().getBlockState(context.getClickedPos());
-        if(state.getBlock() != this)
+        if(state.getBlock() != this) {
             state = super.getStateForPlacement(context);
-        switch(context.getClickedFace().getAxis()) {
-            case X:
-                return state.setValue(AXIS_X, true);
-            default:
-            case Y:
+        }
+        switch (context.getClickedFace().getAxis()) {
+            default -> {
                 BlockState stateUnder = context.getLevel().getBlockState(context.getClickedPos().below());
                 state = state.setValue(AXIS_Y, true);
                 return state.setValue(BOTTOM, isBeamBottom(state, stateUnder));
-            case Z:
+            }
+            case X -> {
+                return state.setValue(AXIS_X, true);
+            }
+            case Z -> {
                 return state.setValue(AXIS_Z, true);
+            }
         }
     }
 
@@ -169,7 +139,7 @@ public class BeamBlock extends WaterloggedBlock implements IBlockPillar, IBlockC
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         // If the block is not PERSISTENT, we change it to persistent state to prevent plant growth.
         if(!state.getValue(PERSISTENT)) {
-            if(DoTBUtils.useLighter(worldIn, pos, player, handIn)) {
+            if(Utils.useLighter(worldIn, pos, player, handIn)) {
                 Random rand = new Random();
                 for(int i = 0; i < 5; i++) {
                     worldIn.addAlwaysVisibleParticle(ParticleTypes.SMOKE, (double) pos.getX() + rand.nextDouble(), (double) pos.getY() + 0.5D + rand.nextDouble() / 2, (double) pos.getZ() + rand.nextDouble(), 0.0D, 0.07D, 0.0D);
@@ -207,8 +177,8 @@ public class BeamBlock extends WaterloggedBlock implements IBlockPillar, IBlockC
 
     @Nonnull
     @Override
-    public DoTBBlockStateProperties.PillarConnection getBlockPillarConnectionAbove(BlockState state) {
-        return state.getValue(AXIS_Y) ? DoTBBlockStateProperties.PillarConnection.TEN_PX : DoTBBlockStateProperties.PillarConnection.NOTHING;
+    public BlockStatePropertiesAA.PillarConnection getBlockPillarConnectionAbove(BlockState state) {
+        return state.getValue(AXIS_Y) ? BlockStatePropertiesAA.PillarConnection.TEN_PX : BlockStatePropertiesAA.PillarConnection.NOTHING;
     }
 
     @Override
@@ -219,7 +189,7 @@ public class BeamBlock extends WaterloggedBlock implements IBlockPillar, IBlockC
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, TOOLTIP_BEAM, TOOLTIP_CLIMBING_PLANT);
+        Utils.addTooltip(tooltip, TOOLTIP_BEAM, TOOLTIP_CLIMBING_PLANT);
     }
 
     @Override

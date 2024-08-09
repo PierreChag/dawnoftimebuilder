@@ -3,15 +3,24 @@
     "pools": [
         {
             "rolls": 1,
-            "entries": [
-                {
-                    "type": "minecraft:item",
-                    "name": "dawnoftimebuilder:birch_couch"
-                }
-            ],
             "conditions": [
                 {
                     "condition": "minecraft:survives_explosion"
+                }
+            ],
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "conditions": [
+                        {
+                            "block": "dawnoftimebuilder:birch_couch",
+                            "condition": "minecraft:block_state_property",
+                            "properties": {
+                                "persistent": "true"
+                            }
+                        }
+                    ],
+                    "name": "dawnoftimebuilder:birch_couch"
                 }
             ]
         }

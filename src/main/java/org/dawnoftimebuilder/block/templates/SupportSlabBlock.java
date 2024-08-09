@@ -13,18 +13,19 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockPillar;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.SUPPORT_SLAB_SHAPES;
 
 public class SupportSlabBlock extends WaterloggedBlock {
-    private static final VoxelShape VS = Block.box(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    private static final VoxelShape VS_FOUR_PX = Shapes.or(VS, Block.box(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D));
-    private static final VoxelShape VS_EIGHT_PX = Shapes.or(VS, Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D));
-    private static final VoxelShape VS_TEN_PX = Shapes.or(VS, Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D));
-    private static final EnumProperty<DoTBBlockStateProperties.PillarConnection> PILLAR_CONNECTION = DoTBBlockStateProperties.PILLAR_CONNECTION;
+    private static final EnumProperty<BlockStatePropertiesAA.PillarConnection> PILLAR_CONNECTION = BlockStatePropertiesAA.PILLAR_CONNECTION;
 
     public SupportSlabBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(PILLAR_CONNECTION, DoTBBlockStateProperties.PillarConnection.NOTHING));
+        super(properties, SUPPORT_SLAB_SHAPES);
+        this.registerDefaultState(this.defaultBlockState().setValue(PILLAR_CONNECTION, BlockStatePropertiesAA.PillarConnection.NOTHING));
     }
 
     @Override
@@ -34,26 +35,23 @@ public class SupportSlabBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch(state.getValue(PILLAR_CONNECTION)) {
-            case FOUR_PX:
-                return VS_FOUR_PX;
-            case EIGHT_PX:
-                return VS_EIGHT_PX;
-            case TEN_PX:
-                return VS_TEN_PX;
-            default:
-                return VS;
-        }
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return switch (state.getValue(PILLAR_CONNECTION)) {
+            case FOUR_PX -> 1;
+            case EIGHT_PX -> 2;
+            case TEN_PX -> 3;
+            default -> 0;
+        };
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return super.getStateForPlacement(context).setValue(PILLAR_CONNECTION, IBlockPillar.getPillarConnectionAbove(context.getLevel(), context.getClickedPos().below()));
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         return facing == Direction.DOWN ? stateIn.setValue(PILLAR_CONNECTION, IBlockPillar.getPillarConnectionAbove(worldIn, currentPos.below())) : stateIn;
     }

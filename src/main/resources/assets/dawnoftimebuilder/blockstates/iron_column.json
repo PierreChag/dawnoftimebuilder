@@ -1,0 +1,28 @@
+{
+    "multipart": [
+        {   "when": { "axis_x": "true"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_axis_x"}
+        },
+        {   "when": { "axis_z": "true"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_axis_z"}
+        },
+        {   "when": { "axis_y": "true", "vertical_connection": "none", "small_top": "true"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_lone_small"}
+        },
+        {   "when": { "axis_y": "true", "vertical_connection": "none", "small_top": "false"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_lone"}
+        },
+        {   "when": { "axis_y": "true", "vertical_connection": "under", "small_top": "true"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_top_small"}
+        },
+        {   "when": { "axis_y": "true", "vertical_connection": "under", "small_top": "false"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_top"}
+        },
+        {   "when": { "axis_y": "true", "vertical_connection": "above"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_bottom"}
+        },
+        {   "when": { "axis_y": "true", "vertical_connection": "both"},
+            "apply": { "model": "dawnoftimebuilder:block/general/iron_column_middle"}
+        }
+    ]
+}

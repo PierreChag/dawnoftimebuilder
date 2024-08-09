@@ -25,34 +25,41 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.IBlockGeneration;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.block.templates.BlockAA;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CypressBlock extends BlockDoTB implements IBlockGeneration {
-    public static final IntegerProperty SIZE = DoTBBlockStateProperties.SIZE_0_5;
-    private static final VoxelShape VS_0 = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
-    private static final VoxelShape VS_1 = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 8.0D, 10.0D);
-    private static final VoxelShape VS_2 = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
-    private static final VoxelShape VS_3_4 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
+import static org.dawnoftimebuilder.util.VoxelShapes.CYPRESS_SHAPES;
+
+public class CypressBlock extends BlockAA implements IBlockGeneration {
+    public static final IntegerProperty SIZE = BlockStatePropertiesAA.SIZE_0_5;
 
     public CypressBlock(final Properties properties) {
-        super(properties);
+        super(properties, CYPRESS_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(CypressBlock.SIZE, 1));
     }
 
     @Override
-    public boolean canSurvive(final BlockState state, final LevelReader worldIn, final BlockPos pos) {
-        return Block.canSupportCenter(worldIn, pos.below(), Direction.UP)
-                || worldIn.getBlockState(pos.below()).getBlock() == this;
+    protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(CypressBlock.SIZE);
     }
 
     @Override
-    public InteractionResult use(final BlockState state, final Level worldIn, final BlockPos pos,
-                                 final Player player, final InteractionHand handIn, final BlockHitResult hit) {
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
+        return state.getValue(CypressBlock.SIZE);
+    }
+
+    @Override
+    public boolean canSurvive(final BlockState state, final LevelReader worldIn, final BlockPos pos) {
+        return Block.canSupportCenter(worldIn, pos.below(), Direction.UP) || worldIn.getBlockState(pos.below()).getBlock() == this;
+    }
+
+    @Override
+    public InteractionResult use(final BlockState state, final Level worldIn, final BlockPos pos, final Player player, final InteractionHand handIn, final BlockHitResult hit) {
         final ItemStack heldItemStack = player.getItemInHand(handIn);
         if(player.isCrouching()) {
             //We remove the highest CypressBlock
@@ -69,7 +76,7 @@ public class CypressBlock extends BlockDoTB implements IBlockGeneration {
         } else if(!heldItemStack.isEmpty() && heldItemStack.getItem() == this.asItem()) {
             //We put a CypressBlock on top of the cypress
             final BlockPos topPos = this.getHighestCypressPos(worldIn, pos).above();
-            if(topPos.getY() <= DoTBUtils.HIGHEST_Y) {
+            if(topPos.getY() <= Utils.HIGHEST_Y) {
                 if(!worldIn.isClientSide() && worldIn.getBlockState(topPos).isAir()) {
                     worldIn.setBlock(topPos, this.defaultBlockState(), 11);
                     if(!player.isCreative()) {
@@ -84,7 +91,7 @@ public class CypressBlock extends BlockDoTB implements IBlockGeneration {
 
     private BlockPos getHighestCypressPos(final Level worldIn, final BlockPos pos) {
         int yOffset;
-        for(yOffset = 0; yOffset + pos.getY() <= DoTBUtils.HIGHEST_Y; yOffset++) {
+        for(yOffset = 0; yOffset + pos.getY() <= Utils.HIGHEST_Y; yOffset++) {
             if(worldIn.getBlockState(pos.above(yOffset)).getBlock() != this) {
                 break;
             }
@@ -93,32 +100,7 @@ public class CypressBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(CypressBlock.SIZE);
-    }
-
-    @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos,
-                               final CollisionContext context) {
-        switch(state.getValue(CypressBlock.SIZE)) {
-            case 0:
-                return CypressBlock.VS_0;
-            default:
-            case 1:
-                return CypressBlock.VS_1;
-            case 2:
-                return CypressBlock.VS_2;
-            case 3:
-            case 4:
-                return CypressBlock.VS_3_4;
-            case 5:
-                return Shapes.block();
-        }
-    }
-
-    @Override
-    public VoxelShape getBlockSupportShape(final BlockState p_230335_1_, final BlockGetter p_230335_2_,
-                                           final BlockPos p_230335_3_) {
+    public VoxelShape getBlockSupportShape(final BlockState p_230335_1_, final BlockGetter p_230335_2_, final BlockPos p_230335_3_) {
         return Shapes.empty();
     }
 
@@ -126,9 +108,7 @@ public class CypressBlock extends BlockDoTB implements IBlockGeneration {
     @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         BlockState adjacentState = context.getLevel().getBlockState(context.getClickedPos().above());
-        final int size = adjacentState.getBlock() == this
-                ? Math.min(adjacentState.getValue(CypressBlock.SIZE) + 1, 5)
-                : 1;
+        final int size = adjacentState.getBlock() == this ? Math.min(adjacentState.getValue(CypressBlock.SIZE) + 1, 5) : 1;
         if(size < 3) {
             return this.defaultBlockState().setValue(CypressBlock.SIZE, size);
         }
@@ -137,8 +117,7 @@ public class CypressBlock extends BlockDoTB implements IBlockGeneration {
     }
 
     @Override
-    public BlockState updateShape(final BlockState stateIn, final Direction facing, final BlockState facingState,
-                                  final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public BlockState updateShape(final BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
         if(!facing.getAxis().isVertical()) {
             return stateIn;
         }
@@ -175,7 +154,7 @@ public class CypressBlock extends BlockDoTB implements IBlockGeneration {
     public void appendHoverText(final ItemStack stack, @Nullable final BlockGetter worldIn,
                                 final List<Component> tooltip, final TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, DoTBUtils.TOOLTIP_COLUMN);
+        Utils.addTooltip(tooltip, Utils.TOOLTIP_COLUMN);
     }
 
     @Override

@@ -19,23 +19,24 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.PORTCULLIS_SHAPES;
 
 public class PortcullisBlock extends WaterloggedBlock {
     private static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     private static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     private static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-    private static final EnumProperty<DoTBBlockStateProperties.VerticalConnection> VERTICAL_CONNECTION = DoTBBlockStateProperties.VERTICAL_CONNECTION;
-    private static final VoxelShape VS_AXIS_X = Block.box(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
-    private static final VoxelShape VS_AXIS_Z = Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
+    private static final EnumProperty<BlockStatePropertiesAA.VerticalConnection> VERTICAL_CONNECTION = BlockStatePropertiesAA.VERTICAL_CONNECTION;
 
     public PortcullisBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(OPEN, false).setValue(POWERED, false).setValue(HORIZONTAL_AXIS, Direction.Axis.X).setValue(VERTICAL_CONNECTION, DoTBBlockStateProperties.VerticalConnection.NONE));
+        super(properties, PORTCULLIS_SHAPES);
+        this.registerDefaultState(this.defaultBlockState().setValue(OPEN, false).setValue(POWERED, false).setValue(HORIZONTAL_AXIS, Direction.Axis.X).setValue(VERTICAL_CONNECTION, BlockStatePropertiesAA.VerticalConnection.NONE));
     }
 
     @Override
@@ -45,13 +46,15 @@ public class PortcullisBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        if(state.getValue(OPEN) && state.getValue(VERTICAL_CONNECTION) != DoTBBlockStateProperties.VerticalConnection.NONE && state.getValue(VERTICAL_CONNECTION) != DoTBBlockStateProperties.VerticalConnection.UNDER)
-            return Shapes.empty();
-        else
-            return (state.getValue(HORIZONTAL_AXIS) == Direction.Axis.X) ? VS_AXIS_X : VS_AXIS_Z;
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        if(state.getValue(OPEN) && state.getValue(VERTICAL_CONNECTION) != BlockStatePropertiesAA.VerticalConnection.NONE && state.getValue(VERTICAL_CONNECTION) != BlockStatePropertiesAA.VerticalConnection.UNDER) {
+            return 0;
+        }else {
+            return (state.getValue(HORIZONTAL_AXIS) == Direction.Axis.X) ? 1 : 2;
+        }
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
@@ -60,7 +63,7 @@ public class PortcullisBlock extends WaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         return this.getShape(stateIn, worldIn, currentPos);
     }
@@ -68,9 +71,9 @@ public class PortcullisBlock extends WaterloggedBlock {
     private BlockState getShape(BlockState state, LevelAccessor worldIn, BlockPos pos) {
         Direction.Axis axis = state.getValue(HORIZONTAL_AXIS);
         if(hasSameAxis(worldIn.getBlockState(pos.above()), axis)) {
-            return state.setValue(VERTICAL_CONNECTION, (hasSameAxis(worldIn.getBlockState(pos.below()), axis)) ? DoTBBlockStateProperties.VerticalConnection.BOTH : DoTBBlockStateProperties.VerticalConnection.ABOVE);
+            return state.setValue(VERTICAL_CONNECTION, (hasSameAxis(worldIn.getBlockState(pos.below()), axis)) ? BlockStatePropertiesAA.VerticalConnection.BOTH : BlockStatePropertiesAA.VerticalConnection.ABOVE);
         } else {
-            return state.setValue(VERTICAL_CONNECTION, (hasSameAxis(worldIn.getBlockState(pos.below()), axis)) ? DoTBBlockStateProperties.VerticalConnection.UNDER : DoTBBlockStateProperties.VerticalConnection.NONE);
+            return state.setValue(VERTICAL_CONNECTION, (hasSameAxis(worldIn.getBlockState(pos.below()), axis)) ? BlockStatePropertiesAA.VerticalConnection.UNDER : BlockStatePropertiesAA.VerticalConnection.NONE);
         }
     }
 
@@ -83,7 +86,7 @@ public class PortcullisBlock extends WaterloggedBlock {
 
     @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        if(state.getValue(VERTICAL_CONNECTION) == DoTBBlockStateProperties.VerticalConnection.UNDER) {
+        if(state.getValue(VERTICAL_CONNECTION) == BlockStatePropertiesAA.VerticalConnection.UNDER) {
             //update coming from top blocks : check the shape of whole portcullis to know if it can be or stay open
             Direction.Axis axis = state.getValue(HORIZONTAL_AXIS);
             boolean isNowPowered = worldIn.hasNeighborSignal(pos);
@@ -106,7 +109,7 @@ public class PortcullisBlock extends WaterloggedBlock {
                 state = state.setValue(POWERED, isNowPowered);
                 worldIn.setBlock(pos, state, 2);
             }
-        } else if(state.getValue(VERTICAL_CONNECTION) == DoTBBlockStateProperties.VerticalConnection.NONE) {
+        } else if(state.getValue(VERTICAL_CONNECTION) == BlockStatePropertiesAA.VerticalConnection.NONE) {
             if(state.getValue(OPEN))
                 worldIn.setBlock(pos, state.setValue(OPEN, false), 2);
         } else {
@@ -287,6 +290,6 @@ public class PortcullisBlock extends WaterloggedBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, this);
+        Utils.addTooltip(tooltip, this);
     }
 }

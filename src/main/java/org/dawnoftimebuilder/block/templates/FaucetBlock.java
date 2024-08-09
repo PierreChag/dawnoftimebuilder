@@ -16,22 +16,18 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import org.dawnoftimebuilder.block.general.WaterSourceTrickleBlock;
 import org.dawnoftimebuilder.block.general.WaterTrickleBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
 
-/**
- * @author Seynax
- */
 public class FaucetBlock extends WaterSourceTrickleBlock {
     public FaucetBlock(final Properties propertiesIn) {
         super(propertiesIn);
-        this.registerDefaultState(this.defaultBlockState()
-                .setValue(DoTBBlockStateProperties.ACTIVATED, false));
+        this.registerDefaultState(this.defaultBlockState().setValue(BlockStatePropertiesAA.ACTIVATED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(DoTBBlockStateProperties.ACTIVATED);
+        builder.add(BlockStatePropertiesAA.ACTIVATED);
     }
 
     @Override
@@ -49,13 +45,13 @@ public class FaucetBlock extends WaterSourceTrickleBlock {
 
     @Override
     public boolean[] getWaterTrickleOutPut(BlockState currentState) {
-        if(!currentState.getValue(DoTBBlockStateProperties.ACTIVATED)) {
+        if(!currentState.getValue(BlockStatePropertiesAA.ACTIVATED)) {
             return new boolean[] {
-                    currentState.getValue(DoTBBlockStateProperties.NORTH_TRICKLE),
-                    currentState.getValue(DoTBBlockStateProperties.EAST_TRICKLE),
-                    currentState.getValue(DoTBBlockStateProperties.SOUTH_TRICKLE),
-                    currentState.getValue(DoTBBlockStateProperties.WEST_TRICKLE),
-                    currentState.getValue(DoTBBlockStateProperties.CENTER_TRICKLE) };
+                    currentState.getValue(BlockStatePropertiesAA.NORTH_TRICKLE),
+                    currentState.getValue(BlockStatePropertiesAA.EAST_TRICKLE),
+                    currentState.getValue(BlockStatePropertiesAA.SOUTH_TRICKLE),
+                    currentState.getValue(BlockStatePropertiesAA.WEST_TRICKLE),
+                    currentState.getValue(BlockStatePropertiesAA.CENTER_TRICKLE) };
         }
         return super.getWaterTrickleOutPut(currentState);
     }
@@ -66,8 +62,8 @@ public class FaucetBlock extends WaterSourceTrickleBlock {
         if(!mainHandItemStack.isEmpty() && mainHandItemStack.getItem() == this.asItem()) {
             return InteractionResult.PASS;
         }
-        boolean activated = !blockStateIn.getValue(DoTBBlockStateProperties.ACTIVATED);
-        blockStateIn = blockStateIn.setValue(DoTBBlockStateProperties.ACTIVATED, activated);
+        boolean activated = !blockStateIn.getValue(BlockStatePropertiesAA.ACTIVATED);
+        blockStateIn = blockStateIn.setValue(BlockStatePropertiesAA.ACTIVATED, activated);
 
         if(activated) {
             blockStateIn = blockStateIn.setValue(BlockStateProperties.UNSTABLE, true);
@@ -82,49 +78,48 @@ public class FaucetBlock extends WaterSourceTrickleBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction directionIn, BlockState facingStateIn, LevelAccessor worldIn,
-                                  BlockPos currentPosIn, BlockPos facingPosIn) {
+    public BlockState updateShape(BlockState stateIn, Direction directionIn, BlockState facingStateIn, LevelAccessor worldIn, BlockPos currentPosIn, BlockPos facingPosIn) {
         BlockState state = super.updateShape(stateIn, directionIn, facingStateIn, worldIn, currentPosIn, facingPosIn);
-        boolean lastActivation = state.getValue(DoTBBlockStateProperties.ACTIVATED);
+        boolean lastActivation = state.getValue(BlockStatePropertiesAA.ACTIVATED);
 
-        switch(directionIn) {
-            case NORTH:
-                if(state.getValue(BlockStateProperties.NORTH) && facingStateIn.getBlock() instanceof BasePoolBlock) {
-                    int level = facingStateIn.getValue(DoTBBlockStateProperties.LEVEL);
-                    state = state.setValue(DoTBBlockStateProperties.ACTIVATED, level >= ((BasePoolBlock) facingStateIn.getBlock()).faucetLevel);
+        switch (directionIn) {
+            case NORTH -> {
+                if (state.getValue(BlockStateProperties.NORTH) && facingStateIn.getBlock() instanceof PoolBlock) {
+                    int level = facingStateIn.getValue(BlockStatePropertiesAA.LEVEL);
+                    state = state.setValue(BlockStatePropertiesAA.ACTIVATED, level >= ((PoolBlock) facingStateIn.getBlock()).faucetLevel);
                 }
-                break;
-            case SOUTH:
-                if(state.getValue(BlockStateProperties.SOUTH) && facingStateIn.getBlock() instanceof BasePoolBlock) {
-                    int level = facingStateIn.getValue(DoTBBlockStateProperties.LEVEL);
-                    state = state.setValue(DoTBBlockStateProperties.ACTIVATED, level >= ((BasePoolBlock) facingStateIn.getBlock()).faucetLevel);
+            }
+            case SOUTH -> {
+                if (state.getValue(BlockStateProperties.SOUTH) && facingStateIn.getBlock() instanceof PoolBlock) {
+                    int level = facingStateIn.getValue(BlockStatePropertiesAA.LEVEL);
+                    state = state.setValue(BlockStatePropertiesAA.ACTIVATED, level >= ((PoolBlock) facingStateIn.getBlock()).faucetLevel);
                 }
-                break;
-            case EAST:
-                if(state.getValue(BlockStateProperties.EAST) && facingStateIn.getBlock() instanceof BasePoolBlock) {
-                    int level = facingStateIn.getValue(DoTBBlockStateProperties.LEVEL);
-                    state = state.setValue(DoTBBlockStateProperties.ACTIVATED, level >= ((BasePoolBlock) facingStateIn.getBlock()).faucetLevel);
+            }
+            case EAST -> {
+                if (state.getValue(BlockStateProperties.EAST) && facingStateIn.getBlock() instanceof PoolBlock) {
+                    int level = facingStateIn.getValue(BlockStatePropertiesAA.LEVEL);
+                    state = state.setValue(BlockStatePropertiesAA.ACTIVATED, level >= ((PoolBlock) facingStateIn.getBlock()).faucetLevel);
                 }
-                break;
-            case WEST:
-                if(state.getValue(BlockStateProperties.WEST) && facingStateIn.getBlock() instanceof BasePoolBlock) {
-                    int level = facingStateIn.getValue(DoTBBlockStateProperties.LEVEL);
-                    state = state.setValue(DoTBBlockStateProperties.ACTIVATED, level >= ((BasePoolBlock) facingStateIn.getBlock()).faucetLevel);
+            }
+            case WEST -> {
+                if (state.getValue(BlockStateProperties.WEST) && facingStateIn.getBlock() instanceof PoolBlock) {
+                    int level = facingStateIn.getValue(BlockStatePropertiesAA.LEVEL);
+                    state = state.setValue(BlockStatePropertiesAA.ACTIVATED, level >= ((PoolBlock) facingStateIn.getBlock()).faucetLevel);
                 }
-                break;
-            case DOWN:
-                if(state.getValue(DoTBBlockStateProperties.ACTIVATED)) {
-                    if(facingStateIn.getBlock() instanceof WaterTrickleBlock) {
+            }
+            case DOWN -> {
+                if (state.getValue(BlockStatePropertiesAA.ACTIVATED)) {
+                    if (facingStateIn.getBlock() instanceof WaterTrickleBlock) {
                         state = state.setValue(BlockStateProperties.UNSTABLE, false);
                     } else {
                         state = state.setValue(BlockStateProperties.UNSTABLE, true);
                     }
                 }
-                break;
+            }
         }
 
 
-        if(!worldIn.isClientSide() && state.getValue(DoTBBlockStateProperties.ACTIVATED) != lastActivation) {
+        if(!worldIn.isClientSide() && state.getValue(BlockStatePropertiesAA.ACTIVATED) != lastActivation) {
             (worldIn).scheduleTick(currentPosIn, this, 5);
         }
 

@@ -16,14 +16,14 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import org.dawnoftimebuilder.block.templates.FlowerPotBlockDoTB;
+import org.dawnoftimebuilder.block.templates.FlowerPotBlockAA;
 import org.dawnoftimebuilder.block.templates.SoilCropsBlock;
 import org.dawnoftimebuilder.item.IHasFlowerPot;
 
 import javax.annotation.Nullable;
 
 public class SoilSeedsItem extends BlockItem implements IHasFlowerPot {
-    private FlowerPotBlockDoTB potBlock;
+    private FlowerPotBlockAA potBlock;
 
     public SoilSeedsItem(SoilCropsBlock crops, @Nullable FoodProperties food) {
         super(crops, food != null ? new Item.Properties().food(food) : new Item.Properties());
@@ -35,15 +35,13 @@ public class SoilSeedsItem extends BlockItem implements IHasFlowerPot {
         if(!world.isClientSide() && this.getPotBlock() != null) {
             BlockPos pos = context.getClickedPos();
             BlockState state = world.getBlockState(pos);
-            if(state.getBlock() instanceof FlowerPotBlock pot) {
-                if(pot.getEmptyPot().getContent() == Blocks.AIR) {
-                    Player player = context.getPlayer();
-                    if(player == null || !player.getAbilities().instabuild) {
-                        stack.shrink(1);
-                    }
-                    world.setBlock(pos, this.getPotBlock().getRandomState(), 2);
-                    return InteractionResult.SUCCESS;
+            if(state.getBlock() instanceof FlowerPotBlock pot && pot.getEmptyPot().getContent() == Blocks.AIR) {
+                Player player = context.getPlayer();
+                if(player == null || !player.getAbilities().instabuild) {
+                    stack.shrink(1);
                 }
+                world.setBlock(pos, this.getPotBlock().getRandomState(), 2);
+                return InteractionResult.SUCCESS;
             }
         }
         return super.onItemUseFirst(stack, context);
@@ -91,12 +89,12 @@ public class SoilSeedsItem extends BlockItem implements IHasFlowerPot {
     }
 
     @Override
-    public FlowerPotBlockDoTB getPotBlock() {
+    public FlowerPotBlockAA getPotBlock() {
         return this.potBlock;
     }
 
     @Override
-    public void setPotBlock(FlowerPotBlockDoTB pot) {
+    public void setPotBlock(FlowerPotBlockAA pot) {
         this.potBlock = pot;
     }
 }

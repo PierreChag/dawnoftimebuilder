@@ -23,20 +23,23 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.SMALL_SHUTTER_SHAPES;
 
 public class SmallShutterBlock extends WaterloggedBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final EnumProperty<DoTBBlockStateProperties.OpenPosition> OPEN_POSITION = DoTBBlockStateProperties.OPEN_POSITION;
+    public static final EnumProperty<BlockStatePropertiesAA.OpenPosition> OPEN_POSITION = BlockStatePropertiesAA.OPEN_POSITION;
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
-    private static final VoxelShape[] SHAPES = DoTBUtils.GenerateHorizontalShapes(SmallShutterBlock.makeShapes());
 
     public SmallShutterBlock(final Properties properties) {
-        super(properties);
-        this.registerDefaultState(
-                this.defaultBlockState().setValue(SmallShutterBlock.OPEN_POSITION, DoTBBlockStateProperties.OpenPosition.CLOSED).setValue(SmallShutterBlock.HINGE, DoorHingeSide.LEFT).setValue(SmallShutterBlock.POWERED, false));
+        super(properties, SMALL_SHUTTER_SHAPES);
+        this.registerDefaultState(this.defaultBlockState().setValue(SmallShutterBlock.OPEN_POSITION, BlockStatePropertiesAA.OpenPosition.CLOSED).setValue(SmallShutterBlock.HINGE, DoorHingeSide.LEFT).setValue(SmallShutterBlock.POWERED, false));
     }
 
     @Override
@@ -46,38 +49,14 @@ public class SmallShutterBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
-        int index = 0;
-        int horizontalIndex = 0;
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {;
         final boolean hinge = state.getValue(SmallShutterBlock.HINGE) == DoorHingeSide.RIGHT;
-        switch(state.getValue(SmallShutterBlock.OPEN_POSITION)) {
-            case FULL:
-                index = hinge ? 1 : 2;
-            case CLOSED:
-                horizontalIndex = state.getValue(SmallShutterBlock.FACING).get2DDataValue();
-                break;
-            case HALF:
-                if(hinge) {
-                    horizontalIndex = state.getValue(SmallShutterBlock.FACING).getClockWise().get2DDataValue();
-                } else {
-                    horizontalIndex = state.getValue(SmallShutterBlock.FACING).getCounterClockWise().get2DDataValue();
-                }
-                break;
-        }
-        return SmallShutterBlock.SHAPES[index + horizontalIndex * 3];
-    }
-
-    /**
-     * @return Stores VoxelShape for "South" with index :
-     * <p/>
-     * 0 : S Closed
-     * <p/>
-     * 1 : S Fully opened to the right
-     * <p/>
-     * 2 : S Fully opened to the left
-     */
-    private static VoxelShape[] makeShapes() {
-        return new VoxelShape[] { Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D), Block.box(-13.0D, 0.0D, 13.0D, 3.0D, 16.0D, 16.0D), Block.box(13.0D, 0.0D, 13.0D, 29.0D, 16.0D, 16.0D) };
+        Direction dir = state.getValue(SmallShutterBlock.FACING);
+        return switch (state.getValue(SmallShutterBlock.OPEN_POSITION)) {
+            case FULL -> (hinge ? 1 : 2) + 3 * dir.get2DDataValue();
+            case CLOSED -> 3 * dir.get2DDataValue();
+            case HALF -> 3 * (hinge ? dir.getClockWise().get2DDataValue() : dir.getCounterClockWise().get2DDataValue());
+        };
     }
 
     @Override
@@ -85,6 +64,7 @@ public class SmallShutterBlock extends WaterloggedBlock {
         return PushReaction.DESTROY;
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         final Level world = context.getLevel();
@@ -98,16 +78,16 @@ public class SmallShutterBlock extends WaterloggedBlock {
         final boolean powered = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.above());
         final BlockState madeState = super.getStateForPlacement(context).setValue(SmallShutterBlock.HINGE, hingeLeft ? DoorHingeSide.LEFT : DoorHingeSide.RIGHT).setValue(SmallShutterBlock.FACING, direction)
                 .setValue(SmallShutterBlock.POWERED, powered);
-        return madeState.setValue(SmallShutterBlock.OPEN_POSITION, powered ? this.getOpenState(madeState, world, pos) : DoTBBlockStateProperties.OpenPosition.CLOSED);
+        return madeState.setValue(SmallShutterBlock.OPEN_POSITION, powered ? this.getOpenState(madeState, world, pos) : BlockStatePropertiesAA.OpenPosition.CLOSED);
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         final Direction direction = stateIn.getValue(SmallShutterBlock.FACING);
         final Direction hingeDirection = stateIn.getValue(SmallShutterBlock.HINGE) == DoorHingeSide.LEFT ? direction.getCounterClockWise() : direction.getClockWise();
         if(facing == hingeDirection) {
             stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-            return stateIn.getValue(SmallShutterBlock.OPEN_POSITION) == DoTBBlockStateProperties.OpenPosition.CLOSED ? stateIn : stateIn.setValue(SmallShutterBlock.OPEN_POSITION, this.getOpenState(stateIn, worldIn, facingPos));
+            return stateIn.getValue(SmallShutterBlock.OPEN_POSITION) == BlockStatePropertiesAA.OpenPosition.CLOSED ? stateIn : stateIn.setValue(SmallShutterBlock.OPEN_POSITION, this.getOpenState(stateIn, worldIn, facingPos));
         }
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
@@ -115,7 +95,7 @@ public class SmallShutterBlock extends WaterloggedBlock {
     @Override
     public InteractionResult use(BlockState state, final Level worldIn, final BlockPos pos, final Player player, final InteractionHand handIn, final BlockHitResult hit) {
         if(state.getValue(SmallShutterBlock.OPEN_POSITION).isOpen()) {
-            state = state.setValue(SmallShutterBlock.OPEN_POSITION, DoTBBlockStateProperties.OpenPosition.CLOSED);
+            state = state.setValue(SmallShutterBlock.OPEN_POSITION, BlockStatePropertiesAA.OpenPosition.CLOSED);
         } else {
             final Direction hingeDirection = state.getValue(SmallShutterBlock.HINGE) == DoorHingeSide.LEFT ? state.getValue(SmallShutterBlock.FACING).getCounterClockWise() : state.getValue(SmallShutterBlock.FACING).getClockWise();
             state = state.setValue(SmallShutterBlock.OPEN_POSITION, this.getOpenState(state, worldIn, pos.relative(hingeDirection)));
@@ -139,14 +119,14 @@ public class SmallShutterBlock extends WaterloggedBlock {
                 final Direction hingeDirection = state.getValue(SmallShutterBlock.HINGE) == DoorHingeSide.LEFT ? state.getValue(SmallShutterBlock.FACING).getCounterClockWise() : state.getValue(SmallShutterBlock.FACING).getClockWise();
                 state = state.setValue(SmallShutterBlock.OPEN_POSITION, this.getOpenState(state, worldIn, pos.relative(hingeDirection)));
             } else {
-                state = state.setValue(SmallShutterBlock.OPEN_POSITION, DoTBBlockStateProperties.OpenPosition.CLOSED);
+                state = state.setValue(SmallShutterBlock.OPEN_POSITION, BlockStatePropertiesAA.OpenPosition.CLOSED);
             }
             worldIn.setBlock(pos, state.setValue(SmallShutterBlock.POWERED, isPowered), 2);
         }
     }
 
-    protected DoTBBlockStateProperties.OpenPosition getOpenState(final BlockState stateIn, final LevelAccessor worldIn, final BlockPos pos) {
-        return worldIn.getBlockState(pos).getCollisionShape(worldIn, pos).isEmpty() ? DoTBBlockStateProperties.OpenPosition.FULL : DoTBBlockStateProperties.OpenPosition.HALF;
+    protected BlockStatePropertiesAA.OpenPosition getOpenState(final BlockState stateIn, final LevelAccessor worldIn, final BlockPos pos) {
+        return worldIn.getBlockState(pos).getCollisionShape(worldIn, pos).isEmpty() ? BlockStatePropertiesAA.OpenPosition.FULL : BlockStatePropertiesAA.OpenPosition.HALF;
     }
 
     private void playSound(final Level worldIn, final BlockPos pos, final boolean isOpening) {

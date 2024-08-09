@@ -11,15 +11,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
+import org.dawnoftimebuilder.block.templates.BlockAA;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class GeraniumBlock extends BlockDoTB {
-    private static final VoxelShape VS = Block.box(-2.0D, -7.0D, -2.0D, 17.0D, 15.0D, 17.0D);
+import static org.dawnoftimebuilder.util.VoxelShapes.GERANIUM_SHAPE;
+
+public class GeraniumBlock extends BlockAA {
 
     public GeraniumBlock(Properties properties) {
-        super(properties);
+        super(properties, GERANIUM_SHAPE);
     }
 
     @Nullable
@@ -37,10 +39,5 @@ public class GeraniumBlock extends BlockDoTB {
     @Override
     public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return VS;
     }
 }

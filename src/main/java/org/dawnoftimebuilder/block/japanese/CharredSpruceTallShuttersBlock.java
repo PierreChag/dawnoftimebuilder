@@ -3,6 +3,7 @@ package org.dawnoftimebuilder.block.japanese;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -17,29 +18,21 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-import static org.dawnoftimebuilder.util.DoTBBlockStateProperties.SquareCorners;
+import static org.dawnoftimebuilder.util.BlockStatePropertiesAA.SquareCorners;
+import static org.dawnoftimebuilder.util.VoxelShapes.CHARRED_SPRUCE_TALL_SHUTTERS_SHAPES;
 
 public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
-    public static final EnumProperty<SquareCorners> CORNER = DoTBBlockStateProperties.CORNER;
-    private static final VoxelShape[] SHAPES = DoTBUtils.GenerateHorizontalShapes(new VoxelShape[] {
-            Block.box(0.0D, 0.0D, 14.0D, 16.0D, 16.0D, 16.0D),
-            Shapes.or(
-                    Block.box(0.0D, 10.0D, 11.0D, 16.0D, 16.0D, 16.0D),
-                    Block.box(0.0D, 5.0D, 9.0D, 16.0D, 10.0D, 14.0D),
-                    Block.box(0.0D, 0.0D, 7.0D, 16.0D, 5.0D, 12.0D)),
-            Shapes.or(
-                    Block.box(0.0D, 11.0D, 5.0D, 16.0D, 16.0D, 10.0D),
-                    Block.box(0.0D, 6.0D, 3.0D, 16.0D, 11.0D, 8.0D),
-                    Block.box(0.0D, 1.0D, 1.0D, 16.0D, 6.0D, 6.0D)) });
+    public static final EnumProperty<SquareCorners> CORNER = BlockStatePropertiesAA.CORNER;
 
     public CharredSpruceTallShuttersBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(CORNER, DoTBBlockStateProperties.SquareCorners.TOP_LEFT));
+        super(properties, CHARRED_SPRUCE_TALL_SHUTTERS_SHAPES);
+        this.registerDefaultState(this.defaultBlockState().setValue(CORNER, SquareCorners.TOP_LEFT));
     }
 
     @Override
@@ -49,9 +42,9 @@ public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         int index = state.getValue(OPEN) ? state.getValue(CORNER).isTopCorner() ? 1 : 2 : 0;
-        return SHAPES[state.getValue(FACING).get2DDataValue() * 3 + index];
+        return state.getValue(FACING).get2DDataValue() * 3 + index;
     }
 
     @Nullable
@@ -111,7 +104,7 @@ public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         SquareCorners thisCorner = stateIn.getValue(CORNER);
         if(stateIn.getValue(WATERLOGGED))
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
@@ -127,5 +120,23 @@ public class CharredSpruceTallShuttersBlock extends CharredSpruceShuttersBlock {
             return Blocks.AIR.defaultBlockState();
         }
         return stateIn;
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            SquareCorners corner = state.getValue(CORNER);
+            if (corner != SquareCorners.TOP_LEFT) {
+                BlockPos cornerPos = pos.above(SquareCorners.TOP_LEFT.getVerticalOffset(corner)).relative(state.getValue(FACING).getClockWise(), SquareCorners.TOP_LEFT.getHorizontalOffset(corner));
+                BlockState cornerState = level.getBlockState(cornerPos);
+                if (cornerState.is(this) && cornerState.getValue(FACING) == state.getValue(FACING) && cornerState.getValue(CORNER) == SquareCorners.TOP_LEFT) {
+                    level.setBlock(cornerPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, cornerPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 }

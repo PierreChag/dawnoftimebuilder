@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
@@ -19,6 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockGeneration;
 import org.dawnoftimebuilder.block.templates.WildPlantBlock;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -32,7 +34,7 @@ public class WildMaizeBlock extends WildPlantBlock implements IBlockGeneration {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         Vec3 vec3d = state.getOffset(worldIn, pos);
         return VS.move(vec3d.x, vec3d.y, vec3d.z);
     }
@@ -60,6 +62,23 @@ public class WildMaizeBlock extends WildPlantBlock implements IBlockGeneration {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         worldIn.setBlock(pos.above(), state.setValue(HALF, Half.TOP), 10);
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            if (state.getValue(HALF) == Half.TOP) {
+                BlockPos adjacentPos = pos.below();
+                BlockState adjacentState = level.getBlockState(adjacentPos);
+                if (adjacentState.is(this) && adjacentState.getValue(HALF) == Half.BOTTOM) {
+                    level.setBlock(adjacentPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, adjacentPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override

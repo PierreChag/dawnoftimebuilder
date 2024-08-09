@@ -19,12 +19,5 @@
 				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		}
-	],
-	"loader": "fusion:model",
-	"type": "connecting",
-	"connections": [
-		{
-			"type": "is_same_block"
-		}
 	]
 }

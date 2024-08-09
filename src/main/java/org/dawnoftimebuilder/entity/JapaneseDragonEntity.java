@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.dawnoftimebuilder.DoTBConfig;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
 
 import javax.annotation.Nullable;
 
@@ -248,7 +248,7 @@ public class JapaneseDragonEntity extends AmbientCreature {
             if(world.getBlockState(pos).getCollisionShape(world, pos) == Shapes.empty() && !world.getBlockState(pos).liquid())
                 return false;
             ChunkAccess chunkAccess = world.getChunk(new BlockPos(this.dragon.blockPosition().getX(), this.dragon.blockPosition().getY(), this.dragon.blockPosition().getZ()));
-            int newY = DoTBUtils.getHighestSectionPosition(chunkAccess);
+            int newY = Utils.getHighestSectionPosition(chunkAccess);
             for(int y = newY + 16; y >= newY; y--) {
                 pos = new BlockPos(this.dragon.blockPosition().getX(), y, this.dragon.blockPosition().getZ());
                 if(world.getBlockState(pos).getCollisionShape(world, pos) != Shapes.empty() || world.getBlockState(pos).liquid()) {

@@ -7,28 +7,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockSpecialDisplay;
-import org.dawnoftimebuilder.block.templates.ColumnConnectibleBlock;
+import org.dawnoftimebuilder.block.templates.ConnectedVerticalBlock;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-import static org.dawnoftimebuilder.util.DoTBBlockStateProperties.VerticalConnection;
+import static org.dawnoftimebuilder.util.BlockStatePropertiesAA.VerticalConnection;
+import static org.dawnoftimebuilder.util.VoxelShapes.PAPER_LAMP_SHAPES;
 
-public class PaperLampBlock extends ColumnConnectibleBlock implements IBlockSpecialDisplay {
-    private static final VoxelShape VS_BOTTOM = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
-    private static final VoxelShape VS_TOP = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 13.0D, 12.0D);
+public class PaperLampBlock extends ConnectedVerticalBlock implements IBlockSpecialDisplay {
 
     public PaperLampBlock(Properties properties) {
-        super(properties);
+        super(properties, PAPER_LAMP_SHAPES);
     }
 
-    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         VerticalConnection connection = state.getValue(VERTICAL_CONNECTION);
-        if(connection == VerticalConnection.ABOVE || connection == VerticalConnection.BOTH) {
-            return VS_BOTTOM;
-        } else
-            return VS_TOP;
+        return connection == VerticalConnection.ABOVE || connection == VerticalConnection.BOTH ? 0 : 1;
     }
 
     @Override

@@ -10,19 +10,29 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.StairsShape;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.PLATE_SHAPES;
 
 public class PlateBlock extends WaterloggedBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<StairsShape> SHAPE = BlockStateProperties.STAIRS_SHAPE;
-    private static final VoxelShape[] SHAPES = PlateBlock.makeShapes();
 
-    public PlateBlock(final Properties properties) {
-        super(properties);
+    public PlateBlock(final Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(PlateBlock.FACING, Direction.NORTH).setValue(PlateBlock.SHAPE, StairsShape.STRAIGHT));
+    }
+
+    public PlateBlock(Properties properties){
+        this(properties, PLATE_SHAPES);
     }
 
     @Override
@@ -32,7 +42,7 @@ public class PlateBlock extends WaterloggedBlock {
     }
 
     @Override
-    public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext context) {
+    public int getShapeIndex(final @NotNull BlockState state, final @NotNull BlockGetter worldIn, final @NotNull BlockPos pos, final @NotNull CollisionContext context) {
         int index = (state.getValue(PlateBlock.FACING).get2DDataValue() + 2) % 4;
         index *= 3;
         switch (state.getValue(PlateBlock.SHAPE)) {
@@ -42,37 +52,10 @@ public class PlateBlock extends WaterloggedBlock {
             case INNER_LEFT -> index += 2;
             case INNER_RIGHT -> index += 5;
         }
-        index %= 12;
-        return PlateBlock.SHAPES[index];
+        return index % 12;
     }
 
-    /**
-     * @return Stores VoxelShape with index : <p/>
-     * 0 : NW Outer <p/>
-     * 1 : N Default <p/>
-     * 2 : NW Inner <p/>
-     * 3 : NE Outer <p/>
-     * 4 : N Default <p/>
-     * 5 : NE Inner <p/>
-     * 6 : SE Outer <p/>
-     * 7 : S Default <p/>
-     * 8 : SE Inner <p/>
-     * 9 : SW Outer <p/>
-     * 10 : S Default <p/>
-     * 11 : SW Inner <p/>
-     */
-    private static VoxelShape[] makeShapes() {
-        final VoxelShape vs_north_flat = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
-        final VoxelShape vs_east_flat = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-        final VoxelShape vs_south_flat = Block.box(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
-        final VoxelShape vs_west_flat = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
-        final VoxelShape vs_nw_corner = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 8.0D);
-        final VoxelShape vs_ne_corner = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
-        final VoxelShape vs_se_corner = Block.box(8.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
-        final VoxelShape vs_sw_corner = Block.box(0.0D, 0.0D, 8.0D, 8.0D, 16.0D, 16.0D);
-        return new VoxelShape[] { vs_nw_corner, vs_north_flat, Shapes.or(vs_north_flat, vs_sw_corner), vs_ne_corner, vs_east_flat, Shapes.or(vs_east_flat, vs_nw_corner), vs_se_corner, vs_south_flat, Shapes.or(vs_south_flat, vs_ne_corner), vs_sw_corner, vs_west_flat, Shapes.or(vs_west_flat, vs_se_corner), };
-    }
-
+    @Nullable
     @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         final BlockState state = super.getStateForPlacement(context).setValue(PlateBlock.FACING, context.getHorizontalDirection());
@@ -80,7 +63,7 @@ public class PlateBlock extends WaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         return facing.getAxis().isHorizontal() ? stateIn.setValue(PlateBlock.SHAPE, PlateBlock.getShapeProperty(stateIn, worldIn, currentPos)) : stateIn;
     }
@@ -120,12 +103,12 @@ public class PlateBlock extends WaterloggedBlock {
     }
 
     @Override
-    public BlockState rotate(final BlockState state, final Rotation rot) {
+    public @NotNull BlockState rotate(final BlockState state, final Rotation rot) {
         return state.setValue(PlateBlock.FACING, rot.rotate(state.getValue(PlateBlock.FACING)));
     }
 
     @Override
-    public BlockState mirror(final BlockState state, final Mirror mirrorIn) {
+    public @NotNull BlockState mirror(final BlockState state, final Mirror mirrorIn) {
         final Direction direction = state.getValue(PlateBlock.FACING);
         final StairsShape stairsshape = state.getValue(PlateBlock.SHAPE);
         switch(mirrorIn) {

@@ -1,0 +1,20 @@
+{
+    "textures": {
+        "particle": "dawnoftimebuilder:block/gold_plated_smooth_block",
+        "wall": "dawnoftimebuilder:block/gold_plated_smooth_block"
+    },
+    "elements": [
+        {   "from": [ 4, -0.01, 4 ],
+            "to": [ 12, 16, 12 ],
+            "faces": {
+                "down":  { "uv": [ 8, 0, 16, 8 ],  "texture": "#wall", "cullface": "down" },
+                "up":    { "uv": [ 8, 0, 16, 8 ],  "texture": "#wall", "cullface": "up"   },
+                "north": { "uv": [ 0, 0, 8, 16 ],  "texture": "#wall" },
+                "south": { "uv": [ 0, 0, 8, 16 ],  "texture": "#wall" },
+                "west":  { "uv": [ 0, 0, 8, 16 ],  "texture": "#wall" },
+                "east":  { "uv": [ 0, 0, 8, 16 ],  "texture": "#wall" }
+            },
+            "__comment": "Center post"
+        }
+    ]
+}

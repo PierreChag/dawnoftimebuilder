@@ -3,7 +3,6 @@ package org.dawnoftimebuilder.block.templates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -12,14 +11,15 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class FoldingScreenBlock extends ColumnConnectibleBlock {
+public class FoldingScreenBlock extends ConnectedVerticalBlock {
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
 
-    public FoldingScreenBlock(Properties properties) {
-        super(properties);
+    public FoldingScreenBlock(Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(INVERTED, false));
     }
 
@@ -29,7 +29,7 @@ public class FoldingScreenBlock extends ColumnConnectibleBlock {
         builder.add(INVERTED);
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
@@ -37,15 +37,7 @@ public class FoldingScreenBlock extends ColumnConnectibleBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return Shapes.block();
-    }
-
-    public boolean isConnectible(LevelAccessor worldIn, BlockPos pos, BlockState stateIn) {
-        BlockState state = worldIn.getBlockState(pos);
-        if(state.getBlock() == this) {
-            return state.getValue(INVERTED) == stateIn.getValue(INVERTED);
-        }
-        return false;
     }
 }

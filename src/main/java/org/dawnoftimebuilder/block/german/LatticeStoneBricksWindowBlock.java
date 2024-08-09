@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.SidedWindowBlock;
+import org.jetbrains.annotations.NotNull;
 
 public class LatticeStoneBricksWindowBlock extends SidedWindowBlock {
     private static final VoxelShape NORTH_VS = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 6.0D);
@@ -21,21 +22,14 @@ public class LatticeStoneBricksWindowBlock extends SidedWindowBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        switch(state.getValue(SIDED_WINDOW)) {
-            default:
-            case NORTH:
-                return NORTH_VS;
-            case EAST:
-                return EAST_VS;
-            case SOUTH:
-                return SOUTH_VS;
-            case WEST:
-                return WEST_VS;
-            case AXIS_X:
-                return X_VS;
-            case AXIS_Z:
-                return Z_VS;
-        }
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return switch (state.getValue(SIDED_WINDOW)) {
+            default -> NORTH_VS;
+            case EAST -> EAST_VS;
+            case SOUTH -> SOUTH_VS;
+            case WEST -> WEST_VS;
+            case AXIS_X -> X_VS;
+            case AXIS_Z -> Z_VS;
+        };
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.dawnoftimebuilder.blockentity.DisplayerBlockEntity;
 
@@ -25,8 +26,8 @@ import static org.dawnoftimebuilder.registry.DoTBBlockEntitiesRegistry.DISPLAYER
 public abstract class DisplayerBlock extends WaterloggedBlock implements EntityBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    public DisplayerBlock(Properties properties) {
-        super(properties);
+    protected DisplayerBlock(Properties properties, VoxelShape[] shapes) {
+        super(properties, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(LIT, false));
     }
 

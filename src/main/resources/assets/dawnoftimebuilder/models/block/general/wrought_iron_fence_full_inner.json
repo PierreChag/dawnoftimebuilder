@@ -1,6 +1,6 @@
 {
-	"render_type": "minecraft:cutout",
 	"credit": "Made with Blockbench",
+	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "dawnoftimebuilder:block/wrought_iron_fence",
@@ -12,7 +12,7 @@
 			"to": [16, 16, 14.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [9, 4, 4]},
 			"faces": {
-				"north": {"uv": [8, 8, 1.5, 16], "texture": "#0"},
+				"north": {"uv": [0, 8, 6.5, 16], "texture": "#0"},
 				"south": {"uv": [1.5, 8, 8, 16], "texture": "#0"}
 			}
 		},
@@ -21,7 +21,7 @@
 			"to": [1.5, 16, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 15]},
 			"faces": {
-				"east": {"uv": [6.5, 8, 0, 16], "texture": "#0"},
+				"east": {"uv": [1.5, 8, 8, 16], "texture": "#0"},
 				"west": {"uv": [0, 8, 6.5, 16], "texture": "#0"}
 			}
 		},

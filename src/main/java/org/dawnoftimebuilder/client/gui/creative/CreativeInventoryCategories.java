@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.minecraft.world.item.Items.FLINT_AND_STEEL;
 import static net.minecraft.world.level.block.Blocks.*;
@@ -164,9 +165,17 @@ public enum CreativeInventoryCategories {
             WARPED_DOOR.asItem(),
             WARPED_TRAPDOOR.asItem(),
             WARPED_WART_BLOCK.asItem(),
+            GOLD_PLATED_SMOOTH_BLOCK.get().asItem(),
+            GOLD_PLATED_SMOOTH_STAIRS.get().asItem(),
+            GOLD_PLATED_SMOOTH_PLATE.get().asItem(),
+            GOLD_PLATED_SMOOTH_SLAB.get().asItem(),
+            GOLD_PLATED_SMOOTH_EDGE.get().asItem(),
+            GOLD_PLATED_SMOOTH_WALL.get().asItem(),
             WATER_SOURCE_TRICKLE.get().asItem(),
+            IRON_COLUMN.get().asItem(),
             IRON_PORTCULLIS.get().asItem(),
             WROUGHT_IRON_FENCE.get().asItem(),
+            IRON_FANCY_LANTERN.get().asItem(),
             FIREPLACE.get().asItem(),
             FLINT_AND_STEEL
     ),
@@ -336,8 +345,8 @@ public enum CreativeInventoryCategories {
             PAPER_FOLDING_SCREEN.get().asItem(),
             FIREPLACE.get().asItem(),
             IRORI_FIREPLACE.get().asItem(),
-            GRAY_TILE.get(),
-            GRAY_CLAY_TILE.get(),
+            UNFIRED_CLAY_ROOF_TILE.get(),
+            GRAY_CLAY_ROOF_TILE.get(),
             WHITE_LITTLE_FLAG.get().asItem(),
             RED_PAPER_LANTERN.get().asItem(),
             PAPER_LAMP.get().asItem(),
@@ -373,22 +382,58 @@ public enum CreativeInventoryCategories {
             FLINT_AND_STEEL
     ),
     PERSIAN("persian",
+            SMOOTH_SANDSTONE.asItem(),
+            SMOOTH_SANDSTONE_STAIRS.asItem(),
+            SMOOTH_SANDSTONE_PLATE.get().asItem(),
+            SMOOTH_SANDSTONE_SLAB.asItem(),
+            SMOOTH_SANDSTONE_EDGE.get().asItem(),
             SANDSTONE_BRICKS.get().asItem(),
             SANDSTONE_BRICKS_STAIRS.get().asItem(),
             SANDSTONE_BRICKS_PLATE.get().asItem(),
             SANDSTONE_BRICKS_SLAB.get().asItem(),
             SANDSTONE_BRICKS_EDGE.get().asItem(),
             SANDSTONE_BRICKS_WALL.get().asItem(),
+            SANDSTONE_BRICKS_TURQUOISE_PATTERN.get().asItem(),
+            SANDSTONE_BRICKS_TURQUOISE_PATTERN_STAIRS.get().asItem(),
+            SANDSTONE_BRICKS_TURQUOISE_PATTERN_PLATE.get().asItem(),
+            SANDSTONE_BRICKS_TURQUOISE_PATTERN_SLAB.get().asItem(),
+            SANDSTONE_BRICKS_TURQUOISE_PATTERN_EDGE.get().asItem(),
+            SANDSTONE_BRICKS_TURQUOISE_PATTERN_WALL.get().asItem(),
             SANDSTONE_SCULPTED_RELIEF.get().asItem(),
             SANDSTONE_CRENELATION.get().asItem(),
-            MORAQ_MOSAIC_TILES_DELICATE.get().asItem(),
-            MORAQ_MOSAIC_TILES_TRADITIONAL.get().asItem(),
-            MORAQ_MOSAIC_TILES_BORDER.get().asItem(),
+            MORAQ_MOSAIC_TRADITIONAL.get().asItem(),
+            MORAQ_MOSAIC_DELICATE.get().asItem(),
+            MORAQ_MOSAIC_BORDER.get().asItem(),
             MORAQ_MOSAIC_PATTERN.get().asItem(),
             MORAQ_MOSAIC_GEOMETRIC.get().asItem(),
             MORAQ_MOSAIC_RECESS.get().asItem(),
             MORAQ_MOSAIC_RELIEF.get().asItem(),
             MORAQ_MOSAIC_COLUMN.get().asItem(),
+            GOLD_PLATED_SMOOTH_BLOCK.get().asItem(),
+            GOLD_PLATED_SMOOTH_STAIRS.get().asItem(),
+            GOLD_PLATED_SMOOTH_PLATE.get().asItem(),
+            GOLD_PLATED_SMOOTH_SLAB.get().asItem(),
+            GOLD_PLATED_SMOOTH_EDGE.get().asItem(),
+            GOLD_PLATED_SMOOTH_WALL.get().asItem(),
+            WAXED_OAK_PLANKS.get().asItem(),
+            WAXED_OAK_PLANKS_STAIRS.get().asItem(),
+            WAXED_OAK_PLANKS_PLATE.get().asItem(),
+            WAXED_OAK_PLANKS_SLAB.get().asItem(),
+            WAXED_OAK_PLANKS_EDGE.get().asItem(),
+            WAXED_OAK_SUPPORT_SLAB.get().asItem(),
+            WAXED_OAK_SUPPORT_BEAM.get().asItem(),
+            WAXED_OAK_LOG_STRIPPED.get().asItem(),
+            WAXED_OAK_BEAM.get().asItem(),
+            WAXED_OAK_WALL.get().asItem(),
+            WAXED_OAK_PERGOLA.get().asItem(),
+            WAXED_OAK_FENCE.get().asItem(),
+            WAXED_OAK_FENCE_GATE.get().asItem(),
+            WAXED_OAK_LATTICE.get().asItem(),
+            UNFIRED_CLAY_TILE.get(),
+            CLAY_TILE.get(),
+            CLAY_TILE_WHITE.get(),
+            CLAY_TILE_CYAN.get(),
+            CLAY_TILE_BLUE.get(),
             PERSIAN_CARPET_RED.get().asItem(),
             PERSIAN_CARPET_DELICATE_RED.get().asItem()
     ),
@@ -491,6 +536,10 @@ public enum CreativeInventoryCategories {
             BIRCH_FANCY_FENCE.get().asItem(),
             BIRCH_FOOTSTOOL.get().asItem(),
             BIRCH_COUCH.get().asItem(),
+            UNFIRED_CLAY_TILE.get(),
+            CLAY_TILE.get(),
+            CLAY_TILE_ORANGE.get(),
+            CLAY_TILE_BLACK.get(),
             BIG_FLOWER_POT.get().asItem(),
             MARBLE_FANCY_FENCE.get().asItem(),
             MARBLE_BIG_FLOWER_POT.get().asItem(),
@@ -520,7 +569,7 @@ public enum CreativeInventoryCategories {
         return this.translation;
     }
 
-    public ArrayList<Item> getItems() {
+    public List<Item> getItems() {
         return this.items;
     }
 }

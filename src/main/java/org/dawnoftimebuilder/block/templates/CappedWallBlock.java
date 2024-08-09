@@ -18,14 +18,14 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
 
 import java.util.Map;
 
 import static net.minecraft.world.phys.shapes.BooleanOp.ONLY_FIRST;
 
 public class CappedWallBlock extends Block implements SimpleWaterloggedBlock {
-    public static final EnumProperty<WallSide> PILLAR = DoTBBlockStateProperties.PILLAR_WALL;
+    public static final EnumProperty<WallSide> PILLAR = BlockStatePropertiesAA.PILLAR_WALL;
     public static final EnumProperty<WallSide> EAST_WALL = BlockStateProperties.EAST_WALL;
     public static final EnumProperty<WallSide> NORTH_WALL = BlockStateProperties.NORTH_WALL;
     public static final EnumProperty<WallSide> SOUTH_WALL = BlockStateProperties.SOUTH_WALL;
@@ -109,7 +109,7 @@ public class CappedWallBlock extends Block implements SimpleWaterloggedBlock {
 
     private boolean connectsTo(BlockState state, boolean p_220113_2_, Direction direction) {
         Block block = state.getBlock();
-        boolean flag = block instanceof FenceGateBlockDoTB && FenceGateBlockDoTB.connectsToDirection(state, direction);
+        boolean flag = block instanceof WaterloggedFenceGateBlock && WaterloggedFenceGateBlock.connectsToDirection(state, direction);
         return state.is(BlockTags.WALLS) || !isExceptionForConnection(state) && p_220113_2_ || block instanceof StainedGlassPaneBlock || flag;
     }
 
@@ -185,19 +185,19 @@ public class CappedWallBlock extends Block implements SimpleWaterloggedBlock {
         if(flag) {
             return this.getPillarState(stateTop);
         } else {
-            WallSide WallSide = state.getValue(NORTH_WALL);
-            WallSide WallSide1 = state.getValue(SOUTH_WALL);
-            WallSide WallSide2 = state.getValue(EAST_WALL);
-            WallSide WallSide3 = state.getValue(WEST_WALL);
-            boolean flag1 = WallSide1 == WallSide.NONE;
-            boolean flag2 = WallSide3 == WallSide.NONE;
-            boolean flag3 = WallSide2 == WallSide.NONE;
-            boolean flag4 = WallSide == WallSide.NONE;
+            WallSide wallSide = state.getValue(NORTH_WALL);
+            WallSide wallSide1 = state.getValue(SOUTH_WALL);
+            WallSide wallSide2 = state.getValue(EAST_WALL);
+            WallSide wallSide3 = state.getValue(WEST_WALL);
+            boolean flag1 = wallSide1 == WallSide.NONE;
+            boolean flag2 = wallSide3 == WallSide.NONE;
+            boolean flag3 = wallSide2 == WallSide.NONE;
+            boolean flag4 = wallSide == WallSide.NONE;
             boolean flag5 = flag4 && flag1 && flag2 && flag3 || flag4 != flag1 || flag2 != flag3;
             if(flag5) {
                 return this.getPillarState(stateTop);
             } else {
-                boolean flag6 = WallSide == WallSide.TALL && WallSide1 == WallSide.TALL || WallSide2 == WallSide.TALL && WallSide3 == WallSide.TALL;
+                boolean flag6 = wallSide == WallSide.TALL && wallSide1 == WallSide.TALL || wallSide2 == WallSide.TALL && wallSide3 == WallSide.TALL;
                 if(flag6) {
                     return WallSide.NONE;
                 } else {

@@ -24,18 +24,19 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.templates.PlateBlock;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static org.dawnoftimebuilder.util.VoxelShapes.IRON_FENCE_SHAPES;
+
 public class IronFenceBlock extends PlateBlock {
     private static final BooleanProperty UP = BlockStateProperties.UP;
-    private static final VoxelShape[] SHAPES_UP = DoTBUtils.GenerateHorizontalShapes(makeShapes(true));
-    private static final VoxelShape[] SHAPES_FULL = DoTBUtils.GenerateHorizontalShapes(makeShapes(false));
 
     public IronFenceBlock(Properties properties) {
-        super(properties);
+        super(properties, IRON_FENCE_SHAPES);
         this.registerDefaultState(this.defaultBlockState()
                 .setValue(PlateBlock.FACING, Direction.NORTH)
                 .setValue(PlateBlock.SHAPE, StairsShape.STRAIGHT)
@@ -44,70 +45,18 @@ public class IronFenceBlock extends PlateBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         int index = (state.getValue(FACING).get2DDataValue() + 2) % 4;
         index *= 3;
-        switch(state.getValue(SHAPE)) {
-            default:
-            case OUTER_LEFT:
-                break;
-            case OUTER_RIGHT:
-                index += 3;
-                break;
-            case STRAIGHT:
-                index += 1;
-                break;
-            case INNER_LEFT:
-                index += 2;
-                break;
-            case INNER_RIGHT:
-                index += 5;
-                break;
+        switch (state.getValue(SHAPE)) {
+            default -> {}
+            case OUTER_RIGHT -> index += 3;
+            case STRAIGHT -> index += 1;
+            case INNER_LEFT -> index += 2;
+            case INNER_RIGHT -> index += 5;
         }
         index %= 12;
-        return state.getValue(UP) ? SHAPES_UP[index] : SHAPES_FULL[index];
-    }
-
-    /**
-     * @return Stores VoxelShape with index : <p/>
-     * 0 : NW Outer <p/>
-     * 1 : N Default <p/>
-     * 2 : NW Inner <p/>
-     * 3 : NE Outer <p/>
-     * 4 : N Default <p/>
-     * 5 : NE Inner <p/>
-     * 6 : SE Outer <p/>
-     * 7 : S Default <p/>
-     * 8 : SE Inner <p/>
-     * 9 : SW Outer <p/>
-     * 10 : S Default <p/>
-     * 11 : SW Inner <p/>
-     */
-    private static VoxelShape[] makeShapes(boolean up) {
-        int size_flat = up ? 8 : 16;
-        int size_corner = up ? 10 : 16;
-        VoxelShape vs_north_flat = Block.box(0.0D, 0.0D, 0.0D, 16.0D, size_flat, 2.5D);
-        VoxelShape vs_east_flat = Block.box(13.5D, 0.0D, 0.0D, 16.0D, size_flat, 16.0D);
-        VoxelShape vs_south_flat = Block.box(0.0D, 0.0D, 13.5D, 16.0D, size_flat, 16.0D);
-        VoxelShape vs_west_flat = Block.box(0.0D, 0.0D, 0.0D, 2.5D, size_flat, 16.0D);
-        VoxelShape vs_nw_corner = Block.box(0.0D, 0.0D, 0.0D, 3.0D, size_corner, 3.0D);
-        VoxelShape vs_ne_corner = Block.box(13.0D, 0.0D, 0.0D, 16.0D, size_corner, 3.0D);
-        VoxelShape vs_se_corner = Block.box(13.0D, 0.0D, 13.0D, 16.0D, size_corner, 16.0D);
-        VoxelShape vs_sw_corner = Block.box(0.0D, 0.0D, 13.0D, 3.0D, size_corner, 16.0D);
-        return new VoxelShape[] {
-                vs_nw_corner,
-                vs_north_flat,
-                Shapes.or(vs_north_flat, vs_west_flat, vs_nw_corner),
-                vs_ne_corner,
-                vs_east_flat,
-                Shapes.or(vs_east_flat, vs_north_flat, vs_ne_corner),
-                vs_se_corner,
-                vs_south_flat,
-                Shapes.or(vs_south_flat, vs_east_flat, vs_se_corner),
-                vs_sw_corner,
-                vs_west_flat,
-                Shapes.or(vs_west_flat, vs_south_flat, vs_sw_corner),
-        };
+        return state.getValue(UP) ? index + 12 : index;
     }
 
     @Override
@@ -116,13 +65,14 @@ public class IronFenceBlock extends PlateBlock {
         builder.add(UP);
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return super.getStateForPlacement(context).setValue(UP, !context.getLevel().getBlockState(context.getClickedPos().above()).is(this));
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         if(facing == Direction.UP) {
             stateIn = stateIn.setValue(UP, !facingState.is(this));
         }
@@ -150,7 +100,7 @@ public class IronFenceBlock extends PlateBlock {
         } else if(!heldItemStack.isEmpty() && heldItemStack.getItem() == this.asItem()) {
             //We put a ColumnBlock on top of the column
             final BlockPos topPos = this.getHighestColumnPos(worldIn, pos).above();
-            if(topPos.getY() <= DoTBUtils.HIGHEST_Y) {
+            if(topPos.getY() <= Utils.HIGHEST_Y) {
                 if(!worldIn.isClientSide() && worldIn.getBlockState(topPos).isAir()) {
                     worldIn.setBlock(topPos, state, 11);
                     if(!player.isCreative()) {
@@ -165,7 +115,7 @@ public class IronFenceBlock extends PlateBlock {
 
     private BlockPos getHighestColumnPos(final Level worldIn, final BlockPos pos) {
         int yOffset;
-        for(yOffset = 0; yOffset + pos.getY() <= DoTBUtils.HIGHEST_Y; yOffset++) {
+        for(yOffset = 0; yOffset + pos.getY() <= Utils.HIGHEST_Y; yOffset++) {
             if(worldIn.getBlockState(pos.above(yOffset)).getBlock() != this) {
                 break;
             }
@@ -176,6 +126,6 @@ public class IronFenceBlock extends PlateBlock {
     @Override
     public void appendHoverText(final ItemStack stack, @Nullable final BlockGetter worldIn, final List<Component> tooltip, final TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, DoTBUtils.TOOLTIP_COLUMN);
+        Utils.addTooltip(tooltip, Utils.TOOLTIP_COLUMN);
     }
 }

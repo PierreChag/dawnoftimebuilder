@@ -3,6 +3,7 @@ package org.dawnoftimebuilder.block.templates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -13,7 +14,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -68,7 +70,7 @@ public class ShutterBlock extends SmallShutterBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         final Direction halfDirection = stateIn.getValue(ShutterBlock.HALF) == Half.TOP ? Direction.DOWN : Direction.UP;
         if(facing == halfDirection) {
             if(facingState.getBlock() != this || facingState.getValue(ShutterBlock.HALF) == stateIn.getValue(ShutterBlock.HALF) || facingState.getValue(SmallShutterBlock.FACING) != stateIn.getValue(SmallShutterBlock.FACING)
@@ -81,11 +83,28 @@ public class ShutterBlock extends SmallShutterBlock {
     }
 
     @Override
-    protected DoTBBlockStateProperties.OpenPosition getOpenState(final BlockState stateIn, final LevelAccessor worldIn, final BlockPos pos) {
+    protected BlockStatePropertiesAA.OpenPosition getOpenState(final BlockState stateIn, final LevelAccessor worldIn, final BlockPos pos) {
         final BlockPos secondPos = pos.relative(stateIn.getValue(ShutterBlock.HALF) == Half.TOP ? Direction.DOWN : Direction.UP);
         if(!worldIn.getBlockState(secondPos).getCollisionShape(worldIn, pos).isEmpty() || !worldIn.getBlockState(pos).getCollisionShape(worldIn, pos).isEmpty()) {
-            return DoTBBlockStateProperties.OpenPosition.HALF;
+            return BlockStatePropertiesAA.OpenPosition.HALF;
         }
-        return DoTBBlockStateProperties.OpenPosition.FULL;
+        return BlockStatePropertiesAA.OpenPosition.FULL;
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            if (state.getValue(HALF) == Half.TOP) {
+                BlockPos adjacentPos = pos.below();
+                BlockState adjacentState = level.getBlockState(adjacentPos);
+                if (adjacentState.is(this) && adjacentState.getValue(HALF) == Half.BOTTOM) {
+                    level.setBlock(adjacentPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, adjacentPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 }

@@ -1,0 +1,17 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "dawnoftimebuilder:block/moraq_mosaic_border"
+    },
+    "loader": "fusion:model",
+    "type": "connecting",
+    "connections": [
+        {
+            "type": "is_same_block"
+        },
+        {
+            "type": "match_block",
+            "block": "dawnoftimebuilder:moraq_mosaic_delicate"
+        }
+    ]
+}

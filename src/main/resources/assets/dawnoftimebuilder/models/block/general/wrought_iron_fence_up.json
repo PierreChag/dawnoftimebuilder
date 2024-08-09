@@ -1,6 +1,6 @@
 {
-	"render_type": "minecraft:cutout",
 	"credit": "Made with Blockbench",
+	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "dawnoftimebuilder:block/wrought_iron_fence",
@@ -12,7 +12,7 @@
 			"to": [16, 8, 14.5],
 			"faces": {
 				"north": {"uv": [0, 4, 8, 8], "texture": "#0"},
-				"south": {"uv": [8, 4, 0, 8], "texture": "#0"}
+				"south": {"uv": [0, 4, 8, 8], "texture": "#0"}
 			}
 		}
 	]

@@ -28,22 +28,19 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
+
+import static org.dawnoftimebuilder.util.VoxelShapes.PLASTERED_STONE_CRESSET_SHAPES;
 
 public class PlasteredStoneCressetBlock extends WaterloggedBlock {
-    private static final IntegerProperty HEAT = DoTBBlockStateProperties.HEAT_0_4;
+    private static final IntegerProperty HEAT = BlockStatePropertiesAA.HEAT_0_4;
     private static final BooleanProperty LIT = BlockStateProperties.LIT;
-    private static final VoxelShape VS = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 14.0D, 13.0D);
 
     public PlasteredStoneCressetBlock(Properties properties) {
-        super(properties);
+        super(properties, PLASTERED_STONE_CRESSET_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(LIT, false).setValue(HEAT, 0).setValue(WATERLOGGED, false));
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return VS;
     }
 
     @Override
@@ -62,7 +59,7 @@ public class PlasteredStoneCressetBlock extends WaterloggedBlock {
             if(state.getValue(WATERLOGGED))
                 return InteractionResult.PASS;
 
-            if(DoTBUtils.useLighter(worldIn, pos, player, handIn)) {
+            if(Utils.useLighter(worldIn, pos, player, handIn)) {
                 worldIn.setBlock(pos, state.setValue(LIT, true).setValue(HEAT, 4), 10);
                 return InteractionResult.SUCCESS;
             }

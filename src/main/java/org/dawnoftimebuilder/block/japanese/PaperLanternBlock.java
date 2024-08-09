@@ -1,27 +1,13 @@
 package org.dawnoftimebuilder.block.japanese;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.dawnoftimebuilder.block.IBlockSpecialDisplay;
-import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
+import org.dawnoftimebuilder.block.templates.SpecialDisplayBlock;
 
-import javax.annotation.Nonnull;
+import static org.dawnoftimebuilder.util.VoxelShapes.PAPER_LANTERN_SHAPES;
 
-public class PaperLanternBlock extends WaterloggedBlock implements IBlockSpecialDisplay {
-    private static final VoxelShape VS = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 15.0D, 12.0D);
+public class PaperLanternBlock extends SpecialDisplayBlock {
 
     public PaperLanternBlock(Properties properties) {
-        super(properties);
-    }
-
-    @Nonnull
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return VS;
+        super(properties, PAPER_LANTERN_SHAPES);
     }
 
     @Override

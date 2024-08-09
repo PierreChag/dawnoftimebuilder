@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.Utils;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ItemDoTB extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltips, TooltipFlag flagIn) {
         super.appendHoverText(stack, world, tooltips, flagIn);
         if(this.hasTooltip) {
-            DoTBUtils.addTooltip(tooltips, this);
+            Utils.addTooltip(tooltips, this);
         }
     }
 }

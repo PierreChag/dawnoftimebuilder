@@ -22,35 +22,30 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.dawnoftimebuilder.block.IBlockChain;
 import org.dawnoftimebuilder.block.templates.WaterloggedBlock;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBUtils;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.Utils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 import static net.minecraft.world.level.block.Blocks.SPRUCE_PLANKS;
 import static org.dawnoftimebuilder.registry.DoTBBlocksRegistry.SMALL_TATAMI_FLOOR;
-import static org.dawnoftimebuilder.util.DoTBUtils.COVERED_BLOCKS;
+import static org.dawnoftimebuilder.util.Utils.COVERED_BLOCKS;
+import static org.dawnoftimebuilder.util.VoxelShapes.SMALL_TATAMI_MAT_SHAPES;
 
 public class SmallTatamiMatBlock extends WaterloggedBlock implements IBlockChain {
-    private static final VoxelShape VS = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
-    private static final VoxelShape X_ROLLED_VS = Block.box(5.5D, 0.0D, 0.0D, 10.5D, 5.0D, 16.0D);
-    private static final VoxelShape X_ROLLED_VS_2 = Block.box(1.5D, 0.0D, 0.0D, 14.5D, 5.0D, 16.0D);
-    private static final VoxelShape X_ROLLED_VS_3 = Block.box(1.5D, 0.0D, 0.0D, 14.5D, 10.0D, 16.0D);
-    private static final VoxelShape Z_ROLLED_VS = Block.box(0.0D, 0.0D, 5.5D, 16.0D, 5.0D, 10.5D);
-    private static final VoxelShape Z_ROLLED_VS_2 = Block.box(0.0D, 0.0D, 1.5D, 16.0D, 5.0D, 14.5D);
-    private static final VoxelShape Z_ROLLED_VS_3 = Block.box(0.0D, 0.0D, 1.5D, 16.0D, 10.0D, 14.5D);
-    private static final VoxelShape ATTACHED_VS = Block.box(5.5D, 0.0D, 5.5D, 10.5D, 16.0D, 10.5D);
     public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
-    public static final BooleanProperty ROLLED = DoTBBlockStateProperties.ROLLED;
-    public static final IntegerProperty STACK = DoTBBlockStateProperties.STACK;
+    public static final BooleanProperty ROLLED = BlockStatePropertiesAA.ROLLED;
+    public static final IntegerProperty STACK = BlockStatePropertiesAA.STACK;
 
     public SmallTatamiMatBlock(Properties properties) {
-        super(properties);
+        super(properties, SMALL_TATAMI_MAT_SHAPES);
         this.registerDefaultState(this.defaultBlockState().setValue(ROLLED, false).setValue(ATTACHED, false).setValue(STACK, 1));
     }
 
@@ -61,24 +56,21 @@ public class SmallTatamiMatBlock extends WaterloggedBlock implements IBlockChain
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         if(state.getValue(ATTACHED))
-            return ATTACHED_VS;
+            return 7;
         if(state.getValue(ROLLED)) {
             boolean isAxisX = state.getValue(HORIZONTAL_AXIS) == Direction.Axis.X;
-            switch(state.getValue(STACK)) {
-                default:
-                case 1:
-                    return isAxisX ? X_ROLLED_VS : Z_ROLLED_VS;
-                case 2:
-                    return isAxisX ? X_ROLLED_VS_2 : Z_ROLLED_VS_2;
-                case 3:
-                    return isAxisX ? X_ROLLED_VS_3 : Z_ROLLED_VS_3;
-            }
+            return switch (state.getValue(STACK)) {
+                default -> isAxisX ? 1 : 4;
+                case 2 -> isAxisX ? 2 : 5;
+                case 3 -> isAxisX ? 3 : 6;
+            };
         }
-        return VS;
+        return 0;
     }
 
+    @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Level world = context.getLevel();
@@ -109,7 +101,7 @@ public class SmallTatamiMatBlock extends WaterloggedBlock implements IBlockChain
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction facing, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         if(facing.getAxis().isVertical()) {
             stateIn = stateIn.setValue(ATTACHED, false);
@@ -193,6 +185,6 @@ public class SmallTatamiMatBlock extends WaterloggedBlock implements IBlockChain
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        DoTBUtils.addTooltip(tooltip, this);
+        Utils.addTooltip(tooltip, this);
     }
 }

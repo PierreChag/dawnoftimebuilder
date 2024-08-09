@@ -19,67 +19,19 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.dawnoftimebuilder.block.templates.BushBlockDoT;
 import org.dawnoftimebuilder.registry.DoTBBlocksRegistry;
 
+import static org.dawnoftimebuilder.util.VoxelShapes.SAPLING_SHAPES;
+
 public class MapleSaplingBlock extends BushBlockDoT implements BonemealableBlock {
-    public final static boolean isValidForPlacement(final LevelAccessor worldIn, final BlockPos bottomCenterIn, final boolean isSaplingCallIn) {
-        final BlockPos floorCenter = bottomCenterIn.below();
-        BlockState state = worldIn.getBlockState(floorCenter);
-
-        if(!state.is(BlockTags.DIRT)) {
-            return false;
-        }
-
-        state = worldIn.getBlockState(bottomCenterIn);
-
-        if(!state.canBeReplaced() || !isSaplingCallIn) {
-            return true;
-        }
-
-        for(int x = -1; x <= 1; x++) {
-            for(int y = 0; y <= 1; y++) {
-                for(int z = -1; z <= 1; z++) {
-                    state = worldIn.getBlockState(bottomCenterIn.offset(x, y + 1, z));
-
-                    if(state != null && !(state.getBlock() instanceof AirBlock)) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean placeFinalTreeIfPossible(final LevelAccessor worldIn, final BlockPos centerPosIn) {
-        if(MapleSaplingBlock.isValidForPlacement(worldIn, centerPosIn, true)) {
-            final Direction direction = Direction.Plane.HORIZONTAL.getRandomDirection(worldIn.getRandom());
-            worldIn.setBlock(centerPosIn, DoTBBlocksRegistry.MAPLE_RED_TRUNK.get().defaultBlockState().setValue(MapleTrunkBlock.FACING, direction), 10);
-
-            for(int x = -1; x <= 1; x++) {
-                for(int y = 0; y <= 1; y++) {
-                    for(int z = -1; z <= 1; z++) {
-                        final BlockPos newBlockPosition = new BlockPos(centerPosIn.getX() + x, centerPosIn.getY() + y + 1, centerPosIn.getZ() + z);
-
-                        worldIn.setBlock(newBlockPosition, DoTBBlocksRegistry.MAPLE_RED_LEAVES.get().defaultBlockState().setValue(MapleTrunkBlock.FACING, direction).setValue(MapleLeavesBlock.MULTIBLOCK_X, x + 1).setValue(MapleLeavesBlock.MULTIBLOCK_Y, y).setValue(MapleLeavesBlock.MULTIBLOCK_Z, z + 1), 10);
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
-    }
 
     public static final IntegerProperty STAGE = BlockStateProperties.STAGE;
-    protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
 
     public MapleSaplingBlock(final Properties properties) {
-        super(properties);
+        super(properties, SAPLING_SHAPES);
         this.registerDefaultState(this.stateDefinition.any().setValue(MapleSaplingBlock.STAGE, 0));
     }
 
@@ -98,10 +50,6 @@ public class MapleSaplingBlock extends BushBlockDoT implements BonemealableBlock
         return InteractionResult.FAIL;
     }
 
-    @Override
-    public VoxelShape getShape(final BlockState p_220053_1_In, final BlockGetter p_220053_2_In, final BlockPos p_220053_3_In, final CollisionContext p_220053_4_In) {
-        return MapleSaplingBlock.SHAPE;
-    }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> p_206840_1_) {
@@ -117,20 +65,20 @@ public class MapleSaplingBlock extends BushBlockDoT implements BonemealableBlock
     }
 
     @Override
-    public void tick(final BlockState p_225542_1_, final ServerLevel p_225542_2_, final BlockPos p_225542_3_, final RandomSource p_225542_4_) {
-        if(p_225542_2_.getMaxLocalRawBrightness(p_225542_3_.above()) >= 9 && p_225542_4_.nextInt(7) == 0) {
-            if(!p_225542_2_.isAreaLoaded(p_225542_3_, 1)) {
+    public void tick(final BlockState state, final ServerLevel level, final BlockPos pos, final RandomSource source) {
+        if(level.getMaxLocalRawBrightness(pos.above()) >= 9 && source.nextInt(7) == 0) {
+            if(!level.isAreaLoaded(pos, 1)) {
                 return; // Forge: prevent loading unloaded chunks when checking neighbor's light
             }
-            this.advanceTree(p_225542_2_, p_225542_3_, p_225542_1_, p_225542_4_);
+            this.advanceTree(level, pos, state);
         }
     }
 
-    public void advanceTree(final ServerLevel p_226942_1_, final BlockPos p_226942_2_, final BlockState p_226942_3_, final RandomSource p_226942_4_) {
-        if(p_226942_3_.getValue(MapleSaplingBlock.STAGE) == 0) {
-            p_226942_1_.setBlock(p_226942_2_, p_226942_3_.cycle(MapleSaplingBlock.STAGE), 4);
-        } else if(MapleSaplingBlock.isValidForPlacement(p_226942_1_, p_226942_2_, true)) {
-            MapleSaplingBlock.placeFinalTreeIfPossible(p_226942_1_, p_226942_2_);
+    public void advanceTree(final ServerLevel level, final BlockPos pos, final BlockState state) {
+        if(state.getValue(MapleSaplingBlock.STAGE) == 0) {
+            level.setBlock(pos, state.cycle(MapleSaplingBlock.STAGE), 4);
+        } else {
+            MapleSaplingBlock.placeFinalTreeIfPossible(level, pos);
         }
     }
 
@@ -145,8 +93,8 @@ public class MapleSaplingBlock extends BushBlockDoT implements BonemealableBlock
     }
 
     @Override
-    public void performBonemeal(final ServerLevel p_225535_1_, final RandomSource p_225535_2_, final BlockPos p_225535_3_, final BlockState p_225535_4_) {
-        this.advanceTree(p_225535_1_, p_225535_3_, p_225535_4_, p_225535_2_);
+    public void performBonemeal(final ServerLevel level, final RandomSource source, final BlockPos pos, final BlockState state) {
+        this.advanceTree(level, pos, state);
     }
 
     /**
@@ -171,5 +119,42 @@ public class MapleSaplingBlock extends BushBlockDoT implements BonemealableBlock
     @Override
     public boolean generateOnPos(WorldGenLevel world, BlockPos pos, BlockState state, RandomSource random) {
         return MapleSaplingBlock.placeFinalTreeIfPossible(world, pos);
+    }
+    public static boolean isValidForPlacement(final LevelAccessor worldIn, final BlockPos bottomCenterIn) {
+        final BlockPos floorCenter = bottomCenterIn.below();
+        BlockState state = worldIn.getBlockState(floorCenter);
+        if(!state.is(BlockTags.DIRT)) {
+            return false;
+        }
+        for(int x = -1; x <= 1; x++) {
+            for(int y = 0; y <= 1; y++) {
+                for(int z = -1; z <= 1; z++) {
+                    state = worldIn.getBlockState(bottomCenterIn.offset(x, y + 1, z));
+                    if(!(state.getBlock() instanceof AirBlock)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean placeFinalTreeIfPossible(final LevelAccessor worldIn, final BlockPos centerPosIn) {
+        if(MapleSaplingBlock.isValidForPlacement(worldIn, centerPosIn)) {
+            final Direction direction = Direction.Plane.HORIZONTAL.getRandomDirection(worldIn.getRandom());
+            worldIn.setBlock(centerPosIn, DoTBBlocksRegistry.MAPLE_RED_TRUNK.get().defaultBlockState().setValue(MapleTrunkBlock.FACING, direction), 10);
+
+            for(int x = -1; x <= 1; x++) {
+                for(int y = 0; y <= 1; y++) {
+                    for(int z = -1; z <= 1; z++) {
+                        final BlockPos newBlockPosition = new BlockPos(centerPosIn.getX() + x, centerPosIn.getY() + y + 1, centerPosIn.getZ() + z);
+
+                        worldIn.setBlock(newBlockPosition, DoTBBlocksRegistry.MAPLE_RED_LEAVES.get().defaultBlockState().setValue(MapleTrunkBlock.FACING, direction).setValue(MapleLeavesBlock.MULTIBLOCK_X, x + 1).setValue(MapleLeavesBlock.MULTIBLOCK_Y, y).setValue(MapleLeavesBlock.MULTIBLOCK_Z, z + 1), 10);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

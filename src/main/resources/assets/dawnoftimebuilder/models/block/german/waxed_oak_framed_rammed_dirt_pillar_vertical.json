@@ -18,12 +18,5 @@
 				"down": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "down"}
 			}
 		}
-	],
-	"loader": "fusion:model",
-	"type": "connecting",
-	"connections": [
-		{
-			"type": "is_same_block"
-		}
 	]
 }

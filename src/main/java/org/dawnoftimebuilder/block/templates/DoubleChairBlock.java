@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -19,14 +20,17 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class DoubleChairBlock extends ChairBlock {
     public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
 
-    public DoubleChairBlock(final Properties properties, final float offsetY) {
-        super(properties, offsetY);
+    public DoubleChairBlock(final Properties properties, final float offsetY, VoxelShape[] shapes) {
+        super(properties, offsetY, shapes);
         this.registerDefaultState(this.defaultBlockState().setValue(DoubleChairBlock.HALF, Half.BOTTOM));
     }
 
@@ -36,8 +40,8 @@ public class DoubleChairBlock extends ChairBlock {
         builder.add(DoubleChairBlock.HALF);
     }
 
-    @Override
     @Nullable
+    @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
         if(!context.getLevel().getBlockState(context.getClickedPos().above()).canBeReplaced(context)) {
             return null;
@@ -60,7 +64,7 @@ public class DoubleChairBlock extends ChairBlock {
     }
 
     @Override
-    public BlockState updateShape(final BlockState stateIn, final Direction facing, final BlockState facingState, final LevelAccessor worldIn, final BlockPos currentPos, final BlockPos facingPos) {
+    public @NotNull BlockState updateShape(final BlockState stateIn, final @NotNull Direction facing, final @NotNull BlockState facingState, final @NotNull LevelAccessor worldIn, final @NotNull BlockPos currentPos, final @NotNull BlockPos facingPos) {
         final Direction halfDirection = stateIn.getValue(DoubleChairBlock.HALF) == Half.TOP ? Direction.DOWN : Direction.UP;
         if(facing == halfDirection && (facingState.getBlock() != this || facingState.getValue(DoubleChairBlock.HALF) == stateIn.getValue(DoubleChairBlock.HALF) || facingState.getValue(ChairBlock.FACING) != stateIn.getValue(ChairBlock.FACING))) {
             return Blocks.AIR.defaultBlockState();
@@ -78,5 +82,28 @@ public class DoubleChairBlock extends ChairBlock {
             return bottomState.getValue(DoubleChairBlock.HALF) == Half.BOTTOM && bottomState.getValue(ChairBlock.FACING) == state.getValue(ChairBlock.FACING);
         }
         return false;
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        // Prevents item from dropping in creative by removing the part that gives the item with a setBlock.
+        if (!level.isClientSide() && player.isCreative()) {
+            if (state.getValue(HALF) == Half.TOP) {
+                BlockPos adjacentPos = pos.below();
+                BlockState adjacentState = level.getBlockState(adjacentPos);
+                if (adjacentState.is(this) && adjacentState.getValue(HALF) == Half.BOTTOM) {
+                    level.setBlock(adjacentPos, Blocks.AIR.defaultBlockState(), 35);
+                    // Event that plays the "break block" sound.
+                    level.levelEvent(player, 2001, adjacentPos, Block.getId(state));
+                }
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public int getShapeIndex(@NotNull BlockState state, @NotNull BlockGetter worldIn, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        int index = (state.getValue(HALF) == Half.TOP) ? 1 : 0;
+        return state.getValue(FACING).get2DDataValue() * 2 + index;
     }
 }

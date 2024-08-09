@@ -25,28 +25,28 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.dawnoftimebuilder.block.templates.BasePoolBlock;
-import org.dawnoftimebuilder.block.templates.BlockDoTB;
+import org.dawnoftimebuilder.block.templates.PoolBlock;
+import org.dawnoftimebuilder.block.templates.BlockAA;
 import org.dawnoftimebuilder.registry.DoTBBlocksRegistry;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties;
-import org.dawnoftimebuilder.util.DoTBBlockStateProperties.WaterTrickleEnd;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA;
+import org.dawnoftimebuilder.util.BlockStatePropertiesAA.WaterTrickleEnd;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.InteractionHand.MAIN_HAND;
 
-public abstract class WaterTrickleBlock extends BlockDoTB {
+public abstract class WaterTrickleBlock extends BlockAA {
     public WaterTrickleBlock(final Properties propertiesIn) {
         super(propertiesIn);
-        this.registerDefaultState(this.defaultBlockState().setValue(DoTBBlockStateProperties.NORTH_TRICKLE, false).setValue(DoTBBlockStateProperties.EAST_TRICKLE, false).setValue(DoTBBlockStateProperties.SOUTH_TRICKLE, false)
-                .setValue(DoTBBlockStateProperties.WEST_TRICKLE, false).setValue(DoTBBlockStateProperties.CENTER_TRICKLE, false).setValue(BlockStateProperties.UNSTABLE, true)
-                .setValue(DoTBBlockStateProperties.WATER_TRICKLE_END, WaterTrickleEnd.FADE));
+        this.registerDefaultState(this.defaultBlockState().setValue(BlockStatePropertiesAA.NORTH_TRICKLE, false).setValue(BlockStatePropertiesAA.EAST_TRICKLE, false).setValue(BlockStatePropertiesAA.SOUTH_TRICKLE, false)
+                .setValue(BlockStatePropertiesAA.WEST_TRICKLE, false).setValue(BlockStatePropertiesAA.CENTER_TRICKLE, false).setValue(BlockStateProperties.UNSTABLE, true)
+                .setValue(BlockStatePropertiesAA.WATER_TRICKLE_END, WaterTrickleEnd.FADE));
     }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(DoTBBlockStateProperties.NORTH_TRICKLE, DoTBBlockStateProperties.EAST_TRICKLE, DoTBBlockStateProperties.SOUTH_TRICKLE, DoTBBlockStateProperties.WEST_TRICKLE, DoTBBlockStateProperties.CENTER_TRICKLE,
-                BlockStateProperties.UNSTABLE, DoTBBlockStateProperties.WATER_TRICKLE_END);
+        builder.add(BlockStatePropertiesAA.NORTH_TRICKLE, BlockStatePropertiesAA.EAST_TRICKLE, BlockStatePropertiesAA.SOUTH_TRICKLE, BlockStatePropertiesAA.WEST_TRICKLE, BlockStatePropertiesAA.CENTER_TRICKLE,
+                BlockStateProperties.UNSTABLE, BlockStatePropertiesAA.WATER_TRICKLE_END);
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
             if(!worldIn.isClientSide()) {
                 (worldIn).scheduleTick(currentPosIn, this, 5);
             }
-            return stateIn.setValue(DoTBBlockStateProperties.WATER_TRICKLE_END, this.getWaterTrickleEnd((Level) worldIn, facingPosIn, facingStateIn)).setValue(BlockStateProperties.UNSTABLE, true);
+            return stateIn.setValue(BlockStatePropertiesAA.WATER_TRICKLE_END, this.getWaterTrickleEnd((Level) worldIn, facingPosIn, facingStateIn)).setValue(BlockStateProperties.UNSTABLE, true);
         }
         return stateIn;
     }
@@ -85,8 +85,8 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
      */
     public boolean[] getWaterTrickleOutPut(final BlockState currentState) {
         return new boolean[] {
-                currentState.getValue(DoTBBlockStateProperties.NORTH_TRICKLE), currentState.getValue(DoTBBlockStateProperties.EAST_TRICKLE), currentState.getValue(DoTBBlockStateProperties.SOUTH_TRICKLE),
-                currentState.getValue(DoTBBlockStateProperties.WEST_TRICKLE), currentState.getValue(DoTBBlockStateProperties.CENTER_TRICKLE) };
+                currentState.getValue(BlockStatePropertiesAA.NORTH_TRICKLE), currentState.getValue(BlockStatePropertiesAA.EAST_TRICKLE), currentState.getValue(BlockStatePropertiesAA.SOUTH_TRICKLE),
+                currentState.getValue(BlockStatePropertiesAA.WEST_TRICKLE), currentState.getValue(BlockStatePropertiesAA.CENTER_TRICKLE) };
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
     public BlockState inheritWaterTrickles(final BlockState currentState, final BlockState aboveState) {
         final boolean[] trickles = ((WaterTrickleBlock) aboveState.getBlock()).getWaterTrickleOutPut(aboveState);
         final BooleanProperty[] properties = {
-                DoTBBlockStateProperties.NORTH_TRICKLE, DoTBBlockStateProperties.EAST_TRICKLE, DoTBBlockStateProperties.SOUTH_TRICKLE, DoTBBlockStateProperties.WEST_TRICKLE, DoTBBlockStateProperties.CENTER_TRICKLE };
+                BlockStatePropertiesAA.NORTH_TRICKLE, BlockStatePropertiesAA.EAST_TRICKLE, BlockStatePropertiesAA.SOUTH_TRICKLE, BlockStatePropertiesAA.WEST_TRICKLE, BlockStatePropertiesAA.CENTER_TRICKLE };
         int i = 0;
         BlockState updatedState = currentState;
         for(final BooleanProperty property : properties) {
@@ -143,7 +143,7 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
     public BlockState updateWaterTrickle(final Level world, BlockState currentState, final BlockPos bottomPos, final BlockState bottomState, final BlockState aboveState) {
         // We update the water trickle end, now that the bottom block has been updated.
         final WaterTrickleEnd lowerEnd = this.getWaterTrickleEnd(world, bottomPos, bottomState);
-        currentState = currentState.setValue(DoTBBlockStateProperties.WATER_TRICKLE_END, lowerEnd);
+        currentState = currentState.setValue(BlockStatePropertiesAA.WATER_TRICKLE_END, lowerEnd);
 
         // Finally, we synchronize this water trickle with the block above. If it changes, this block stays unstable.
         if(aboveState.getBlock() instanceof WaterTrickleBlock) {
@@ -167,7 +167,7 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
      */
     public BlockState createFlowingTrickle(final BlockState currentState, final boolean[] trickles, final Level world, final BlockPos waterTricklePos) {
         final BooleanProperty[] properties = {
-                DoTBBlockStateProperties.NORTH_TRICKLE, DoTBBlockStateProperties.EAST_TRICKLE, DoTBBlockStateProperties.SOUTH_TRICKLE, DoTBBlockStateProperties.WEST_TRICKLE, DoTBBlockStateProperties.CENTER_TRICKLE };
+                BlockStatePropertiesAA.NORTH_TRICKLE, BlockStatePropertiesAA.EAST_TRICKLE, BlockStatePropertiesAA.SOUTH_TRICKLE, BlockStatePropertiesAA.WEST_TRICKLE, BlockStatePropertiesAA.CENTER_TRICKLE };
         int i = 0;
         int numberOfTrickle = 0;
         BlockState waterTrickleState = DoTBBlocksRegistry.WATER_FLOWING_TRICKLE.get().defaultBlockState();
@@ -191,7 +191,7 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
     public void animateTick(final BlockState state, final Level worldIn, final BlockPos pos, final RandomSource rand) {
         super.animateTick(state, worldIn, pos, rand);
         final boolean[] trickles = this.getWaterTrickleOutPut(state);
-        if(state.getValue(DoTBBlockStateProperties.WATER_TRICKLE_END) == WaterTrickleEnd.SPLASH) {
+        if(state.getValue(BlockStatePropertiesAA.WATER_TRICKLE_END) == WaterTrickleEnd.SPLASH) {
             this.spawnFullParticles(worldIn, pos, trickles[0], rand, 0.5D, 0.4D);
             this.spawnFullParticles(worldIn, pos, trickles[1], rand, 0.6D, 0.5D);
             this.spawnFullParticles(worldIn, pos, trickles[2], rand, 0.5D, 0.6D);
@@ -203,7 +203,7 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
 
         final BlockState belowState = worldIn.getBlockState(pos.below());
 
-        if(belowState.getBlock() instanceof BasePoolBlock && belowState.getValue(DoTBBlockStateProperties.LEVEL) > ((BasePoolBlock) belowState.getBlock()).faucetLevel) {
+        if(belowState.getBlock() instanceof PoolBlock && belowState.getValue(BlockStatePropertiesAA.LEVEL) > ((PoolBlock) belowState.getBlock()).faucetLevel) {
             this.spawnLimitedParticles(worldIn, pos, trickles[0], rand, 0.5D, 0.4D);
             this.spawnLimitedParticles(worldIn, pos, trickles[1], rand, 0.6D, 0.5D);
             this.spawnLimitedParticles(worldIn, pos, trickles[2], rand, 0.5D, 0.6D);
@@ -256,18 +256,13 @@ public abstract class WaterTrickleBlock extends BlockDoTB {
     }
 
     protected static BooleanProperty getPropertyFromDirection(final Direction facing) {
-        switch(facing) {
-            default:
-                return DoTBBlockStateProperties.CENTER;
-            case NORTH:
-                return BlockStateProperties.NORTH;
-            case SOUTH:
-                return BlockStateProperties.SOUTH;
-            case WEST:
-                return BlockStateProperties.WEST;
-            case EAST:
-                return BlockStateProperties.EAST;
-        }
+        return switch (facing) {
+            default -> BlockStatePropertiesAA.CENTER;
+            case NORTH -> BlockStateProperties.NORTH;
+            case SOUTH -> BlockStateProperties.SOUTH;
+            case WEST -> BlockStateProperties.WEST;
+            case EAST -> BlockStateProperties.EAST;
+        };
     }
 
     @Override

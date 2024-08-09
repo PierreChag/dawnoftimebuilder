@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 import static org.dawnoftimebuilder.DawnOfTimeBuilder.MOD_ID;
 
 public class DoTBBlockEntitiesRegistry {
+    private DoTBBlockEntitiesRegistry() {}
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
 
     public static final RegistryObject<BlockEntityType<DryerBlockEntity>> DRYER = reg("dryer",
