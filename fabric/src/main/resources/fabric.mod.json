@@ -1,0 +1,43 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://fabricmc.net/",
+        "sources": "https://github.com/FabricMC/fabric-example-mod"
+    },
+    "license": "${license}",
+    "icon": "icon.png",
+    "environment": "*",
+    "accessWidener": "${mod_id}.accesswidener",
+    "entrypoints": {
+        "main": [
+            "org.dawnoftimebuilder.DoTBFabric"
+        ],
+        "client": [
+            "org.dawnoftimebuilder.DoTBFabric"
+        ],
+        "modmenu": [
+            "org.dawnoftimebuilder.compat.ModMenuEntrypoint"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.14",
+        "fabric": "*",
+        "yet_another_config_lib_v3": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=17"
+    },
+    "suggests": {
+        "another-mod": "*"
+    }
+}
+  

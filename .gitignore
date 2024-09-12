@@ -1,6 +1,25 @@
-/.gradle/
-/build/
-/.idea/
-/run/
-/run-data/
-/src/generated/resources/.cache/
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+node_modules
+package-lock.json
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea/*
+!.idea/scopes
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run

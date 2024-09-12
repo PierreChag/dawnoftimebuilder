@@ -1,0 +1,9 @@
+{
+    "pack": {
+        "description": "${mod_name}",
+        "pack_format": 8
+    },
+    "fusion": {
+        "overrides_folder": "fusion-overrides"
+    }
+}
