@@ -1,3 +1,9 @@
+buildscript {
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
+    }
+}
+
 plugins {
     id 'idea'
     id 'maven-publish'
@@ -13,6 +19,8 @@ mixin {
     config("${mod_id}.mixins.json")
 }
 
+apply plugin: 'kotlin'
+
 repositories {
     exclusiveContent {
         forRepository {
@@ -25,6 +33,10 @@ repositories {
         filter {
             includeGroup "maven.modrinth"
         }
+    }
+    maven {
+        name = 'kotlinforforge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
     }
 }
 
@@ -97,6 +109,8 @@ dependencies {
     runtimeOnly fg.deobf("maven.modrinth:fusion-connected-textures:1.1.1-forge-mc1.20.1")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+    // Use the latest version of KotlinForForge
+    implementation 'thedarkcolour:kotlinforforge:4.10.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
