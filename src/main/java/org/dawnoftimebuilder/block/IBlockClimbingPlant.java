@@ -71,10 +71,9 @@ public interface IBlockClimbingPlant {
                 };
                 int index = random.nextInt(5);//Probability "chose the adjacent block to grow on"
                 BlockState newState = worldIn.getBlockState(positions[index]);
-                if(newState.getBlock() instanceof IBlockClimbingPlant) {
-                    IBlockClimbingPlant newBlock = (IBlockClimbingPlant) newState.getBlock();
+                if(newState.getBlock() instanceof IBlockClimbingPlant newBlock) {
                     if(newBlock.canHavePlant(newState) && newState.getValue(CLIMBING_PLANT).hasNoPlant()) {
-                        this.placePlant(newState.setValue(CLIMBING_PLANT, stateIn.getValue(CLIMBING_PLANT)), worldIn, positions[index], 2);
+                        newBlock.placePlant(newState.setValue(CLIMBING_PLANT, stateIn.getValue(CLIMBING_PLANT)), worldIn, positions[index], 2);
                     }
                 }
             }
