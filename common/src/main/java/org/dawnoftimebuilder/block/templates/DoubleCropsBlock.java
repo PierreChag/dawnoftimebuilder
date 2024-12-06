@@ -79,14 +79,14 @@ public class DoubleCropsBlock extends SoilCropsBlock {
                 if(facingState.getBlock() == this && !this.isBottomCrop(facingState)) {
                     return stateIn.setValue(PERSISTENT, facingState.getValue(PERSISTENT));
                 } else
-                    return (stateIn.getValue(AGE) < this.getAgeReachingTopBlock()) ? stateIn : Blocks.AIR.defaultBlockState();
+                    return (stateIn.getValue(AGE) < this.getAgeReachingTopBlock()) ? stateIn : this.getRemovedState(stateIn);
             }
         } else {
             if(facing == Direction.DOWN) {
                 if(facingState.getBlock() == this && this.isBottomCrop(facingState)) {
                     return stateIn.setValue(AGE, facingState.getValue(AGE)).setValue(PERSISTENT, facingState.getValue(PERSISTENT));
                 } else
-                    return Blocks.AIR.defaultBlockState();
+                    return this.getRemovedState(stateIn);
             }
         }
 
@@ -117,19 +117,23 @@ public class DoubleCropsBlock extends SoilCropsBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         Half half = state.getValue(HALF);
-        BlockPos blockpos = (half == Half.BOTTOM) ? pos.above() : pos.below();
-        BlockState blockstate = worldIn.getBlockState(blockpos);
-        if(blockstate.getBlock() == this) {
-            worldIn.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-            worldIn.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
+        BlockPos otherPos = (half == Half.BOTTOM) ? pos.above() : pos.below();
+        BlockState otherState = worldIn.getBlockState(otherPos);
+        if(otherState.getBlock() == this) {
+            worldIn.setBlock(otherPos, this.getRemovedState(otherState), 35);
+            worldIn.levelEvent(player, 2001, otherPos, Block.getId(otherState));
             ItemStack itemstack = player.getMainHandItem();
             if(!worldIn.isClientSide() && !player.isCreative()) {
                 Block.dropResources(state, worldIn, pos, null, player, itemstack);
-                Block.dropResources(blockstate, worldIn, blockpos, null, player, itemstack);
+                Block.dropResources(otherState, worldIn, otherPos, null, player, itemstack);
             }
         }
 
         super.playerWillDestroy(worldIn, pos, state, player);
+    }
+
+    public BlockState getRemovedState(BlockState state){
+        return Blocks.AIR.defaultBlockState();
     }
 
     // Only called with Bonemeal

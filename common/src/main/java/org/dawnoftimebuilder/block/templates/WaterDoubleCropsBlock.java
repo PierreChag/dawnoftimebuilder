@@ -63,6 +63,11 @@ public class WaterDoubleCropsBlock extends DoubleCropsBlock implements SimpleWat
     }
 
     @Override
+    public BlockState getRemovedState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Blocks.WATER.defaultBlockState() : super.getRemovedState(state);
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         LevelAccessor world = context.getLevel();

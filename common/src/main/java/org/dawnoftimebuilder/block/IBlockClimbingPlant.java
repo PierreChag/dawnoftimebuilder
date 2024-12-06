@@ -71,7 +71,7 @@ public interface IBlockClimbingPlant {
                 BlockState newState = worldIn.getBlockState(positions[index]);
                 if(newState.getBlock() instanceof IBlockClimbingPlant newBlock) {
                     if(newBlock.canHavePlant(newState) && newState.getValue(CLIMBING_PLANT).hasNoPlant()) {
-                        this.placePlant(newState.setValue(CLIMBING_PLANT, stateIn.getValue(CLIMBING_PLANT)), worldIn, positions[index], 2);
+                        newBlock.placePlant(newState.setValue(CLIMBING_PLANT, stateIn.getValue(CLIMBING_PLANT)), worldIn, positions[index], 2);
                     }
                 }
             }
