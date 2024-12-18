@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"I": {
-			"tag": "forge:ingots/iron"
+			"item": "minecraft:iron_ingot"
 		},
 		"i": {
-			"tag": "forge:dyes/green"
+			"item": "minecraft:green_dye"
 		}
 	},
 	"result": {

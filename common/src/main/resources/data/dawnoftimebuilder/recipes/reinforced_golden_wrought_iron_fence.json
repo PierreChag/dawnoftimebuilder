@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shapeless",
 	"ingredients": [
 		{
-			"tag": "forge:nuggets/gold"
+			"item": "minecraft:gold_nugget"
 		},
 		{
 			"item": "dawnoftimebuilder:reinforced_black_wrought_iron_fence"
