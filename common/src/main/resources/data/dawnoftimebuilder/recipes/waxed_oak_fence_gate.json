@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:rods/wooden"
+      "item": "minecraft:stick"
     },
     "W": {
       "item": "dawnoftimebuilder:waxed_oak_planks"

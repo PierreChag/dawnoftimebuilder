@@ -10,7 +10,7 @@
 			"item": "dawnoftimebuilder:plastered_stone"
 		},
 		"i": {
-			"tag": "forge:nuggets/gold"
+			"item": "minecraft:gold_nugget"
 		}
 	},
 	"result": {
