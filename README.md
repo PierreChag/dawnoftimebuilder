@@ -1,5 +1,5 @@
-# Ancient Architecture (previously Dawn of Time : Builder Edition)
-
+# Ancient Architecture (Dawn of Time : Builder Edition)
+***
 [download]: https://img.shields.io/badge/loader-forge-1976d2?style=flat-square&color=orange&logo=curseforge&labelColor=0d1117
 [downloadLink]: https://www.curseforge.com/minecraft/mc-mods/dawn-of-time
 [ ![download][] ][downloadLink]
