@@ -9,7 +9,7 @@
 			"item": "dawnoftimebuilder:charred_spruce_planks"
 		},
 		"i": {
-			"tag": "forge:ingots/iron"
+			"item": "minecraft:iron_ingot"
 		}
 	},
 	"result": {

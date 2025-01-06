@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"i": {
-			"tag": "forge:rods/wooden"
+			"item": "minecraft:stick"
 		},
 		"I": {
 			"item": "minecraft:paper"
