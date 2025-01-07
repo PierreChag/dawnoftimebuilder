@@ -107,7 +107,6 @@ dependencies {
     compileOnly project(":common")
     implementation fg.deobf("dev.isxander:yet-another-config-lib:${project.yacl_version}-forge")
     runtimeOnly fg.deobf("maven.modrinth:fusion-connected-textures:1.1.1-forge-mc1.20.1")
-    runtimeOnly fg.deobf("maven.modrinth:dramatic-doors:1.20.1-3.2.8")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
     // Use the latest version of KotlinForForge
