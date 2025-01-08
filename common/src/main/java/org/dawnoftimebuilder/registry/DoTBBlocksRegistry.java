@@ -46,6 +46,14 @@ public abstract class DoTBBlocksRegistry {
     public final Supplier<Block> ACACIA_WALL = register("acacia_wall", () -> new WallBlock(Block.Properties.copy(Blocks.ACACIA_PLANKS)), BlockTags.MINEABLE_WITH_AXE);
     public final Supplier<Block> ACACIA_SUPPORT_BEAM = register("acacia_support_beam", () -> new SupportBeamBlock(Block.Properties.copy(Blocks.ACACIA_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
     public final Supplier<Block> ACACIA_SUPPORT_SLAB = register("acacia_support_slab", () -> new SupportSlabBlock(Block.Properties.copy(Blocks.ACACIA_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_PLANKS_EDGE = register("bamboo_planks_edge", () -> new EdgeBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_PLANKS_PLATE = register("bamboo_planks_plate", () -> new PlateBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_PERGOLA = register("bamboo_pergola", () -> new PergolaBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_LATTICE = register("bamboo_lattice", () -> new LatticeBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS).noOcclusion()).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_BEAM = register("bamboo_beam", () -> new BeamBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_WALL = register("bamboo_wall", () -> new WallBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS)), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_SUPPORT_BEAM = register("bamboo_support_beam", () -> new SupportBeamBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
+    public final Supplier<Block> BAMBOO_SUPPORT_SLAB = register("bamboo_support_slab", () -> new SupportSlabBlock(Block.Properties.copy(Blocks.BAMBOO_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
     public final Supplier<Block> BIRCH_PLANKS_EDGE = register("birch_planks_edge", () -> new EdgeBlock(Block.Properties.copy(Blocks.BIRCH_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
     public final Supplier<Block> BIRCH_PLANKS_PLATE = register("birch_planks_plate", () -> new PlateBlock(Block.Properties.copy(Blocks.BIRCH_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
     public final Supplier<Block> BIRCH_PERGOLA = register("birch_pergola", () -> new PergolaBlock(Block.Properties.copy(Blocks.BIRCH_PLANKS)).setBurnable(), BlockTags.MINEABLE_WITH_AXE);
