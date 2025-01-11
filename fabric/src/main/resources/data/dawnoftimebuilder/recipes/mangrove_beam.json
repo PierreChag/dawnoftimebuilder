@@ -6,14 +6,14 @@
 	],
 	"key": {
 		"I": {
-			"item": "minecraft:stripped_bamboo_block"
+			"item": "minecraft:stripped_mangrove_log"
 		},
 		"i": {
-			"item": "minecraft:bamboo_planks"
+			"item": "minecraft:mud_bricks"
 		}
 	},
 	"result": {
-		"item": "dawnoftimebuilder:bamboo_beam",
+		"item": "dawnoftimebuilder:mangrove_beam",
 		"count": 4
 	}
 }

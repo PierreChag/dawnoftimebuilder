@@ -1,6 +1,0 @@
-// 1.20.1	2024-08-19T15:30:14.712239746	Tags for minecraft:block mod id dawnoftimebuilder
-80ef06a243a23bdf7261271b2d8ae6f3386bf842 data/minecraft/tags/blocks/mineable/axe.json
-dd03e0faedca039e01d0c98135fd455eb2049f44 data/minecraft/tags/blocks/mineable/hoe.json
-b7a7ab1c6f8a7735d0ec4a57ad686a57c9d44af2 data/minecraft/tags/blocks/mineable/pickaxe.json
-7e546b7d681ce9bb8be9c8c581e4ca78b26b9339 data/minecraft/tags/blocks/mineable/shovel.json
-a5c37c065a151ea741889f4a0cf9796042ce879a data/minecraft/tags/blocks/sword_efficient.json

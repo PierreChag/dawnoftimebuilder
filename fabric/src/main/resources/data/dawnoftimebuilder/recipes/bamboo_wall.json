@@ -1,19 +1,19 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"I",
-		"i"
+		"IiI",
+		"IiI"
 	],
 	"key": {
-		"I": {
+		"i": {
 			"item": "minecraft:stripped_bamboo_block"
 		},
-		"i": {
+		"I": {
 			"item": "minecraft:bamboo_planks"
 		}
 	},
 	"result": {
-		"item": "dawnoftimebuilder:bamboo_beam",
-		"count": 4
+		"item": "dawnoftimebuilder:bamboo_wall",
+		"count": 9
 	}
 }

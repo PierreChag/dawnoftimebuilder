@@ -6,14 +6,14 @@
 	],
 	"key": {
 		"I": {
-			"item": "minecraft:stripped_bamboo_block"
+			"item": "minecraft:stripped_cherry_log"
 		},
 		"i": {
-			"item": "minecraft:bamboo_planks"
+			"item": "dawnoftimebuilder:gray_roof_tiles"
 		}
 	},
 	"result": {
-		"item": "dawnoftimebuilder:bamboo_beam",
+		"item": "dawnoftimebuilder:cherry_beam",
 		"count": 4
 	}
 }
