@@ -34,7 +34,6 @@ public class BlockStatePropertiesAA {
     public static final IntegerProperty MULTIBLOCK_0_2 = IntegerProperty.create("multiblock", 0, 2);
     public static final IntegerProperty MULTIBLOCK_3X = IntegerProperty.create("multiblock_3x", 0, 2);
     public static final IntegerProperty MULTIBLOCK_2Y = IntegerProperty.create("multiblock_2y", 0, 1);
-    public static final IntegerProperty MULTIBLOCK_3Y = IntegerProperty.create("multiblock_3y", 0, 2);
     public static final IntegerProperty MULTIBLOCK_3Z = IntegerProperty.create("multiblock_3z", 0, 2);
     public static final IntegerProperty HUMIDITY_0_8 = IntegerProperty.create("humidity", 0, 8);
     public static final IntegerProperty AGE_0_6 = IntegerProperty.create("age", 0, 6);
