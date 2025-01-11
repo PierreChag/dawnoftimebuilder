@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.ItemStackHandler;
 import org.dawnoftimebuilder.datagen.DataGenerators;
 
@@ -27,7 +28,10 @@ public class DoTBForge {
 
         RegistryImpls.init(modEventBus);
 
-        modEventBus.register(DoTBForgeClient.class);
+        if (FMLEnvironment.dist.isClient()) {
+            modEventBus.register(DoTBForgeClient.class);
+        }
+
         modEventBus.register(DataGenerators.class);
     }
 
