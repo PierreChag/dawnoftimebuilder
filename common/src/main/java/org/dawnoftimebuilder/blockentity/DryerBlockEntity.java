@@ -1,29 +1,24 @@
 package org.dawnoftimebuilder.blockentity;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.dawnoftimebuilder.DoTBConfig;
 import org.dawnoftimebuilder.platform.Services;
 import org.dawnoftimebuilder.recipe.DryerRecipe;
 import org.dawnoftimebuilder.registry.DoTBBlockEntitiesRegistry;
 import org.dawnoftimebuilder.registry.DoTBRecipeTypesRegistry;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -41,16 +36,16 @@ public class DryerBlockEntity extends BlockEntity {
         if (this.getLevel() != null && this.isInOperation) {
             int finish = 0;
             boolean success = false;
-            for (int i = 0; i < this.remainingTicks.length; i++) {
-                this.remainingTicks[i]--;
+            for (int slotIndex = 0; slotIndex < this.remainingTicks.length; slotIndex++) {
+                this.remainingTicks[slotIndex]--;
 
-                if (this.remainingTicks[i] <= 0) {
-                    this.remainingTicks[i] = 0;
+                if (this.remainingTicks[slotIndex] <= 0) {
+                    this.remainingTicks[slotIndex] = 0;
                     // Item dried, we replace it with the recipe result, and clear the recipe cached.
-                    final DryerRecipe recipe = this.getDryerRecipe(new SimpleContainer(this.itemHandler.getItem(i)));
+                    final DryerRecipe recipe = this.getDryerRecipe(new SimpleContainer(this.itemHandler.getItem(slotIndex)));
 
                     if (recipe != null) {
-                        this.itemHandler.setItem(i, recipe.getResultItem(this.getLevel().registryAccess()).copy());
+                        this.itemHandler.setItem(slotIndex, recipe.getResultItem(this.getLevel().registryAccess()).copy());
                         success = true;
                     }
                     finish++;
@@ -149,8 +144,6 @@ public class DryerBlockEntity extends BlockEntity {
 
     private boolean putItemStackInIndex(final int index, final ItemStack itemStack, final Player player) {
         //Tries to put the itemStack in a dryer : first we check if there is a corresponding recipe, then we set the variables.
-        // enable mouse
-        GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         if (this.getLevel() != null) {
             final SimpleContainer invInHand = new SimpleContainer(itemStack);
             final DryerRecipe recipe = this.getDryerRecipe(invInHand);
@@ -191,13 +184,23 @@ public class DryerBlockEntity extends BlockEntity {
     @Override
     public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
-        tag.put("inv", itemHandler.createTag());
+        if (!itemHandler.getItem(0).isEmpty()) {
+            tag.put("slot_0", itemHandler.getItem(0).save(new CompoundTag()));
+        }
+        if (!itemHandler.getItem(1).isEmpty()) {
+            tag.put("slot_1", itemHandler.getItem(1).save(new CompoundTag()));
+        }
         return tag;
     }
 
     @Override
-    public void saveAdditional(final CompoundTag tag) {
-        tag.put("inv", itemHandler.createTag());
+    public void saveAdditional(final @NotNull CompoundTag tag) {
+        if (!itemHandler.getItem(0).isEmpty()) {
+            tag.put("slot_0", itemHandler.getItem(0).save(new CompoundTag()));
+        }
+        if (!itemHandler.getItem(1).isEmpty()) {
+            tag.put("slot_1", itemHandler.getItem(1).save(new CompoundTag()));
+        }
         for (int index = 0; index < 2; index++) {
             tag.putInt("remainingTime" + index, this.remainingTicks[index]);
         }
@@ -207,8 +210,16 @@ public class DryerBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(final CompoundTag tag) {
-        itemHandler.fromTag(tag.getList("inv", CompoundTag.TAG_COMPOUND));
+    public void load(final @NotNull CompoundTag tag) {
+        itemHandler.clearContent();
+        ItemStack stack = ItemStack.of(tag.getCompound("slot_0"));
+        if (!stack.isEmpty()) {
+            itemHandler.setItem(0, stack);
+        }
+        stack = ItemStack.of(tag.getCompound("slot_1"));
+        if (!stack.isEmpty()) {
+            itemHandler.setItem(1, stack);
+        }
         for (int index = 0; index < 2; index++) {
             this.remainingTicks[index] = tag.getInt("remainingTime" + index);
         }

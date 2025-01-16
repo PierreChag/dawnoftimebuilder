@@ -44,8 +44,8 @@ public class VoxelShapes {
             Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D),
             Shapes.block()};
     public static final VoxelShape[] DRYER_SHAPES = new VoxelShape[]{
-            Block.box(4.0D, 1.0D, 0.0D, 12.0D, 15.0D, 14.0D),
-            Block.box(5.0D, 0.0D, 5.0D, 11.0D, 15.0D, 11.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D),
             Shapes.block()};
     public static final VoxelShape[] EDGE_SHAPES = makeEdgeShapes();
     public static final VoxelShape[] FEATHERED_SERPENT_SCULPTURE_SHAPES = Utils.generateHorizontalShapes(new VoxelShape[]{

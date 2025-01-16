@@ -41,8 +41,8 @@ public class DryerBlock extends WaterloggedBlock implements EntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return !pLevel.isClientSide() ? (pLevel1, pPos, pState1, pBlockEntity) -> ((DryerBlockEntity)pBlockEntity).tick() : null;
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, @NotNull BlockEntityType<T> entityType) {
+        return !pLevel.isClientSide() ? (pLevel1, pPos, pState1, entity) -> ((DryerBlockEntity)entity).tick() : null;
     }
 
     @Override
@@ -120,12 +120,12 @@ public class DryerBlock extends WaterloggedBlock implements EntityBlock {
 
     @Override
     public InteractionResult use(final BlockState state, final Level worldIn, final BlockPos pos, final Player player, final InteractionHand handIn, final BlockHitResult hit) {
-        if(!worldIn.isClientSide() && handIn == InteractionHand.MAIN_HAND && worldIn.getBlockEntity(pos) instanceof DryerBlockEntity tileEntity) {
+        if(!worldIn.isClientSide() && handIn == InteractionHand.MAIN_HAND && worldIn.getBlockEntity(pos) instanceof DryerBlockEntity dryerEntity) {
             if(player.isCrouching()) {
-                return tileEntity.dropOneItem(worldIn, pos);
+                return dryerEntity.dropOneItem(worldIn, pos);
             }
             ItemStack handStack = player.getItemInHand(handIn);
-            return tileEntity.tryInsertItemStack(handStack, state.getValue(DryerBlock.SIZE) == 0, worldIn, pos, player);
+            return dryerEntity.tryInsertItemStack(handStack, state.getValue(DryerBlock.SIZE) == 0, worldIn, pos, player);
         }
         return InteractionResult.FAIL;
     }
